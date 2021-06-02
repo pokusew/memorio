@@ -1,0 +1,35 @@
+{
+	"name": "Memorio",
+	"short_name": "Memorio",
+	"description": "App for effective learning",
+	"background_color": "#f5f5f5",
+	"display": "standalone",
+	"scope": "/",
+	"start_url": "/",
+	"icons": [
+		{
+			"src": "./images/icons/app-icon_48.png",
+			"sizes": "48x48"
+		},
+		{
+			"src": "./images/icons/app-icon_72.png",
+			"sizes": "72x72"
+		},
+		{
+			"src": "./images/icons/app-icon_96.png",
+			"sizes": "96x96"
+		},
+		{
+			"src": "./images/icons/app-icon_128.png",
+			"sizes": "128x128"
+		},
+		{
+			"src": "./images/icons/app-icon_256.png",
+			"sizes": "256x256"
+		},
+		{
+			"src": "./images/icons/app-icon_512.png",
+			"sizes": "512x512"
+		}
+	]
+}
