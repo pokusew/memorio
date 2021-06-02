@@ -113,16 +113,27 @@ export default merge(baseConfig, {
 	},
 
 	devServer: {
+
+		// currently, we use v4.0.0-beta.3
+		// the docs at https://webpack.js.org/configuration/dev-server/ are outdated
+		// see notes the release notes at https://github.com/webpack/webpack-dev-server/releases
+		// for an up-to-date docs of the beta version
+
 		// host: '0.0.0.0',
 		port,
 		hot: true,
-		inline: false,
 		historyApiFallback: true,
-		contentBase: path.join(__dirname, 'dist'),
-		publicPath,
+		static: false,
+
 		// headers: {
 		// 	'Access-Control-Allow-Origin': '*',
 		// },
+
+		// removed in v4.0.0:
+		// inline: false,
+		// contentBase: path.join(__dirname, 'dist'),
+		// publicPath,
+
 	},
 
 });
