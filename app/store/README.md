@@ -1,4 +1,12 @@
-# Subscribing to external state changes in React
+# Simple State Management
+
+A simple custom solution for global state management in React.
+
+
+## Resources
+
+
+### Subscribing to external state changes in React
 
 
 * https://github.com/facebook/react/tree/master/packages/use-subscription

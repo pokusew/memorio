@@ -9,6 +9,10 @@ Here is tracked what needs to be done.
 	* name, domain
 	* logo
 
+* improve routing
+	* typed routes (use generics)
+	* route state 
+
 
 ## Issues to watch
 
