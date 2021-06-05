@@ -1,10 +1,10 @@
 {
+	// https://www.devextent.com/create-service-worker-typescript/
 	"compilerOptions": {
 		// https://stackoverflow.com/questions/61305578/what-typescript-configuration-produces-output-closest-to-node-js-14-capabilities/61305579#61305579
 		"lib": [
 			"es2020",
-			"dom",
-			"dom.iterable"
+			"webworker"
 		],
 		"module": "commonjs",
 		"target": "es2020",
@@ -24,7 +24,6 @@
 		// see https://github.com/Microsoft/TypeScript/wiki/FAQ#why-is-a-file-in-the-exclude-list-still-picked-up-by-the-compiler
 		// use `yarn tsc --listFiles` to list what files are included in the compilation,
 		// and `yarn tsc --traceResolution` to see why they were included
-		"**/node_modules/**/*",
-		"app/sw/**/*"
+		"**/node_modules/**/*"
 	]
 }

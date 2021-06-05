@@ -29,6 +29,9 @@ export default merge(baseConfig, {
 			'webpack/hot/only-dev-server',
 			path.join(__dirname, 'app/another'),
 		],
+		sw: [
+			path.join(__dirname, 'app/sw/sw'),
+		],
 	},
 
 	output: {
@@ -122,17 +125,24 @@ export default merge(baseConfig, {
 		// host: '0.0.0.0',
 		port,
 		hot: true,
+		client: {
+			// both defaults to true (even when the docs say otherwise)
+			// we need false in order to control this per chunk (see entry config)
+			needClientEntry: false,
+			needHotEntry: false,
+		},
 		historyApiFallback: true,
 		static: false,
 
+		// currently, not needed
 		// headers: {
 		// 	'Access-Control-Allow-Origin': '*',
 		// },
 
-		// removed in v4.0.0:
-		// inline: false,
-		// contentBase: path.join(__dirname, 'dist'),
-		// publicPath,
+		// unnecessary
+		// devMiddleware: {
+		// 	publicPath,
+		// },
 
 	},
 
