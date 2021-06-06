@@ -1,7 +1,7 @@
 "use strict";
 
 import DataManager from './DataManager';
-import { Dataset } from '../types';
+import { Package } from '../types';
 
 
 const DEFAULT_DELAY = 1000;
@@ -12,32 +12,8 @@ const delay = (ms: number = DEFAULT_DELAY) => new Promise<void>((resolve => {
 	}, ms);
 }));
 
-export const datasets = {
-	findAll: () => async (dm: DataManager): Promise<Dataset[]> => {
-
-		await delay();
-
-		return [
-			{
-				id: 'a',
-				name: 'A',
-			},
-			{
-				id: 'b',
-				name: 'B',
-			},
-		];
-
-	},
-	findOneById: (id: string) => async (dm: DataManager): Promise<Dataset> => {
-
-		await delay();
-
-		return {
-			id,
-			name: id.toUpperCase(),
-		};
-
-	},
+export const packages = {
+	findAll: () => (dm: DataManager): Promise<Package[]> => dm.findAllPackages(),
+	findOneById: (id: number) => (dm: DataManager): Promise<Package | undefined> => dm.findOnePackageById(id),
 };
 

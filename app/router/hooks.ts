@@ -3,10 +3,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 
 import RouterContext from './RouterContext';
+import { useSubscription } from '../helpers/useSubscription';
 
 
 export const useRouter = () => useContext(RouterContext);
 
+// TODO: deprecated in favour of useRoute, remove
 export const useLocation = () => {
 
 	const router = useRouter();
@@ -37,6 +39,22 @@ export const useLocation = () => {
 	return {
 		router,
 		location: location,
+		route,
+	};
+
+};
+
+export const useRoute = () => {
+
+	const router = useRouter();
+
+	const route = useSubscription({
+		getCurrentValue: router.currentRouteGetter,
+		subscribe: router.listenForRoute,
+	});
+
+	return {
+		router,
 		route,
 	};
 

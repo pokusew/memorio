@@ -1,0 +1,21 @@
+//
+// Progress bars
+// --------------------------------------------------
+
+.progress {
+	display: flex;
+	height: 1rem;
+	overflow: hidden; // if we would like to force rounded corners by cropping it
+	background-color: $gray-lighter;
+}
+
+.progress-bar {
+	display: flex; // so that inner text can be easily centered
+	flex-direction: column;
+	justify-content: center;
+	overflow: hidden;
+	color: $black;
+	text-align: center;
+	white-space: nowrap;
+	transition: width .6s ease;
+}

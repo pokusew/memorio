@@ -8,7 +8,9 @@ import {
 	RoutesMap,
 	RouteToUrlMap,
 	UrlToRouteMap,
-	INVALID_LINK, RouteMatcher,
+	INVALID_LINK,
+	RouteMatcher,
+	UnlistenFunction,
 } from './common';
 import { DOMAttributes } from 'react';
 
@@ -229,6 +231,11 @@ class Router {
 	private readonly listeners: Set<LocationListener>;
 	private readonly popstateHandler: (event: PopStateEvent) => void;
 
+	public readonly listenForRoute: (onChange: LocationListener) => UnlistenFunction =
+		(onChange) => this.listen(onChange);
+
+	public readonly currentRouteGetter: () => Route | undefined = () => this.route;
+
 	public pathname: string;
 	public route: Route | undefined;
 	public readonly defaultLinkOnClickHandler: NonNullable<DOMAttributes<HTMLAnchorElement>['onClick']>;
@@ -372,7 +379,9 @@ class Router {
 		this.listeners.forEach(fn => fn(this.route));
 	}
 
-	public listen(onChange) {
+	public listen(onChange: LocationListener): UnlistenFunction {
+
+		console.log('listen');
 
 		this.listeners.add(onChange);
 

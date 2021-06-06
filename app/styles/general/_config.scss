@@ -2,16 +2,11 @@
 // Config file for the whole project (define colors etc)
 // --------------------------------------------------
 
-@use "sass:math";
-
 $xs: 420px;
 $sm: 576px;
 $md: 768px;
 $lg: 992px;
 $xl: 1200px;
-
-$sidebar-collapsed: 50px;
-$sidebar-expanded: 240px;
 
 // Base colors
 
@@ -47,9 +42,9 @@ $red: #d9534f;
 $orange: #f0ad4e;
 $yellow: #ffd500;
 $green: #5cb85c;
-//$blue: #0275d8;
+// $blue: #0275d8;
 $teal: #5bc0de;
-//$pink: #ff5b77;
+// $pink: #ff5b77;
 $purple: #613d7c;
 
 $gray-dark: #292b2c;
@@ -69,20 +64,11 @@ $brand-inverse: $gray-dark;
 //
 // Settings for the `<body>` element.
 
-$body-bg: $white;
-$body-color: $gray-dark;
-$inverse-bg: $gray-dark;
-$inverse-color: $gray-lighter;
-$font-size-base: 1rem;
-
-$text-color: $gray-dark;
 
 // Links
 
 $link-color: $brand-primary;
-$link-decoration: none;
 $link-hover-color: darken($link-color, 15%);
-$link-hover-decoration: underline;
 
 // Fonts
 $line-height-base: 1.5;
@@ -91,12 +77,11 @@ $font-family-sans-serif: Roboto, -apple-system, system-ui, BlinkMacSystemFont, "
 $font-family-serif: Georgia, "Times New Roman", Times, serif;
 $font-family-monospace: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 $font-family-base: $font-family-sans-serif;
-$dt-font-weight: 400;
-$font-weight-lighter:         lighter !default;
-$font-weight-light:           300 !default;
-$font-weight-normal:          400 !default;
-$font-weight-bold:            700 !default;
-$font-weight-bolder:          bolder !default;
+$font-weight-lighter: lighter !default;
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-bold: 700 !default;
+$font-weight-bolder: bolder !default;
 
 // Form states and alerts
 
@@ -118,31 +103,6 @@ $state-danger-bg: #f2dede;
 $state-danger-border: darken($state-danger-bg, 5%);
 
 $text-muted: $gray-light;
-
-$cursor-disabled: not-allowed;
-// Tables
-//
-// Customizes the `.table` component with basic values, each used across all table variations.
-
-$table-cell-padding: .75rem;
-$table-sm-cell-padding: .3rem;
-
-$table-bg: transparent;
-
-$table-inverse-bg: $gray-dark;
-$table-inverse-color: $body-bg;
-
-$table-bg-accent: rgba($black, .05);
-$table-bg-hover: rgba($black, .075);
-$table-bg-active: $table-bg-hover;
-
-$table-head-bg: $gray-lighter;
-$table-head-color: $gray;
-
-$table-border-width: 1px;
-$table-border-color: $gray-lighter;
-
-$enable-hover-media-query: false;
 
 // Buttons
 //
@@ -181,26 +141,3 @@ $btn-danger-bg: $brand-danger !default;
 $btn-danger-border: $btn-danger-bg !default;
 
 $btn-link-disabled-color: $gray-light !default;
-
-$btn-padding-x-sm: .5rem !default;
-$btn-padding-y-sm: .25rem !default;
-
-$btn-padding-x-lg: 1.5rem !default;
-$btn-padding-y-lg: .75rem !default;
-
-$btn-block-spacing-y: .5rem !default;
-$btn-toolbar-margin: .5rem !default;
-
-// Allows for customizing button radius independently from global border radius
-$btn-border-radius: 0 !default;
-$btn-border-radius-lg: 0 !default;
-$btn-border-radius-sm: 0 !default;
-
-$btn-transition: all .2s ease-in-out !default;
-
-// see https://youtrack.jetbrains.com/issue/WEB-51021
-// noinspection CssInvalidFunction
-$headings-margin-bottom: math.div(1rem, 2);
-$paragraph-margin-bottom: 1rem;
-$table-caption-color: $text-muted;
-$label-margin-bottom: .5rem;

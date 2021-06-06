@@ -3,25 +3,26 @@
 import React, { useEffect } from 'react';
 
 import { IS_DEVELOPMENT, isDefined } from '../helpers/common';
-import { useLocation, useRouter } from '../router/hooks';
+import { useRouter, useRoute } from '../router/hooks';
 
 import {
 	R_SETTINGS,
 	R_ROOT,
-	R_DATASET,
+	R_PACKAGE,
 } from '../routes';
 
 import NotFoundPage from '../views/NotFoundPage';
 import SettingsPage from '../views/SettingsPage';
 import HomePage from '../views/HomePage';
 import MissingRoutePage from '../views/MissingRoutePage';
-import SetPage from '../views/SetPage';
+import PackagePage from '../views/PackagePage';
 
 
 const PageRouter = () => {
 
-	const router = useRouter();
-	const { route } = useLocation();
+	const { route } = useRoute();
+
+	console.log(`[PageRouter] route changed`, route);
 
 	// 404: no route matched
 	if (!isDefined(route)) {
@@ -35,8 +36,8 @@ const PageRouter = () => {
 		return <SettingsPage />;
 	}
 
-	if (name === R_DATASET) {
-		return <SetPage />;
+	if (name === R_PACKAGE) {
+		return <PackagePage />;
 	}
 
 	if (name === R_ROOT) {

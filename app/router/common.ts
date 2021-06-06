@@ -19,8 +19,10 @@ export interface PayloadTransformer {
 }
 
 export interface LocationListener {
-	(route: Route | undefined): void
+	(route?: Route | undefined): void
 }
+
+export type UnlistenFunction = () => void;
 
 export interface RouteUrlGenerator {
 	(payload?: any): string | undefined

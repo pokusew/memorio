@@ -2,6 +2,7 @@
 
 import './styles/main.scss';
 import { isDefined } from './helpers/common';
+import { doSomethingWithDB } from './db';
 
 
 const registerServiceWorker = () => {
@@ -63,4 +64,4 @@ if (isDefined(b2El)) {
 }
 
 
-
+doSomethingWithDB();

@@ -5,26 +5,28 @@ import React, { useCallback, useMemo, useState } from 'react';
 import {
 	R_ROOT,
 } from '../routes';
-import { useDocumentTitle, useFormatMessageIdExperimental } from '../helpers/hooks';
-import { datasets } from '../db/queries';
+import { useDocumentTitle, useFormatMessageIdAsTagFn } from '../helpers/hooks';
+import { packages } from '../db/queries';
 import { useQuery } from '../db/hooks';
-import { Dataset } from '../types';
-import { useLocation } from '../router/hooks';
+import { Package } from '../types';
+import { useRoute } from '../router/hooks';
 import { isDefined } from '../helpers/common';
 import { Redirect } from '../router/compoments';
 
 
-const SetPage = () => {
+const PackagePage = () => {
 
-	const t = useFormatMessageIdExperimental();
+	const t = useFormatMessageIdAsTagFn();
 
 	// useDocumentTitle(t`titles.set`);
 
-	const { route } = useLocation();
+	const { route } = useRoute();
 
-	const id = route?.payload?.setId as string;
+	const idStr = route?.payload?.setId as string;
 
-	const query = useMemo(() => datasets.findOneById(id), [id]);
+	const id = parseInt(idStr);
+
+	const query = useMemo(() => packages.findOneById(id), [id]);
 
 	const op = useQuery(query);
 
@@ -48,4 +50,4 @@ const SetPage = () => {
 
 };
 
-export default SetPage;
+export default PackagePage;

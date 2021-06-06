@@ -2,16 +2,51 @@
 // Base global styles for whole project (body styling, helpers, global classes, etc)
 // --------------------------------------------------
 
+html {
+	// font-size: 16px; // respect the browser's (user's) size
+	line-height: 1.5;
+	font-family: $font-family-base;
+	color: $black;
+}
+
 html, body, #root {
 	height: 100%;
 	margin: 0;
 	padding: 0;
-	// font-size: 16px;
-	line-height: initial;
 }
 
-*:before, *:after {
+*, *:before, *:after {
 	box-sizing: border-box;
+}
+
+p {
+	margin: 0 0 1rem 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin: 0 0 .5rem 0;
+	padding: 0;
+	font-weight: 500;
+}
+
+h1 {
+	font-size: 2em;
+}
+
+h3 {
+	font-size: 1.5em;
+}
+
+h4 {
+	font-size: 1.25em;
+}
+
+h5 {
+	font-size: 1em;
+}
+
+h6 {
+	font-size: 1em;
 }
 
 strong {
@@ -29,48 +64,32 @@ strong {
 	border: 0;
 }
 
+a {
+	color: $link-color;
+	text-decoration: underline;
 
-.editor {
-
-	#canvas {
-		position: relative;
-		width: 500px;
-		height: 500px;
-		background: #b0f1fd;
+	&:hover {
+		color: $link-hover-color;
+		text-decoration: none;
 	}
-
-	.box {
-		position: absolute;
-		background: red;
-		width: 40px;
-		height: 40px;
-		text-align: center;
-		line-height: 40px;
-	}
-
-	#b1 {
-		top: 0;
-		left: 0;
-	}
-
-	#b2 {
-		bottom: 0;
-		right: 0;
-	}
-
 }
 
-.navbar {
-	background: $red;
+.bg-primary {
+	background-color: $brand-primary;
 }
 
-.dataset-card {
-	padding: 15px;
-	margin-bottom: 20px;
+.bg-success {
+	background-color: $brand-success;
+}
 
-	.dataset-card-heading {
-		font-weight: bold;
-		font-size: remy(18px);
-	}
+.bg-info {
+	background-color: $brand-info;
+}
 
+.bg-warning {
+	background-color: $brand-warning;
+}
+
+.bg-danger, .bg-error {
+	background-color: $brand-danger;
 }

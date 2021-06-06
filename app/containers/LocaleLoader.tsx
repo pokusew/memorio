@@ -16,7 +16,43 @@ const messages: Record<string, Record<string, string>> = {
 	en: flatten(en),
 };
 
-// TODO: implement dynamic messages loading with cache
+const SUPPORTED_LOCALES = new Set(Object.keys(messages));
+
+const DEFAULT_LOCALE = 'en';
+
+const determineEffectiveLocale = (
+	locale: string,
+	supportedLocales: Set<string>,
+	defaultLocale: string,
+	navigatorLanguage: string,
+	navigatorLanguagePreferences: readonly string[],
+): string => {
+
+	if (locale === 'auto') {
+
+		if (supportedLocales.has(navigatorLanguage)) {
+			return navigatorLanguage;
+		}
+
+		for (const preferredLocale of navigatorLanguagePreferences) {
+			if (supportedLocales.has(preferredLocale)) {
+				return preferredLocale;
+			}
+		}
+
+		return defaultLocale;
+
+	}
+
+	if (supportedLocales.has(locale)) {
+		return locale;
+	}
+
+	return defaultLocale;
+
+};
+
+// TODO: implement dynamic messages loading (via dynamic import)
 const LocaleLoader = ({ children }) => {
 
 	const [locale] = useStoreValueLocale();
@@ -25,13 +61,21 @@ const LocaleLoader = ({ children }) => {
 		throw new Error(`[LocaleLoader] locale undefined`);
 	}
 
+	const effectiveLocale = determineEffectiveLocale(
+		locale,
+		SUPPORTED_LOCALES,
+		DEFAULT_LOCALE,
+		navigator.language,
+		navigator.languages ?? [],
+	);
+
 	useEffect(() => {
 
 		const html = document.getElementsByTagName('html')[0];
 
 		const originalLangAttr = html.getAttribute('lang');
 
-		html.setAttribute('lang', locale);
+		html.setAttribute('lang', effectiveLocale);
 
 		return () => {
 
@@ -44,10 +88,14 @@ const LocaleLoader = ({ children }) => {
 
 		};
 
-	}, [locale]);
+	}, [effectiveLocale]);
 
 	return (
-		<IntlProvider locale={locale} key={locale} messages={messages?.[locale] ?? {}}>
+		<IntlProvider
+			locale={effectiveLocale}
+			key={effectiveLocale}
+			messages={messages?.[effectiveLocale] ?? {}}
+		>
 			{children}
 		</IntlProvider>
 	);

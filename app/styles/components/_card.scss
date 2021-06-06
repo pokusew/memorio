@@ -1,0 +1,40 @@
+//
+// Cards
+// --------------------------------------------------
+
+.card-grid {
+	display: grid;
+	grid-gap: 1rem;
+	margin: 0 0 1rem 0;
+}
+
+.card {
+	display: block;
+	border: 1px solid $gray-lighter;
+	padding: 1rem;
+
+	.card-heading {
+		margin: 0 0 1rem 0;
+
+		> .heading, > .description {
+			margin: 0;
+			padding: 0;
+		}
+	}
+
+	.card-content {
+		margin: 0 0 .25rem 0;
+		color: $gray-light;
+	}
+
+	.card-progress {
+		margin: 0 0 1rem 0;
+	}
+
+	.card-actions {
+		> a:not(:last-child) {
+			margin-right: 1rem;
+		}
+	}
+
+}

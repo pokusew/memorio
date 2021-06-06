@@ -5,12 +5,12 @@ import React from 'react';
 import { R_ROOT } from '../routes';
 import { Link } from '../router/compoments';
 
-import { useDocumentTitle, useFormatMessageIdExperimental } from '../helpers/hooks';
+import { useDocumentTitle, useFormatMessageIdAsTagFn } from '../helpers/hooks';
 
 
 const NotFoundPage = (props) => {
 
-	const t = useFormatMessageIdExperimental();
+	const t = useFormatMessageIdAsTagFn();
 
 	useDocumentTitle(t`titles.notFound`);
 

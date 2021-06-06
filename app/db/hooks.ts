@@ -143,6 +143,7 @@ export const useQuery = <T>(query: QueryExecutor<T>): QueryOperation<T> => {
 		// Because we're subscribing in a passive effect,
 		// it's possible that an update has occurred between render and our effect handler.
 		// Check for this and schedule an update if work has occurred.
+		// noinspection JSIgnoredPromiseFromCall
 		executeQuery();
 
 		return () => {

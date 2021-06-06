@@ -29,9 +29,10 @@ import DataManager from './db/DataManager';
 
 
 const store = new Store<AppState>({
-	version: '0.0.1', // TODO: use build hash
+	version: '0.0.4', // TODO: consider using build hash
 	onInitData: () => typedMapConstructor([
-		['locale', 'cs'],
+		['locale', 'auto'],
+		['soundEffects', true],
 	]),
 });
 

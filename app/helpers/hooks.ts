@@ -1,6 +1,6 @@
 "use strict";
 
-import { IntlShape, MessageDescriptor, useIntl } from 'react-intl';
+import { IntlFormatters, IntlShape, MessageDescriptor, useIntl } from 'react-intl';
 
 import { useStore, useStoreValue, useStoreValueSetter } from '../store/hooks';
 import { useEffect } from 'react';
@@ -15,24 +15,26 @@ export const useAppStateValueSetter = <K extends keyof AppState>(path: K) => use
 
 export const useStoreValueLocale = () => useAppSateValue('locale');
 
+export const useStoreValueSoundEffects = () => useAppSateValue('soundEffects');
+
 
 // ### i18n
 
 // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
 export const fnToTemplateTag = (fn: (input: string) => string) => (strings: TemplateStringsArray) => fn(strings[0]);
 
-interface Test {
-	id: string;
-}
-
 export type MessageId = NonNullable<MessageDescriptor['id']>;
 
 export const createGetRawIntlMessage = (intl: IntlShape) => (id: MessageId, fallbackToId: boolean = true) =>
 	intl.messages[id] ?? (fallbackToId ? id : undefined);
 
-// TODO: consider usage in way t`messageId` instead of t('messageId')
-// TODO: any
-export const createFormatMessageId = (intl: IntlShape) => (id: MessageId, values?: any) => intl.formatMessage({ id }, values);
+// TODO: better type for values?
+export const createFormatMessage = (intl: IntlShape) => (descriptor: MessageDescriptor, values?: Parameters<IntlFormatters['formatMessage']>[1]) =>
+	intl.formatMessage(descriptor , values);
+
+// TODO: better type for values?
+export const createFormatMessageId = (intl: IntlShape) => (id: MessageId, values?: Parameters<IntlFormatters['formatMessage']>[1]) =>
+	intl.formatMessage({ id }, values);
 
 export const useGetRawIntlMessage = () => {
 
@@ -50,7 +52,7 @@ export const useFormatMessageId = () => {
 
 };
 
-export const useFormatMessageIdExperimental = () => {
+export const useFormatMessageIdAsTagFn = () => {
 
 	const intl = useIntl();
 
@@ -62,8 +64,7 @@ export const useFormatMessage = () => {
 
 	const intl = useIntl();
 
-	// TODO: consider usage in way t`messageId` instead of t('messageId')
-	return (descriptor: MessageDescriptor, values?) => intl.formatMessage(descriptor, values);
+	return createFormatMessage(intl);
 
 };
 

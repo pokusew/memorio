@@ -1,6 +1,30 @@
 "use strict";
 
 export default {
+	locales: {
+		auto: `automaticky dle jazyka prohlížeče`,
+		en: `angličtina`,
+		cs: 'čeština',
+	},
+	titles: {
+		home: `Úvodní stránka`,
+		login: `Přihlášení`,
+		notFound: `Stránka nenalezena`,
+		settings: `Nastavení`,
+		users: `Uživatelé`,
+	},
+	header: {
+		appName: `Memorio`,
+	},
+	footer: {
+		sourceCode: `Zdrojový kód na`,
+	},
+	ui: {
+		add: `Přidat`,
+		pageHeader: {
+			toggle: `Otevřít/Zavřít menu`,
+		},
+	},
 	forms: {
 		cancel: `Zrušit`,
 		errors: {
@@ -19,10 +43,12 @@ export default {
 	},
 	settingsForm: {
 		labels: {
+			effectiveLocale: `Aktuálně použitý jazyk`,
 			locale: `Jazyk`,
+			soundEffects: `Zvukové efekty`,
 			serverUrl: `URL serveru`,
 		},
-		switchToBtn: `Přepnout na {url}`
+		switchToBtn: `Přepnout na {url}`,
 	},
 	loginPage: {
 		errors: {
@@ -34,18 +60,5 @@ export default {
 	notFoundPage: {
 		backToHomePageBtn: `Zpět na úvodní stránku`,
 		message: `Jejda! :D`,
-	},
-	titles: {
-		home: `Úvodní stránka`,
-		login: `Přihlášení`,
-		notFound: `Stránka nenalezena`,
-		settings: `Nastavení`,
-		users: `Uživatelé`,
-	},
-	ui: {
-		add: `Přidat`,
-		pageHeader: {
-			toggle: `Otevřít/Zavřít menu`,
-		},
 	},
 };

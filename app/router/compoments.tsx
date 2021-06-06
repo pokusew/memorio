@@ -5,8 +5,9 @@ import React, { useEffect } from 'react';
 import { IS_DEVELOPMENT, isDefined } from '../helpers/common';
 
 import { INVALID_LINK } from './common';
-import { useRouter } from './hooks';
+import { useRoute, useRouter } from './hooks';
 import Router from './Router';
+import classNames from 'classnames';
 
 export type CommonLinkProps = React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>;
 
@@ -58,16 +59,20 @@ export type NavLinkProps = LinkProps & {
 	activeClassName?: string;
 }
 
-export const NavLink = ({ className, children, ...props }: NavLinkProps) => {
+export const NavLink = ({ className, children, activeClassName, ...props }: NavLinkProps) => {
 
-	const router = useRouter();
+	const { router, route } = useRoute();
 
-	const href = createHref(router, props);
+	const targetHref = createHref(router, props);
+
+	const currentHref = router.pathname; // TODO: change to href
 
 	return (
 		<a
-			className={className}
-			href={href}
+			className={classNames(className, {
+				[activeClassName ?? 'active']: currentHref === targetHref,
+			})}
+			href={targetHref}
 			onClick={router.defaultLinkOnClickHandler}
 		>{children}</a>
 	);
