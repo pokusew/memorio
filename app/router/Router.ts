@@ -288,7 +288,7 @@ class Router {
 
 	private updateRoute(event?: PopStateEvent): void {
 
-		console.log('[Router] updateRoute', location, event);
+		console.log(`[Router] updateRoute ${isDefined(event) ? '(due to a PopStateEvent)' : '(manual)'}`);
 
 		this.pathname = location.pathname;
 
@@ -380,8 +380,6 @@ class Router {
 	}
 
 	public listen(onChange: LocationListener): UnlistenFunction {
-
-		console.log('listen');
 
 		this.listeners.add(onChange);
 

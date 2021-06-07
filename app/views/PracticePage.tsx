@@ -18,16 +18,11 @@ const PracticePage = () => {
 	useDocumentTitle(t`titles.practice`);
 
 	return (
-		<div>
-			<nav className="navbar">
-				<ul>
-					<a href="/">xxx</a>
-				</ul>
-			</nav>
+		<>
 
 			PracticePage
 
-		</div>
+		</>
 	);
 
 };

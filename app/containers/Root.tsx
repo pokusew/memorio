@@ -13,6 +13,7 @@ import LocaleLoader from './LocaleLoader';
 import PageRouter from './PageRouter';
 
 import { AppState } from '../types';
+import { App } from '../components/layout';
 
 
 export interface RootProps {
@@ -28,7 +29,9 @@ const Root = ({ store, dm, router }: RootProps) => {
 			<DataManagerContext.Provider value={dm}>
 				<RouterContext.Provider value={router}>
 					<LocaleLoader>
-						<PageRouter />
+						<App>
+							<PageRouter />
+						</App>
 					</LocaleLoader>
 				</RouterContext.Provider>
 			</DataManagerContext.Provider>

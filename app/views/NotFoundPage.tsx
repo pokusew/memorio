@@ -15,13 +15,13 @@ const NotFoundPage = (props) => {
 	useDocumentTitle(t`titles.notFound`);
 
 	return (
-		<div>
-				<p>
-					<br />
-					{t`notFoundPage.message`}
-				</p>
-				<Link name={R_ROOT}>{t`notFoundPage.backToHomePageBtn`}</Link>
-		</div>
+		<>
+			<h1>{t`titles.notFound`}</h1>
+			<p>
+				{t`notFoundPage.message`}
+			</p>
+			<Link name={R_ROOT}>{t`notFoundPage.backToHomePageBtn`}</Link>
+		</>
 	);
 };
 

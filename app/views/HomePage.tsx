@@ -1,52 +1,13 @@
 "use strict";
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
-import {
-	R_ROOT,
-	R_PACKAGE,
-} from '../routes';
 import { useDocumentTitle, useFormatMessageIdAsTagFn } from '../helpers/hooks';
 import { packages } from '../db/queries';
 import { useDataManager, useQuery } from '../db/hooks';
-import { Package } from '../types';
-import { Link } from '../router/compoments';
-import { App } from '../components/layout';
+import { LoadingError, LoadingScreen } from '../components/layout';
+import { PackageCard } from '../components/content';
 
-
-const PackageCard = ({ id, name }) => {
-
-	return (
-		<section className="card">
-			<header className="card-heading">
-				<h2 className="heading">Modelové otázky z biologie na 1. LF UK</h2>
-				{/*<h3>{name}</h3>*/}
-				<p className="description">
-					Modelové otázky z biologie k přijímacím zkouškám na 1. lékařskou fakultu Univerzity Karlovy v Praze, verze 2010
-				</p>
-			</header>
-			<div className="card-content">
-				<strong className="number">1800</strong> otázek v <strong className="number">5</strong> kateogriích
-			</div>
-			<div className="card-progress progress">
-				<div
-					className="progress-bar bg-danger"
-					role="progressbar"
-					style={{ width: '15%' }}
-					aria-valuenow={15}
-					aria-valuemin={0}
-					aria-valuemax={100}
-				/>
-			</div>
-			<div className="card-actions">
-				<Link name={R_PACKAGE} payload={{ packageId: id }}>Detail balíčku</Link>
-				<Link name={R_PACKAGE} payload={{ packageId: id }}>Provičovat</Link>
-				<Link name={R_PACKAGE} payload={{ packageId: id }}>Test</Link>
-			</div>
-		</section>
-	);
-
-};
 
 const HomePage = () => {
 
@@ -64,23 +25,41 @@ const HomePage = () => {
 
 	const op = useQuery(query);
 
+	if (op.loading) {
+		return (
+			<LoadingScreen />
+		);
+	}
+
 	return (
-		<App>
+		<>
 
-			<h1>Statistky</h1>
+			<aside className="callout">
+				<p>
+					{t`homePage.callout.welcome`}
+				</p>
+				<p>
+					{t`homePage.callout.gettingStarted`}
+				</p>
+			</aside>
 
-			<p>TODO</p>
-
-
-			<h1>Přehled balíčků</h1>
-
-			HomePage {id}
+			<h1>{t`homePage.packagesHeading`}</h1>
 
 			<div className="card-grid">
-				{op.loading || op.error
-					? <div>loading || error</div>
-					: op.data.map(({ id, name }) => <PackageCard key={id} id={id} name={name} />)
-				}
+				{op.error ? <LoadingError /> : op.data.map(({ id, name }) =>
+					<PackageCard
+						key={id}
+						id={id}
+						locale={'cs'}
+						// name={name}
+						name="Modelové otázky z biologie na 1. LF UK"
+						description="Modelové otázky z biologie k přijímacím zkouškám na 1. lékařskou fakultu Univerzity Karlovy v Praze, verze 2010"
+						numQuestions={5}
+						numCategories={2}
+						lastPractice={Date.now()}
+						successRate={50}
+					/>,
+				)}
 			</div>
 
 			<button onClick={(event) => {
@@ -124,7 +103,7 @@ const HomePage = () => {
 				d
 			</button>
 
-		</App>
+		</>
 	);
 
 };

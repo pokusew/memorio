@@ -15,7 +15,7 @@ const LocalizedDate = (
 		weekday = 'short', year = 'numeric', month = 'numeric', day = 'numeric',
 		hour = 'numeric', minute = 'numeric', second = 'numeric',
 		hour12,
-		timeZone = 'Europe/Prague',
+		timeZone, // = 'Europe/Prague',
 		timeZoneName,
 		...otherProps // such as className
 	}: LocalizedDateProps, // TODO

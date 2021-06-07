@@ -14,10 +14,14 @@
 
 .app-header {
 	grid-area: header;
-	display: flex;
-	background-color: $gray-lighter;
+	display: block;
 	margin: 0;
-	padding: 0 1rem;
+	padding: 0;
+	background-color: $gray-lighter;
+
+	> .container {
+		display: flex;
+	}
 
 	.app-name {
 		font-size: 1.25rem;
@@ -80,7 +84,12 @@
 .app-content {
 	grid-area: content;
 	display: block;
-	padding: 1rem 1rem 0 1rem;
+	position: relative;
+	margin: 0;
+	padding: 0;
+	> .container {
+		padding: 1rem 1rem 0 1rem;
+	}
 }
 
 .app-footer {

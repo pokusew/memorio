@@ -8,7 +8,6 @@ import {
 	useDocumentTitle,
 	useStoreValueLocale, useStoreValueSoundEffects,
 } from '../helpers/hooks';
-import { App } from '../components/layout';
 import { Option, SelectInput, ToggleInput } from '../components/inputs';
 import { isDefined } from '../helpers/common';
 import { useIntl } from 'react-intl';
@@ -53,7 +52,7 @@ const SettingsPage = () => {
 	}, [setSoundEffects]);
 
 	return (
-		<App>
+		<>
 
 			<h1>{t`titles.settings`}</h1>
 
@@ -79,7 +78,7 @@ const SettingsPage = () => {
 				onChange={handleSoundEffectsChange}
 			/>
 
-		</App>
+		</>
 	);
 
 };

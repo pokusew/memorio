@@ -31,12 +31,7 @@ const PackagePage = () => {
 	const op = useQuery(query);
 
 	return (
-		<div>
-			<nav className="navbar">
-				<ul>
-					<a href="/">xxx</a>
-				</ul>
-			</nav>
+		<>
 
 			SetPage
 
@@ -45,7 +40,7 @@ const PackagePage = () => {
 				: <pre>{JSON.stringify(op.data)}</pre>
 			}
 
-		</div>
+		</>
 	);
 
 };
