@@ -30,6 +30,10 @@
 /index         /    301!
 
 
+# TODO: remove once we have a favicon
+/favicon.ico   /favicon.ico   404
+
+
 # this is a fully client side only SPA (Single Page App)
 # see https://docs.netlify.com/routing/redirects/rewrites-proxies/#history-pushstate-and-single-page-apps
 /*    /index.html    200
