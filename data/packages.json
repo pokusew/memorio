@@ -1,0 +1,11 @@
+[
+	{
+		"id": 1,
+		"version": 1,
+		"locale": "cs",
+		"name": "Modelové otázky z biologie na 1. LF UK",
+		"description": "Modelové otázky z biologie k přijímacím zkouškám na 1. lékařskou fakultu Univerzity Karlovy v Praze, verze 2011",
+		"numCategories": 23,
+		"numQuestions": 1730
+	}
+]

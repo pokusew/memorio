@@ -149,7 +149,15 @@ export default merge(baseConfig, {
 			overlay: false,
 		},
 		historyApiFallback: true,
-		static: false,
+		static: [
+			{
+				directory: path.join(__dirname, 'data'),
+				publicPath: '/data/',
+				// https://github.com/expressjs/serve-index
+				serveIndex: false,
+				watch: false,
+			},
+		],
 
 		// currently, not needed
 		// headers: {
