@@ -74,7 +74,7 @@ In the future, this might be an isomorphic app based on Cloudflare Workers.
 Currently, I use [Netlify](https://www.netlify.com/) which is practically a CDN on steroids with integrated
 builds.
 
-In the future, the simple CDN might not be sufficient (in terms of features, speed, costs, ...). Then
+In the future, a simple CDN might not be sufficient (in terms of features, speed, costs, ...). Then a
 server-rendered app with additional features might be the way.
 
 Cloudflare has always offered state-of-the-art features on the fastest and reliable network all round the
