@@ -21,6 +21,9 @@ const CACHE_NAME = 'memorio-v1';
 const MANIFEST = self.__WB_MANIFEST ?? [];
 const MANIFEST_URLS: string[] = MANIFEST.map(({ url }) => url);
 
+// currently, our "API" is served from the same origin as the SPA (and the SW)
+const MEMORIO_API = location.origin + '/data/';
+
 const FONT_AWESOME_URL_PATTERN = /font-awesome/;
 const GOOGLE_FONTS_URL_PATTERN = /fonts\.(googleapis|gstatic)\.com/;
 
@@ -32,6 +35,30 @@ const isImmutable = (response: Response) => {
 	const cacheControl: string | null = response.headers.get('Cache-Control');
 
 	return isDefined(cacheControl) && cacheControl.indexOf('immutable') != -1;
+
+};
+
+const shouldIgnoreUrl = (url: string) => {
+
+	if (url.startsWith('chrome-extension://')) {
+		return true;
+	}
+
+	// ignore requests to our "API"
+	// as the content caching is solved in the app
+	if (url.startsWith(MEMORIO_API)) {
+		return true;
+	}
+
+	// if (process.env.NODE_ENV === 'development') {
+	//
+	// 	if (FONT_AWESOME_URL_PATTERN.test(url) || GOOGLE_FONTS_URL_PATTERN.test(url)) {
+	// 		return true;
+	// 	}
+	//
+	// }
+
+	return false;
 
 };
 
@@ -80,54 +107,64 @@ self.addEventListener('fetch', (e: FetchEvent) => {
 
 	// console.log(`[${NAME}] fetch`, e.request.url);
 
+	// if we know beforehand that we do not want to cache the response
+	// we can completely skip our custom fetching logic and let the browser handle it
+	// (instead of fetching and then returning it)
+	if (shouldIgnoreUrl(e.request.url)) {
+		return;
+	}
+
 	e.respondWith((async () => {
 
 		const cachedResponse: Response | undefined = await caches.match(e.request);
 
 		if (isDefined(cachedResponse)) {
 
-			// TODO: revalidate if not immutable
+			// if the cached response is immutable we can return it immediately and skip refreshing it
+			if (isImmutable(cachedResponse)) {
+				console.log(`[${NAME}] immutable response from cache for`, e.request.url);
+				return cachedResponse;
+			}
 
-			const immutable = isImmutable(cachedResponse);
+			// otherwise we try to get a fresh response (if the cached one is not immutable)
+			// note 1: it is still possible that no actual request will be made
+			//         as it will be served from the browser's internal cache (according to Cache-Control headers)
+			// note 2: we could also return the cached maybe-stale response immediately
+			//         and attempt the refresh in the background (that's called stale-while-revalidate)
 
-			console.log(`[${NAME}] response from cache (immutable: ${immutable})`);
+			try {
 
-			if (!immutable) {
+				console.log(`[${NAME}] revalidating`, e.request.url);
 
-				try {
+				const response = await fetch(e.request);
 
-					console.log(`[${NAME}] revalidating`, e.request.url);
+				const cache = await caches.open(CACHE_NAME);
 
-					const response = await fetch(e.request);
+				await cache.put(e.request, response.clone());
 
-					const cache = await caches.open(CACHE_NAME);
+				return response;
 
-					await cache.put(e.request, response.clone());
+			} catch (err) {
 
-					return response;
+				console.log(
+					`[${NAME}] an error occurred while revalidating, using maybe-stale cache as fallback`,
+					e.request.url, err,
+				);
 
-				} catch (err) {
-
-					console.log(
-						`[${NAME}] an error occurred while revalidating, using maybe-stale cache as fallback`,
-						e.request.url, err
-					);
-
-					return cachedResponse;
-
-				}
+				// if there was an error getting a fresh response, return the maybe-style one from cache
+				return cachedResponse;
 
 			}
 
-			return cachedResponse;
-
 		}
 
-		console.log(`[${NAME}] fetching`, e.request.url);
+		console.log(`[${NAME}] no cache > fetching`, e.request.url);
 
 		const response = await fetch(e.request);
 
-		// we cache only fonts and icons, other files are already cached during the install event
+		// as we do not know the exact URL addresses for Google Fonts and Font Awesome CDN
+		// we cache them at the first time when these requests go through this service worker
+		// note: other files are already cached during the install event
 		if (shouldCacheAdditional(e.request.url)) {
 			const cache = await caches.open(CACHE_NAME);
 			console.log(`[${NAME}] caching additional resource`, e.request.url);
@@ -140,7 +177,6 @@ self.addEventListener('fetch', (e: FetchEvent) => {
 
 });
 
-// NOTE: this is just for testing (no meaningful messages are currently sent)
 self.addEventListener('message', (e: ExtendableMessageEvent) => {
 
 	if (!(e.source instanceof Client)) {
