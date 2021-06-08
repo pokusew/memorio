@@ -11,7 +11,6 @@ import React from 'react';
 // }
 import { render } from 'react-dom';
 
-// import Manager from './metrics/Manager';
 import { AppContainer } from 'react-hot-loader';
 import Root from './containers/Root';
 import { routesMap } from './routes';
@@ -26,7 +25,10 @@ import Router from './router/Router';
 import { typedMapConstructor } from './helpers/common';
 import { AppState } from './types';
 import DataManager from './db/DataManager';
+import { registerServiceWorker } from './helpers/sw';
 
+
+registerServiceWorker();
 
 const store = new Store<AppState>({
 	version: '0.0.4', // TODO: consider using build hash
