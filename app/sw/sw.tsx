@@ -79,6 +79,8 @@ self.addEventListener('install', (e: ExtendableEvent) => {
 			const cache = await caches.open(CACHE_NAME);
 			console.log(`[${NAME}] caching files from MANIFEST`, MANIFEST_URLS);
 			await cache.addAll(MANIFEST_URLS);
+		} else {
+			console.log(`[${NAME}] in production the following files would be precached`, MANIFEST_URLS);
 		}
 
 	})());

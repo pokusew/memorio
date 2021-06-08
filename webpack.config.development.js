@@ -111,6 +111,23 @@ export default merge(baseConfig, {
 				/robots\.txt/,
 				/\.map$/,
 			],
+			manifestTransforms: [
+				async (manifestEntries) => {
+
+					const manifest = manifestEntries.map(entry => {
+
+						if (entry.url.endsWith('index.html')) {
+							entry.url = entry.url.slice(0, -10);
+						}
+
+						return entry;
+
+					});
+
+					return { manifest, warnings: [] };
+
+				},
+			],
 		}),
 		new HtmlWebpackPlugin({
 			filename: 'index.html',
