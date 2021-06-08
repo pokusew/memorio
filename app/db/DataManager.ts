@@ -1,15 +1,23 @@
 "use strict";
 
 import { isDefined } from '../helpers/common';
-import { Package } from '../types';
+import { Package, FullPackage } from '../types';
 import { Database } from './indexed-db';
+import { callApi } from '../helpers/api';
 
+
+export interface DataManagerOptions {
+	serverUrl: string;
+}
 
 class DataManager {
 
+	private readonly serverUrl: string;
 	private readonly db: Database;
 
-	constructor() {
+	constructor({ serverUrl }: DataManagerOptions) {
+
+		this.serverUrl = serverUrl;
 
 		this.db = new Database({
 			name: 'memorio',
@@ -71,11 +79,21 @@ class DataManager {
 	}
 
 	public findAllPackages(): Promise<Package[]> {
-		return this.db.getAll('packages');
+
+		// TODO: fuse with score data, handle offline
+
+		// return this.db.getAll('packages');
+
+		return callApi(`${this.serverUrl}/packages.json`).then(({ json }) => json);
+
 	}
 
-	public findOnePackageById(id: number): Promise<Package | undefined> {
-		return this.db.getOneByKey('packages', id);
+	public findOnePackageById(id: number): Promise<FullPackage | undefined> {
+
+		// return this.db.getOneByKey('packages', id);
+
+		return callApi(`${this.serverUrl}/packages/${id}.json`).then(({ json }) => json);
+
 	}
 
 	public addPackages(data: Package[]): Promise<void> {

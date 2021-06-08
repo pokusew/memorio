@@ -42,14 +42,3 @@ export const callApi = (url: RequestInfo, { headers, token, body, ...options }: 
 			return { json, response };
 
 		});
-
-export const login = (serverUrl: string, credentials) => {
-
-	return callApi(`${serverUrl}/auth`, {
-		method: METHOD_POST,
-		body: {
-			credentials,
-		},
-	});
-
-};

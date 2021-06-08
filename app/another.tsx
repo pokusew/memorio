@@ -2,7 +2,6 @@
 
 import './styles/main.scss';
 import { isDefined } from './helpers/common';
-import { doSomethingWithDB } from './db';
 import { registerServiceWorker } from './helpers/sw';
 
 
@@ -24,5 +23,3 @@ if (isDefined(b2El)) {
 		navigator.serviceWorker.controller?.postMessage(2);
 	});
 }
-
-doSomethingWithDB();

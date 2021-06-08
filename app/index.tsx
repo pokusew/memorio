@@ -36,7 +36,9 @@ const store = new Store<AppState>({
 	]),
 });
 
-const dm = new DataManager();
+const dm = new DataManager({
+	serverUrl: `${location.origin}/data`,
+});
 
 const router = new Router(routesMap);
 

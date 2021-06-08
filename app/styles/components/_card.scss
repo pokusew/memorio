@@ -6,6 +6,19 @@
 	display: grid;
 	grid-gap: 1rem;
 	margin: 0 0 1rem 0;
+	grid-template-columns: 1fr;
+
+	@media (min-width: $sm) {
+		// grid-template-columns: repeat(2, 1fr); // verify support?
+		grid-template-columns: 1fr 1fr;
+
+	}
+
+	@media (min-width: $lg) {
+		// grid-template-columns: repeat(3, 1fr); // verify support?
+		grid-template-columns: 1fr 1fr 1fr;
+	}
+
 }
 
 .card {
@@ -47,5 +60,15 @@
 
 }
 
+.package-content {
+	margin: 0 0 1rem 0;
+}
 
+.package-actions {
+	margin: 0 0 1rem 0;
 
+	.btn:not(:last-child) {
+		margin: 1rem 0 0 0;
+	}
+
+}

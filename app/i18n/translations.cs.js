@@ -8,6 +8,7 @@ export default {
 	},
 	titles: {
 		home: `Úvodní stránka`,
+		loading: `Načítání ...`,
 		login: `Přihlášení`,
 		notFound: `Stránka nenalezena`,
 		settings: `Nastavení`,
@@ -40,6 +41,19 @@ export default {
 			detail: 'Detail balíčku',
 			practice: 'Procvičovat',
 			test: 'Test',
+		},
+	},
+	category: {
+		// X otázka/otázky/otázek
+		details: `
+			<num>{numQuestions, number}</num> {numQuestions, plural,
+				one {otázka}
+				few {otázky}
+				other {otázek}
+			}
+		`,
+		actions: {
+			detail: 'Detail kategorie',
 		},
 	},
 	ui: {
@@ -81,6 +95,12 @@ export default {
 			gettingStarted: `Začněte výběrem balíčku otázek. Můžete si ho také uložit pro použití offline.`,
 		},
 		packagesHeading: `Přehled balíčků`,
+	},
+	packagePage: {
+		categoriesHeading: `Kategorie`,
+	},
+	categoryPage: {
+		questionsHeading: `Otázky`,
 	},
 	loginPage: {
 		errors: {

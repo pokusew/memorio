@@ -1,6 +1,31 @@
 "use strict";
 
 
+export interface ServiceWorkerDetails {
+	name: string;
+	cacheName: string;
+}
+
+export const NAME_GET_DETAILS_REQUEST = 1;
+
+export const TYPE_REQUEST = 1;
+export const TYPE_REPLY = 1;
+
+export interface AbstractMessage {
+	id: number;
+	type: typeof TYPE_REQUEST | typeof TYPE_REPLY;
+	name: number;
+	error: string | undefined;
+}
+
+export interface GetDetailsReply extends AbstractMessage {
+	name: typeof NAME_GET_DETAILS_REQUEST;
+	data: ServiceWorkerDetails;
+}
+
+export type Message = GetDetailsReply | AbstractMessage;
+
+
 export const registerServiceWorker = () => {
 
 	// see https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API

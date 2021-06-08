@@ -13,25 +13,33 @@ export interface Score {
 
 export interface Package {
 	id: number;
+	version: number;
+	locale: string;
 	name: string;
+	description: string;
+	numCategories: number;
+	numQuestions: number;
 }
 
 export interface Category {
 	id: number;
 	package: number;
 	name: string;
+	number?: number | undefined;
+	numQuestions: number;
 }
 
 export interface AbstractQuestion {
 	id: number;
 	package: number;
 	category: number;
+	number?: number | undefined;
 	type: string;
 }
 
-export interface OpenQuestion {
-	type: 'open';
-}
+// export interface OpenQuestion {
+// 	type: 'open';
+// }
 
 // a for lowercase letters
 // A for uppercase letters
@@ -40,12 +48,23 @@ export interface OpenQuestion {
 // 1 for numbers (default)
 // export const NUMBERING_TYPE_LETTERS_LOWER
 
-export interface ChoiceQuestion {
+export interface Choice {
+	id: number;
+	text: string;
+}
+
+export interface ChoiceQuestion extends AbstractQuestion {
 	type: 'choice';
+	text: string;
 	multiple: boolean;
-	// numberingType:
-	choices: string[];
+	// numberingType: 'a' | 'A' | 'i' | 'I' | 1;
+	correct: number[];
+	choices: Choice[];
 }
 
 export type Question = ChoiceQuestion;
 
+export interface FullPackage extends Package {
+	categories: Category[];
+	questions: Question[];
+}

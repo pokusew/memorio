@@ -5,7 +5,7 @@
 //       see https://github.com/microsoft/TypeScript/issues/14877
 //       see https://github.com/microsoft/TypeScript/issues/11781
 
-import { isDefined } from '../helpers/common';
+import { isDefined, IS_PRODUCTION } from '../helpers/common';
 
 export type {};
 declare var self: ServiceWorkerGlobalScope & typeof globalThis
@@ -50,7 +50,7 @@ const shouldIgnoreUrl = (url: string) => {
 		return true;
 	}
 
-	// if (process.env.NODE_ENV === 'development') {
+	// if (IS_DEVELOPMENT) {
 	//
 	// 	if (FONT_AWESOME_URL_PATTERN.test(url) || GOOGLE_FONTS_URL_PATTERN.test(url)) {
 	// 		return true;
@@ -68,13 +68,14 @@ self.addEventListener('install', (e: ExtendableEvent) => {
 
 	console.log(`[${NAME}] install`);
 
+	// TODO: in our current use-case, it is safe to skipWaiting
 	// the promise that skipWaiting() returns can be safely ignored
 	// noinspection JSIgnoredPromiseFromCall
 	// self.skipWaiting();
 
 	e.waitUntil((async () => {
 
-		if (process.env.NODE_ENV !== 'development') {
+		if (IS_PRODUCTION) {
 			const cache = await caches.open(CACHE_NAME);
 			console.log(`[${NAME}] caching files from MANIFEST`, MANIFEST_URLS);
 			await cache.addAll(MANIFEST_URLS);
@@ -87,6 +88,9 @@ self.addEventListener('install', (e: ExtendableEvent) => {
 self.addEventListener('activate', (e: ExtendableEvent) => {
 
 	console.log(`[${NAME}] activate`);
+
+	// TODO: in our current use-case, it is safe to claim all clients
+	// self.clients.claim();
 
 	// remove old caches
 	e.waitUntil((async () => {
@@ -126,11 +130,17 @@ self.addEventListener('fetch', (e: FetchEvent) => {
 				return cachedResponse;
 			}
 
-			// otherwise we try to get a fresh response (if the cached one is not immutable)
-			// note 1: it is still possible that no actual request will be made
+			// otherwise we try to get a fresh response (if the cached one is not immutable and we are not offline)
+			// note 1: even when navigator.onLine === true, there can still be no Internet access
+			// note 2: it is still possible that no actual request will be made
 			//         as it will be served from the browser's internal cache (according to Cache-Control headers)
-			// note 2: we could also return the cached maybe-stale response immediately
+			// note 3: we could also return the cached maybe-stale response immediately
 			//         and attempt the refresh in the background (that's called stale-while-revalidate)
+
+			if (!navigator.onLine) {
+				console.log(`[${NAME}] not immutable but also not online`, e.request.url);
+				return cachedResponse;
+			}
 
 			try {
 

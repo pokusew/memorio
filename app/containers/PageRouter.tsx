@@ -9,6 +9,7 @@ import {
 	R_SETTINGS,
 	R_ROOT,
 	R_PACKAGE,
+	R_PACKAGE_CATEGORY,
 } from '../routes';
 
 import NotFoundPage from '../views/NotFoundPage';
@@ -16,6 +17,7 @@ import SettingsPage from '../views/SettingsPage';
 import HomePage from '../views/HomePage';
 import MissingRoutePage from '../views/MissingRoutePage';
 import PackagePage from '../views/PackagePage';
+import CategoryPage from '../views/CategoryPage';
 
 
 const PageRouter = () => {
@@ -38,6 +40,10 @@ const PageRouter = () => {
 
 	if (name === R_PACKAGE) {
 		return <PackagePage />;
+	}
+
+	if (name === R_PACKAGE_CATEGORY) {
+		return <CategoryPage />;
 	}
 
 	if (name === R_ROOT) {

@@ -1,7 +1,7 @@
 "use strict";
 
 import DataManager from './DataManager';
-import { Package } from '../types';
+import { FullPackage, Package } from '../types';
 
 
 const DEFAULT_DELAY = 1000;
@@ -14,6 +14,6 @@ const delay = (ms: number = DEFAULT_DELAY) => new Promise<void>((resolve => {
 
 export const packages = {
 	findAll: () => (dm: DataManager): Promise<Package[]> => dm.findAllPackages(),
-	findOneById: (id: number) => (dm: DataManager): Promise<Package | undefined> => dm.findOnePackageById(id),
+	findOneById: (id: number) => (dm: DataManager): Promise<FullPackage | undefined> => dm.findOnePackageById(id),
 };
 

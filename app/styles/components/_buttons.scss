@@ -1,0 +1,44 @@
+//
+// Buttons
+// --------------------------------------------------
+
+.btn {
+	display: inline-block;
+	margin: 0;
+	padding: .5rem 1rem;
+	background-image: none;
+	background-color: $gray-lighter;
+	text-decoration: none;
+	appearance: none;
+
+	&:hover, &:focus {
+		text-decoration: none;
+		appearance: none;
+		background-color: darken($gray-lighter, 10%);
+	}
+
+	&.btn-lg {
+		padding: .75rem 1.25rem;
+	}
+
+	&.btn-primary {
+		background-color: $brand-primary;
+		color: $white;
+
+		&:hover, &:focus {
+			background-color: darken($brand-primary, 10%);
+			color: $white;
+		}
+	}
+
+	&.btn-warning {
+		background-color: $brand-warning;
+		color: $white;
+
+		&:hover, &:focus {
+			background-color: darken($brand-warning, 10%);
+			color: $white;
+		}
+	}
+
+}
