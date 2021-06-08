@@ -9,6 +9,7 @@ import SriPlugin from 'webpack-subresource-integrity';
 import baseConfig from './webpack.config.base';
 import autoprefixer from 'autoprefixer';
 import { templateParameters } from './tools/webpack-utils';
+import { InjectManifest } from 'workbox-webpack-plugin';
 
 
 // [hash] vs [chunkhash] vs [contenthash] > contenthash is best for our use-case
@@ -23,12 +24,26 @@ export default merge(baseConfig, {
 
 	entry: {
 		index: [
-			'./app/index',
+			path.join(__dirname, 'app/index'),
 		],
+		// handled the InjectManifest plugin
+		// sw: [
+		// 	path.join(__dirname, 'app/sw/sw'),
+		// ],
 	},
 
 	output: {
-		filename: '[name].[contenthash].imt.js',
+		filename: (pathData, assetInfo) => {
+
+			// note: this is currently not needed as it is handled by the InjectManifest plugin
+			// Service Worker scripts should always have the same name
+			// if (pathData.chunk.name === 'sw') {
+			// 	return '[name].js';
+			// }
+
+			return '[name].[contenthash].imt.js';
+
+		},
 		publicPath: '/',
 		// https://github.com/waysact/webpack-subresource-integrity#webpack-configuration-example
 		crossOriginLoading: 'anonymous',
@@ -82,6 +97,19 @@ export default merge(baseConfig, {
 			//       maybe it is related to discussion in https://github.com/webpack/webpack/issues/798
 			'process': false,
 			'process.env.NODE_ENV': JSON.stringify('production'),
+		}),
+		// see https://developers.google.com/web/tools/workbox/modules/workbox-webpack-plugin
+		// see https://developers.google.com/web/tools/workbox/reference-docs/latest/module-workbox-webpack-plugin.InjectManifest#InjectManifest
+		new InjectManifest({
+			swSrc: path.join(__dirname, 'app/sw/sw'),
+			injectionPoint: 'self.__WB_MANIFEST',
+			exclude: [
+				/LICENSE/,
+				/_headers/,
+				/_redirects/,
+				/robots\.txt/,
+				/\.map$/,
+			],
 		}),
 		// https://github.com/webpack-contrib/mini-css-extract-plugin
 		// https://webpack.js.org/plugins/mini-css-extract-plugin/

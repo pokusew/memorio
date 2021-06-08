@@ -7,6 +7,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import autoprefixer from 'autoprefixer';
 import baseConfig from './webpack.config.base';
 import { templateParameters } from './tools/webpack-utils';
+import { InjectManifest } from 'workbox-webpack-plugin';
 
 
 const port = 3000;
@@ -29,9 +30,10 @@ export default merge(baseConfig, {
 			'webpack/hot/only-dev-server',
 			path.join(__dirname, 'app/another'),
 		],
-		sw: [
-			path.join(__dirname, 'app/sw/sw'),
-		],
+		// handled the InjectManifest plugin
+		// sw: [
+		// 	path.join(__dirname, 'app/sw/sw'),
+		// ],
 	},
 
 	output: {
@@ -96,6 +98,20 @@ export default merge(baseConfig, {
 			'process': false,
 			'process.env.NODE_ENV': JSON.stringify('development'),
 		}),
+		// see https://developers.google.com/web/tools/workbox/modules/workbox-webpack-plugin
+		// see https://developers.google.com/web/tools/workbox/reference-docs/latest/module-workbox-webpack-plugin.InjectManifest#InjectManifest
+		new InjectManifest({
+			swSrc: path.join(__dirname, 'app/sw/sw'),
+			injectionPoint: 'self.__WB_MANIFEST',
+			maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
+			exclude: [
+				/LICENSE/,
+				/_headers/,
+				/_redirects/,
+				/robots\.txt/,
+				/\.map$/,
+			],
+		}),
 		new HtmlWebpackPlugin({
 			filename: 'index.html',
 			template: './app/template.ejs',
@@ -130,6 +146,7 @@ export default merge(baseConfig, {
 			// we need false in order to control this per chunk (see entry config)
 			needClientEntry: false,
 			needHotEntry: false,
+			overlay: false,
 		},
 		historyApiFallback: true,
 		static: false,
