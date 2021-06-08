@@ -5,7 +5,7 @@ import webpack from 'webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { merge } from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import SriPlugin from 'webpack-subresource-integrity';
+import { SubresourceIntegrityPlugin } from 'webpack-subresource-integrity';
 import baseConfig from './webpack.config.base';
 import autoprefixer from 'autoprefixer';
 import { templateParameters } from './tools/webpack-utils';
@@ -116,7 +116,7 @@ export default merge(baseConfig, {
 		new MiniCssExtractPlugin({
 			filename: 'style.[contenthash].imt.css',
 		}),
-		new SriPlugin({
+		new SubresourceIntegrityPlugin({
 			hashFuncNames: ['sha256', 'sha384'],
 		}),
 		new HtmlWebpackPlugin({
