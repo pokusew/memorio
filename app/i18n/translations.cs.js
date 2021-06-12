@@ -13,6 +13,7 @@ export default {
 		notFound: `Stránka nenalezena`,
 		settings: `Nastavení`,
 		users: `Uživatelé`,
+		practice: `Procvičování`,
 	},
 	header: {
 		appName: `Memorio`,
@@ -88,6 +89,20 @@ export default {
 			serverUrl: `URL serveru`,
 		},
 		switchToBtn: `Přepnout na {url}`,
+	},
+	questionForm: {
+		types: {
+			singleChoice: `právě jedna správná odpověď`,
+			multipleChoice: `více správných odpovědí`,
+		},
+		validation: {
+			correct: `Otázka byla zodpovězna <strong>správně</strong>.`,
+			wrong: `Otázka byla zodpovězna <strong>špatně</strong>.`,
+		},
+		actions: {
+			validate: `Zkontrolovat`,
+			next: `Další otázku`,
+		},
 	},
 	homePage: {
 		callout: {

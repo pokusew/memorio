@@ -70,6 +70,8 @@ export default merge(baseConfig, {
 						loader: MiniCssExtractPlugin.loader,
 					},
 					'css-loader',
+					// https://github.com/bholloway/resolve-url-loader/blob/v5/packages/resolve-url-loader/README.md
+					'resolve-url-loader',
 					'sass-loader',
 					{
 						loader: 'postcss-loader',

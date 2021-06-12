@@ -10,6 +10,7 @@ import {
 	R_ROOT,
 	R_PACKAGE,
 	R_PACKAGE_CATEGORY,
+	R_PACKAGE_PRACTICE,
 } from '../routes';
 
 import NotFoundPage from '../views/NotFoundPage';
@@ -18,6 +19,7 @@ import HomePage from '../views/HomePage';
 import MissingRoutePage from '../views/MissingRoutePage';
 import PackagePage from '../views/PackagePage';
 import CategoryPage from '../views/CategoryPage';
+import PracticePage from '../views/PracticePage';
 
 
 const PageRouter = () => {
@@ -44,6 +46,10 @@ const PageRouter = () => {
 
 	if (name === R_PACKAGE_CATEGORY) {
 		return <CategoryPage />;
+	}
+
+	if (name === R_PACKAGE_PRACTICE) {
+		return <PracticePage />;
 	}
 
 	if (name === R_ROOT) {

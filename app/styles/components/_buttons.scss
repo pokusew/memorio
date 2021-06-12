@@ -10,6 +10,10 @@
 	background-color: $gray-lighter;
 	text-decoration: none;
 	appearance: none;
+	border: none;
+	cursor: pointer;
+	font-size: 1rem;
+	line-height: inherit;
 
 	&:hover, &:focus {
 		text-decoration: none;

@@ -45,31 +45,6 @@ input[type="search"] {
 	box-sizing: border-box;
 }
 
-// Position radios and checkboxes better
-input[type="radio"],
-input[type="checkbox"] {
-	margin: 4px 0 0;
-	margin-top: 1px \9
-; // IE8-9
-	line-height: normal;
-}
-
-input[type="file"] {
-	display: block;
-}
-
-// Make range inputs behave like textual form controls
-input[type="range"] {
-	display: block;
-	width: 100%;
-}
-
-// Make multiple select elements height not fixed
-select[multiple],
-select[size] {
-	height: auto;
-}
-
 // Form validation states
 //
 // Used in _forms.scss to generate the form validation CSS for warnings, errors,
@@ -98,23 +73,6 @@ select[size] {
 
 }
 
-// WebKit-style focus
-
-@mixin tab-focus() {
-	// WebKit-specific. Other browsers will keep their default outline style.
-	// (Initially tried to also force default via `outline: initial`,
-	// but that seems to erroneously remove the outline in Firefox altogether.)
-	outline: 5px auto -webkit-focus-ring-color;
-	outline-offset: -2px;
-}
-
-// Focus for file, radio, and checkbox
-input[type="file"]:focus,
-input[type="radio"]:focus,
-input[type="checkbox"]:focus {
-	@include tab-focus;
-}
-
 // Placeholder text
 @mixin placeholder($color: lighten($gray-light, 40%)) {
 	// Firefox
@@ -122,14 +80,14 @@ input[type="checkbox"]:focus {
 		color: $color;
 		opacity: 1; // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526
 	}
+	// Internet Explorer 10+
 	&:-ms-input-placeholder {
 		color: $color;
 	}
-	// Internet Explorer 10+
+	// Safari and Chrome
 	&::-webkit-input-placeholder {
 		color: $color;
 	}
-	// Safari and Chrome
 }
 
 @mixin form-control-focus($color: lighten($brand-primary, 20%)) {
@@ -138,6 +96,7 @@ input[type="checkbox"]:focus {
 		border-color: $color;
 		outline: 0;
 		// box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 4px $color-rgba;
+		// box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
 	}
 }
 
