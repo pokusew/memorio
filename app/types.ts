@@ -17,8 +17,8 @@ export interface Package {
 	locale: string;
 	name: string;
 	description: string;
-	numCategories: number;
-	numQuestions: number;
+	numCategories: number; // precomputed by API
+	numQuestions: number; // precomputed by API
 }
 
 export interface Category {
@@ -26,7 +26,7 @@ export interface Category {
 	package: number;
 	name: string;
 	number?: number | undefined;
-	numQuestions: number;
+	numQuestions: number; // precomputed by API
 }
 
 export interface AbstractQuestion {
@@ -68,3 +68,19 @@ export interface FullPackage extends Package {
 	categories: Category[];
 	questions: Question[];
 }
+
+export interface LocalData {
+	lastPractice?: Date | undefined;
+	score?: Score | undefined;
+}
+
+export type LocalPackage = Package & LocalData;
+
+export type LocalCategory = Category & LocalData;
+
+export type LocalQuestion = Question & LocalData;
+
+export type LocalFullPackage = LocalPackage & {
+	categories: LocalCategory[];
+	questions: LocalQuestion[];
+};

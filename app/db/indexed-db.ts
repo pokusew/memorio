@@ -126,44 +126,6 @@ export class Database {
 
 	}
 
-	async getAll<T>(storeName: string): Promise<T[]> {
-
-		const db = await this.ready;
-
-		const t: IDBTransaction = db.transaction([storeName], 'readonly');
-
-		const store: IDBObjectStore = t.objectStore(storeName);
-
-		return new Promise((resolve, reject) => {
-
-			store.getAll().onsuccess = (event) => {
-				// @ts-ignore
-				resolve(event.target.result as T[]);
-			};
-
-		});
-
-	}
-
-	async getOneByKey<T>(storeName: string, key: any): Promise<T | undefined> {
-
-		const db = await this.ready;
-
-		const t: IDBTransaction = db.transaction([storeName], 'readonly');
-
-		const store: IDBObjectStore = t.objectStore(storeName);
-
-		return new Promise((resolve, reject) => {
-
-			store.getKey(key).onsuccess = (event) => {
-				// @ts-ignore
-				resolve(event.target.result as T);
-			};
-
-		});
-
-	}
-
 	runInTransaction<T>(storeNames: string[], mode: IDBTransactionMode, executor: TransactionExecutor<T>): Promise<T> {
 		return this.ready.then(db => new Promise<T>((resolve, reject) => {
 
@@ -180,6 +142,42 @@ export class Database {
 			executor(db, t, resolve, reject);
 
 		}));
+	}
+
+	getAll<T>(storeName: string): Promise<T[]> {
+		return this.runInTransaction(
+			[storeName],
+			'readonly',
+			(db, transaction, resolve) => {
+
+				const store = transaction.objectStore(storeName);
+
+				store.getAll().onsuccess = (event) => {
+					// @ts-ignore
+					resolve(event.target.result as T[]);
+				};
+
+			},
+		);
+
+	}
+
+	getOneByKey<T>(storeName: string, key: any): Promise<T | undefined> {
+		return this.runInTransaction(
+			[storeName],
+			'readonly',
+			(db, transaction, resolve) => {
+
+				const store = transaction.objectStore(storeName);
+
+				store.getKey(key).onsuccess = (event) => {
+					// @ts-ignore
+					resolve(event.target.result as T);
+				};
+
+			},
+		);
+
 	}
 
 	add<T>(storeName: string, data: T[]): Promise<void> {

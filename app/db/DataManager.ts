@@ -1,7 +1,7 @@
 "use strict";
 
 import { isDefined } from '../helpers/common';
-import { Package, FullPackage } from '../types';
+import { Package, FullPackage, LocalPackage, LocalFullPackage, LocalCategory, LocalQuestion } from '../types';
 import { Database } from './indexed-db';
 import { callApi } from '../helpers/api';
 
@@ -12,6 +12,7 @@ export interface DataManagerOptions {
 
 class DataManager {
 
+	private offline: boolean;
 	private readonly serverUrl: string;
 	private readonly db: Database;
 
@@ -76,38 +77,190 @@ class DataManager {
 			],
 		});
 
-	}
+		this.offline = false;
 
-	public findAllPackages(): Promise<Package[]> {
+		const handleNavigatorOnLineChange = (event) => {
 
-		// TODO: fuse with score data, handle offline
+			console.log(`[dm] navigator.onLine =`, navigator.onLine);
 
-		// return this.db.getAll('packages');
+			this.offline = !navigator.onLine;
 
-		return callApi(`${this.serverUrl}/packages.json`).then(({ json }) => json);
+		};
 
-	}
-
-	public findOnePackageById(id: number): Promise<FullPackage | undefined> {
-
-		// return this.db.getOneByKey('packages', id);
-
-		return callApi(`${this.serverUrl}/packages/${id}.json`).then(({ json }) => json);
+		window.addEventListener('online', handleNavigatorOnLineChange);
+		window.addEventListener('offline', handleNavigatorOnLineChange);
 
 	}
 
-	public addPackages(data: Package[]): Promise<void> {
-		return this.db.add('packages', data);
+	public async findAllPackages(): Promise<LocalPackage[]> {
+
+		const localDataOp: Promise<Map<number, LocalPackage>> = this.db.runInTransaction(
+			['packages'],
+			'readonly',
+			(db, transaction, resolve, reject) => {
+
+				const result: Map<number, LocalPackage> = new Map<number, LocalPackage>();
+
+				transaction.oncomplete = () => {
+					resolve(result);
+				};
+
+				const packagesStore = transaction.objectStore('packages');
+
+				const openCursorReq = packagesStore.openCursor();
+
+				openCursorReq.onsuccess = (event) => {
+
+					const cursor = openCursorReq.result;
+
+					if (!isDefined(cursor)) {
+						// that's all data
+						return;
+					}
+
+					result.set(cursor.key as number, cursor.value);
+
+					cursor.continue();
+
+				};
+
+			},
+		);
+
+		if (this.offline) {
+
+			const localData = await localDataOp;
+
+			return [...localData.values()];
+
+		}
+
+		// TODO: rethink non-matching version data (come up with synchronization)
+
+		const [localData, remoteData] = await Promise.all([
+			localDataOp,
+			callApi(`${this.serverUrl}/packages.json`).then(({ json }) => json) as Promise<Package[]>,
+		]);
+
+		remoteData.forEach(pack => {
+
+			if (!localData.has(pack.id)) {
+				localData.set(pack.id, pack);
+			}
+
+		});
+
+		return [...localData.values()];
+
 	}
 
-	public addOfflinePackage(id: number) {
+	private async downloadPackage(id: number) {
+
+		const fullPack: FullPackage = await callApi(`${this.serverUrl}/packages/${id}.json`).then(({ json }) => json);
+
+		await this.db.runInTransaction<void>(
+			['packages', 'categories', 'questions'],
+			'readwrite',
+			(db, transaction, resolve, reject) => {
+
+				transaction.oncomplete = () => {
+					resolve();
+				};
+
+				const pStore = transaction.objectStore('packages');
+				const cStore = transaction.objectStore('categories');
+				const qStore = transaction.objectStore('questions');
+
+				const { categories, questions, ...pack } = fullPack;
+
+				pStore.put(pack);
+
+				categories.forEach(category => cStore.put(category));
+
+				questions.forEach(question => qStore.put(question));
+
+			},
+		);
 
 	}
 
-	public removeOffline(id: number) {
+	public async findOnePackageById(id: number): Promise<LocalFullPackage | undefined> {
+
+		const localPackage = await this.db.getOneByKey('packages', id);
+
+		if (!isDefined(localPackage)) {
+			await this.downloadPackage(id);
+		}
+
+		return await this.db.runInTransaction<LocalFullPackage | undefined>(
+			['packages', 'categories', 'questions'],
+			'readonly',
+			(db, transaction, resolve, reject) => {
+
+				const pStore = transaction.objectStore('packages');
+				const cStore = transaction.objectStore('categories');
+				const qStore = transaction.objectStore('questions');
+
+				let pack: LocalPackage | undefined;
+				const categories: LocalCategory[] = [];
+				const questions: LocalQuestion[] = [];
+
+				transaction.oncomplete = () => {
+
+					if (!isDefined(pack)) {
+						resolve(undefined);
+						return;
+					}
+
+					const fullPack: LocalFullPackage = {
+						...pack,
+						categories,
+						questions,
+					};
+
+					resolve(fullPack);
+
+				};
+
+				pStore.get(id).onsuccess = (event) => {
+					pack = (event.target as IDBRequest).result;
+				};
+
+				cStore.index('package').openCursor(id).onsuccess = (event) => {
+
+					const cursor = (event.target as IDBRequest<IDBCursorWithValue | null>).result;
+
+					if (!isDefined(cursor)) {
+						// that's all data
+						return;
+					}
+
+					categories.push(cursor.value);
+
+					cursor.continue();
+
+				};
+
+				qStore.index('package').openCursor(id).onsuccess = (event) => {
+
+					const cursor = (event.target as IDBRequest<IDBCursorWithValue | null>).result;
+
+					if (!isDefined(cursor)) {
+						// that's all data
+						return;
+					}
+
+					questions.push(cursor.value);
+
+					cursor.continue();
+
+				};
+
+
+			},
+		);
 
 	}
-
 
 }
 
