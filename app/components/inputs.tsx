@@ -186,7 +186,7 @@ export const ToggleInput = (
 				type="checkbox"
 				name={name}
 				ref={inputRef}
-				className="form-control toggle-checkbox-input"
+				className="toggle-checkbox-input"
 				placeholder={isDefined(finalPlaceholder) ? t(finalPlaceholder) : undefined}
 				{...otherInputProps}
 			/>

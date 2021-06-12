@@ -1,0 +1,112 @@
+//
+// Question form
+// --------------------------------------------------
+
+.question-form {
+	display: block;
+
+	.question-note {
+		text-align: right;
+		opacity: .8;
+		font-size: .875rem;
+	}
+
+	.question-text {
+		margin: 0 0 1rem 0;
+	}
+
+	.question-choices {
+		display: block;
+		margin: 0;
+		padding: 0;
+		list-style-type: none;
+	}
+
+	.question-choice {
+		display: flex;
+		background-color: $gray-lighter;
+		cursor: pointer;
+		padding: 1rem;
+		margin: 0 0 1rem 0;
+		transition: background-color ease-in-out .1s;
+
+		.question-choice-checkbox {
+			align-self: center;
+			display: block;
+			margin: 0 1rem 0 0;
+			padding: 0;
+			appearance: none;
+			width: 1.25rem;
+			height: 1.25rem;
+			color: red;
+			border: 0.125rem solid $gray-light;
+			transition: all ease-in-out .1s;
+			cursor: pointer;
+
+			@include form-control-focus;
+
+			&:before, &:after {
+				position: absolute;
+				content: "";
+				display: block;
+				height: 0.125rem;
+				background-color: transparent;
+				transition: all ease-in-out .1s;
+			}
+
+			&:before {
+				width: 0.875rem;
+				transform: translate(0.1875rem, 0.4375rem) rotate(-45deg);
+			}
+
+			&:after {
+				width: 0.4375rem;
+				transform: translate(0rem, 0.625rem) rotate(45deg);
+			}
+
+			&:checked {
+				&:before, &:after {
+					background-color: $brand-primary;
+				}
+			}
+
+			&:disabled {
+				opacity: .5;
+				pointer-events: none;
+			}
+
+		}
+
+		.question-choice-label {
+			flex: 1;
+			display: block;
+			margin: 0;
+			font-weight: normal;
+			cursor: pointer;
+		}
+
+		&:hover {
+			background-color: darken($gray-lighter, 10%);
+		}
+
+		&.question-choice--correct, &.question-choice--wrong {
+			&, .question-choice-label {
+				cursor: default;
+			}
+		}
+
+		&.question-choice--correct {
+			&, &:hover {
+				background-color: $state-success-bg;
+			}
+		}
+
+		&.question-choice--wrong {
+			&, &:hover {
+				background-color: $state-danger-bg;
+			}
+		}
+
+	}
+
+}

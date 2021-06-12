@@ -1,0 +1,44 @@
+//
+// Toggle style checkbox
+// --------------------------------------------------
+
+.toggle-checkbox-input {
+	@include sr-only;
+	//display: none;
+}
+
+.toggle-checkbox-label {
+	display: block;
+	padding: 0;
+	margin: 0;
+	position: relative;
+	overflow: hidden;
+	cursor: pointer;
+	width: 80px;
+	height: 40px;
+	border-radius: 40px;
+	background-color: $white;
+	border: 2px solid rgba($black, .15);
+}
+
+.toggle-checkbox-label::before {
+	position: absolute;
+	content: "";
+	display: block;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: darken($brand-danger, 5%);
+	top: 2px;
+	left: 2px;
+	transition: all 0.3s ease;
+}
+
+.toggle-checkbox-input:checked + .toggle-checkbox-label::before {
+	transform: translateX(40px);
+	background: darken($brand-success, 5%);
+}
+
+.toggle-checkbox-input:focus +.toggle-checkbox-label {
+	border-color: lighten($brand-primary, 20%);
+}
