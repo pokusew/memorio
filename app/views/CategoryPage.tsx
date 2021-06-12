@@ -59,13 +59,8 @@ const CategoryPage = () => {
 		<>
 
 			<CategoryHeader
-				packageId={pack.id}
-				id={category.id}
 				locale={pack.locale}
-				name={category.name}
-				numQuestions={category.numQuestions}
-				lastPractice={0}
-				successRate={50}
+				category={category}
 			/>
 
 			<h2>{t`categoryPage.questionsHeading`}</h2>

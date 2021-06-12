@@ -10,33 +10,34 @@ import {
 import { useFormatMessageId } from '../helpers/hooks';
 import { isDefined } from '../helpers/common';
 import LocalizedDate from './LocalizedDate';
+import { LocalCategory, LocalPackage, Score } from '../types';
 
+
+const scoreToSuccessRate = (score: Score | undefined): number | undefined =>
+	score ? Math.round(score.correct / (score.correct + score.wrong)) : undefined;
 
 export interface PackageCardProps {
-	id: number;
-	locale: string;
-	name: string;
-	description: string;
-	numQuestions: number;
-	numCategories: number;
-	lastPractice: number | undefined;
-	successRate: number | undefined;
+	package: LocalPackage;
 }
 
 export const PackageCard = (
 	{
-		id,
-		locale,
-		name,
-		description,
-		numQuestions,
-		numCategories,
-		lastPractice,
-		successRate,
+		package: {
+			id,
+			locale,
+			name,
+			description,
+			numQuestions,
+			numCategories,
+			lastPractice,
+			score,
+		},
 	}: PackageCardProps,
 ) => {
 
 	const t = useFormatMessageId();
+
+	const successRate = scoreToSuccessRate(score);
 
 	return (
 		<section className="card package" lang={locale}>
@@ -100,30 +101,27 @@ export const PackageCard = (
 };
 
 export interface PackageHeaderProps {
-	id: number;
-	locale: string;
-	name: string;
-	description: string;
-	numQuestions: number;
-	numCategories: number;
-	lastPractice: number | undefined;
-	successRate: number | undefined;
+	package: LocalPackage;
 }
 
 export const PackageHeader = (
 	{
-		id,
-		locale,
-		name,
-		description,
-		numQuestions,
-		numCategories,
-		lastPractice,
-		successRate,
+		package: {
+			id,
+			locale,
+			name,
+			description,
+			numQuestions,
+			numCategories,
+			lastPractice,
+			score,
+		},
 	}: PackageHeaderProps,
 ) => {
 
 	const t = useFormatMessageId();
+
+	const successRate = scoreToSuccessRate(score);
 
 	return (
 		<>
@@ -185,28 +183,27 @@ export const PackageHeader = (
 };
 
 export interface CategoryCardProps {
-	packageId: number;
-	id: number;
 	locale: string;
-	name: string;
-	numQuestions: number;
-	lastPractice: number | undefined;
-	successRate: number | undefined;
+	category: LocalCategory;
 }
 
 export const CategoryCard = (
 	{
-		packageId,
-		id,
 		locale,
-		name,
-		numQuestions,
-		lastPractice,
-		successRate,
+		category: {
+			package: packageId,
+			id,
+			name,
+			numQuestions,
+			lastPractice,
+			score,
+		},
 	}: CategoryCardProps,
 ) => {
 
 	const t = useFormatMessageId();
+
+	const successRate = scoreToSuccessRate(score);
 
 	return (
 		<section className="card category" lang={locale}>
@@ -268,28 +265,27 @@ export const CategoryCard = (
 };
 
 export interface CategoryHeaderProps {
-	packageId: number;
-	id: number;
 	locale: string;
-	name: string;
-	numQuestions: number;
-	lastPractice: number | undefined;
-	successRate: number | undefined;
+	category: LocalCategory;
 }
 
 export const CategoryHeader = (
 	{
-		packageId,
-		id,
 		locale,
-		name,
-		numQuestions,
-		lastPractice,
-		successRate,
+		category: {
+			package: packageId,
+			id,
+			name,
+			numQuestions,
+			lastPractice,
+			score,
+		},
 	}: CategoryHeaderProps,
 ) => {
 
 	const t = useFormatMessageId();
+
+	const successRate = scoreToSuccessRate(score);
 
 	return (
 		<>

@@ -48,36 +48,18 @@ const PackagePage = () => {
 		<>
 
 			<PackageHeader
-				id={pack.id}
-				locale={pack.locale}
-				name={pack.name}
-				description={pack.description}
-				numQuestions={pack.numQuestions}
-				numCategories={pack.numCategories}
-				lastPractice={0}
-				successRate={50}
+				package={pack}
 			/>
 
 			<h2>{t`packagePage.categoriesHeading`}</h2>
 
 			<div className="card-grid">
-				{pack.categories.map((
-					{
-						id,
-						name,
-						numQuestions,
-					},
-					) =>
-						<CategoryCard
-							key={id}
-							packageId={pack.id}
-							id={id}
-							locale={pack.locale}
-							name={name}
-							numQuestions={numQuestions}
-							lastPractice={Date.now()}
-							successRate={50}
-						/>,
+				{pack.categories.map(category =>
+					<CategoryCard
+						key={category.id}
+						locale={pack.locale}
+						category={category}
+					/>,
 				)}
 			</div>
 

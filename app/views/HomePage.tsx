@@ -41,27 +41,11 @@ const HomePage = () => {
 
 			<div className="card-grid">
 				{op.error ? <LoadingError /> : (
-					op.data.map((
-						{
-							id,
-							locale,
-							name,
-							description,
-							numQuestions,
-							numCategories,
-						},
-						) =>
-							<PackageCard
-								key={id}
-								id={id}
-								locale={locale}
-								name={name}
-								description={description}
-								numQuestions={numQuestions}
-								numCategories={numCategories}
-								lastPractice={Date.now()}
-								successRate={50}
-							/>,
+					op.data.map(pack =>
+						<PackageCard
+							key={pack.id}
+							package={pack}
+						/>,
 					)
 				)}
 			</div>
