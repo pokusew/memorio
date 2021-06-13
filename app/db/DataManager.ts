@@ -77,8 +77,6 @@ class DataManager {
 			],
 		});
 
-		this.offline = false;
-
 		const handleNavigatorOnLineChange = (event) => {
 
 			console.log(`[dm] navigator.onLine =`, navigator.onLine);
@@ -89,6 +87,8 @@ class DataManager {
 
 		window.addEventListener('online', handleNavigatorOnLineChange);
 		window.addEventListener('offline', handleNavigatorOnLineChange);
+
+		this.offline = !navigator.onLine;
 
 	}
 
@@ -127,6 +127,8 @@ class DataManager {
 			},
 		);
 
+		// do not attempt load data from the network if we know that the browser is offline
+		// return the local data immediately
 		if (this.offline) {
 
 			const localData = await localDataOp;
@@ -137,18 +139,29 @@ class DataManager {
 
 		// TODO: rethink non-matching version data (come up with synchronization)
 
-		const [localData, remoteData] = await Promise.all([
+		const [localDataResult, remoteDataResult] = await Promise.allSettled([
 			localDataOp,
 			callApi(`${this.serverUrl}/packages.json`).then(({ json }) => json) as Promise<Package[]>,
 		]);
 
-		remoteData.forEach(pack => {
+		// both ways failed
+		if (localDataResult.status === 'rejected' && remoteDataResult.status === 'rejected') {
+			throw new Error('Data could lot be loaded (neither from local storage nor the network).');
+		}
 
-			if (!localData.has(pack.id)) {
-				localData.set(pack.id, pack);
-			}
+		const localData = localDataResult.status === 'fulfilled'
+			? localDataResult.value
+			: new Map<number, LocalPackage>();
 
-		});
+		if (remoteDataResult.status === 'fulfilled') {
+			remoteDataResult.value.forEach(pack => {
+
+				if (!localData.has(pack.id)) {
+					localData.set(pack.id, pack);
+				}
+
+			});
+		}
 
 		return [...localData.values()];
 
