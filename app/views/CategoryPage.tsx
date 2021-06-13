@@ -12,6 +12,8 @@ import NotFoundPage from './NotFoundPage';
 import { CategoryHeader } from '../components/content';
 import { Category } from '../types';
 import classNames from 'classnames';
+import { R_PACKAGE_CATEGORY } from '../routes';
+import { Breadcrumbs } from '../components/breadcrumbs';
 
 
 const CategoryPage = () => {
@@ -58,6 +60,14 @@ const CategoryPage = () => {
 
 	return (
 		<>
+
+			<Breadcrumbs
+				name={R_PACKAGE_CATEGORY}
+				packageId={pack.id}
+				packageName={pack.name}
+				categoryId={category.id}
+				categoryName={category.name}
+			/>
 
 			<CategoryHeader
 				locale={pack.locale}

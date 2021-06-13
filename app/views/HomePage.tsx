@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
 import { useDocumentTitle, useFormatMessageIdAsTagFn } from '../helpers/hooks';
 import { packages } from '../db/queries';

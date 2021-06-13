@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
 import { useDocumentTitle, useFormatMessageIdAsTagFn } from '../helpers/hooks';
 import { packages } from '../db/queries';
@@ -10,6 +10,8 @@ import { isDefined } from '../helpers/common';
 import { LoadingScreen } from '../components/layout';
 import NotFoundPage from './NotFoundPage';
 import { CategoryCard, PackageHeader } from '../components/content';
+import { Breadcrumbs } from '../components/breadcrumbs';
+import { R_PACKAGE } from '../routes';
 
 
 const PackagePage = () => {
@@ -46,6 +48,12 @@ const PackagePage = () => {
 
 	return (
 		<>
+
+			<Breadcrumbs
+				name={R_PACKAGE}
+				packageId={pack.id}
+				packageName={pack.name}
+			/>
 
 			<PackageHeader
 				package={pack}

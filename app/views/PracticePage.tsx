@@ -2,21 +2,18 @@
 
 import React, { useCallback, useMemo, useState } from 'react';
 
-import {
-	R_PACKAGE,
-	R_PACKAGE_PRACTICE,
-	R_ROOT,
-} from '../routes';
+import { R_PACKAGE, R_PACKAGE_PRACTICE, R_ROOT } from '../routes';
 import { useDocumentTitle, useFormatMessageIdAsTagFn } from '../helpers/hooks';
 import { packages } from '../db/queries';
 import { useQuery } from '../db/hooks';
-import { LocalFullPackage, LocalQuestion, Package, Question } from '../types';
+import { LocalFullPackage, LocalQuestion } from '../types';
 import { useRoute } from '../router/hooks';
 import { isDefined } from '../helpers/common';
 import { LoadingScreen } from '../components/layout';
 import NotFoundPage from './NotFoundPage';
 import { NextQuestionHandler, QuestionForm, UpdateScoreHandler } from '../components/practice';
 import { Link } from '../router/compoments';
+import { Breadcrumbs } from '../components/breadcrumbs';
 
 
 interface PracticeBoxProps {
@@ -139,13 +136,11 @@ const PracticePage = () => {
 	return (
 		<>
 
-			<nav className="breadcrumbs">
-				<ol>
-					<li><Link name={R_ROOT}>{t`titles.home`}</Link></li>
-					<li><Link name={R_PACKAGE} payload={{ packageId: id }}>{pack.name}</Link></li>
-					<li><Link name={R_PACKAGE_PRACTICE} payload={{ packageId: id }}>{t`titles.practice`}</Link></li>
-				</ol>
-			</nav>
+			<Breadcrumbs
+				name={R_PACKAGE_PRACTICE}
+				packageId={pack.id}
+				packageName={pack.name}
+			/>
 
 			<h1>{t`titles.practice`}</h1>
 

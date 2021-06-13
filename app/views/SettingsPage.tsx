@@ -4,9 +4,11 @@ import React, { useCallback } from 'react';
 
 import {
 	createFormatMessageId,
-	createGetRawIntlMessage, fnToTemplateTag,
+	createGetRawIntlMessage,
+	fnToTemplateTag,
 	useDocumentTitle,
-	useStoreValueLocale, useStoreValueSoundEffects,
+	useStoreValueLocale,
+	useStoreValueSoundEffects,
 } from '../helpers/hooks';
 import { Option, SelectInput, ToggleInput } from '../components/inputs';
 import { isDefined } from '../helpers/common';
