@@ -9,6 +9,123 @@ The main goals of this custom solution are:
 * make values of all fields available in `onSubmit` handler
 
 
+## Usage example
+
+`LoginPage.tsx`:
+```tsx
+// imports ...
+
+interface LoginState {
+	loading: boolean;
+	message?: [MessageId, any];
+}
+
+const LoginPage = () => {
+
+	const t = useFormatMessageIdAsTagFn();
+
+	const [state, setState] = useState<LoginState>({ loading: false });
+
+	useDocumentTitle(t`titles.login`);
+
+	const handleSubmit = useCallback(values => {
+
+		console.log(`[LoginPage][handleSubmit]`, values);
+
+		setState({ loading: true });
+
+		login('https://some-login-api.com/login', values)
+			.then(({ json }) => {
+
+				setAuth(json);
+
+				// TODO: redirect ...
+
+			})
+			.catch(err => {
+
+				if (err instanceof Error) {
+					setState({
+						loading: false,
+						message: [`loginPage.errors.unknown`, { message: err?.message }],
+					});
+					return;
+				}
+
+				const { json } = err;
+
+				setState({
+					loading: false,
+					message: [`loginPage.errors.${json?.code ?? 'unknown'}`, { message: json?.message }],
+				});
+
+			});
+
+	}, [setState]);
+
+	return (
+		<Form
+			name="login"
+			className={classNames({
+				'login-form': true,
+				'submitting': submitting,
+				'submit-failed': submitFailed,
+			})}
+			onSubmit={onSubmit}
+		>
+			
+			<div className="login-form-body">
+
+				{message && <p className="help-block error-block">{t(...message)}</p>}
+
+				<FormInput
+					name="email"
+					label="loginForm.labels.email"
+					type="email"
+					autoComplete="email"
+					required={true}
+				/>
+
+				<FormInput
+					name="password"
+					label="loginForm.labels.password"
+					type="password"
+					autoComplete="current-password"
+					required={true}
+				/>
+
+			</div>
+
+			{!submitting
+				?
+				<Button
+					type="submit"
+					name="submit"
+					style="success"
+					className="btn-login"
+				>
+					<span>
+						{t('loginForm.login')}
+						<i className="btn-login-icon fa fa-angle-double-right" />
+					</span>
+				</Button>
+				:
+				<Button
+					disabled={true}
+					type="submit"
+					name="submit"
+					className="btn-success btn-login"
+				>
+					<span>{t('loginForm.loading')}</span>
+				</Button>
+			}
+
+		</Form>
+	);
+
+};
+```
+
 ## Resources
 
 * **React Hook Form**
