@@ -4,11 +4,13 @@
 
 .question-form {
 	display: block;
+	margin: 0 0 1rem 0;
 
 	.question-note {
 		text-align: right;
 		opacity: .8;
 		font-size: .875rem;
+		margin: 0 0 .75rem 0;
 	}
 
 	.question-text {
@@ -89,19 +91,27 @@
 			background-color: darken($gray-lighter, 10%);
 		}
 
+		&.question-choice--selected {
+			background-color: $state-info-bg;
+
+			&:hover {
+				background-color: darken($state-info-bg, 10%);
+			}
+		}
+
 		&.question-choice--correct, &.question-choice--wrong {
 			&, .question-choice-label {
 				cursor: default;
 			}
 		}
 
-		&.question-choice--correct {
+		&.question-choice--correct, &.question-choice--selected.question-choice--correct {
 			&, &:hover {
 				background-color: $state-success-bg;
 			}
 		}
 
-		&.question-choice--wrong {
+		&.question-choice--wrong, &.question-choice--selected.question-choice--wrong {
 			&, &:hover {
 				background-color: $state-danger-bg;
 			}

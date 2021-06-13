@@ -21,6 +21,11 @@
 		background-color: darken($gray-lighter, 10%);
 	}
 
+	&.btn-flex {
+		display: flex;
+		align-items: center;
+	}
+
 	&.btn-lg {
 		padding: .75rem 1.25rem;
 	}

@@ -1,10 +1,8 @@
 "use strict";
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { NavLink } from '../router/compoments';
-import { R_ROOT, R_SETTINGS } from '../routes';
-import { useFormatMessageId, useFormatMessageIdAsTagFn } from '../helpers/hooks';
-import { AbstractQuestion, Choice, Question } from '../types';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useFormatMessageId } from '../helpers/hooks';
+import { Choice, Question } from '../types';
 import classNames from 'classnames';
 import { isDefined } from '../helpers/common';
 
@@ -26,6 +24,8 @@ export const ChoiceBox = (
 		onChange,
 	}: ChoiceBoxProps,
 ) => {
+
+	const letterKey = choiceIdToLetterKey(choice.id);
 
 	return (
 		<li
@@ -53,14 +53,12 @@ export const ChoiceBox = (
 			>
 				{choice.text}
 			</label>
+			{letterKey && <kbd>{letterKey}</kbd>}
+			<kbd>{choice.id}</kbd>
 		</li>
 	);
 
 };
-
-export interface QuestionFormProps {
-	question: Question;
-}
 
 export interface QuestionFormState {
 	question: Question;
@@ -151,6 +149,20 @@ export const keyToChoiceId = (key: string): number | undefined => {
 
 };
 
+export const choiceIdToLetterKey = (choiceId: number): string | undefined => {
+
+	// choiceId === 1 => charCode = 65 => letter A
+	const charCode = 64 + choiceId;
+
+	// map characters A ... Z to numbers 1 ... 26
+	if (charCode > 90) {
+		return undefined;
+	}
+
+	return String.fromCharCode(charCode);
+
+};
+
 export const createInitialQuestionFormStateFromQuestion = (question: Question): QuestionFormState => {
 
 	const correct = new Set<number>(question.correct);
@@ -164,15 +176,36 @@ export const createInitialQuestionFormStateFromQuestion = (question: Question): 
 
 };
 
+export type UpdateScoreHandler = (correct: boolean) => void;
+export type NextQuestionHandler = () => void;
+
+
+export interface QuestionFormProps {
+	question: Question;
+	onUpdateScore: UpdateScoreHandler;
+	onNextQuestion: NextQuestionHandler;
+}
+
 export const QuestionForm = (
 	{
 		question,
+		onUpdateScore,
+		onNextQuestion,
 	}: QuestionFormProps,
 ) => {
 
 	const t = useFormatMessageId();
 
 	const [state, setState] = useState<QuestionFormState>(createInitialQuestionFormStateFromQuestion(question));
+
+	useEffect(() => {
+
+		if (isDefined(state.validation)) {
+			console.log(`[QuestionForm] updating score correct = `, state.validation.correct);
+			onUpdateScore(state.validation.correct);
+		}
+
+	}, [onUpdateScore, state.validation]);
 
 	const handleSubmit = useCallback<React.FormEventHandler<HTMLFormElement>>(event => {
 
@@ -219,17 +252,32 @@ export const QuestionForm = (
 
 	useEffect(() => {
 
+		let didUnsubscribe = false;
+
 		const handler = (event: KeyboardEvent) => {
 
-			if (event.repeat) {
+			if (didUnsubscribe) {
 				return;
 			}
 
+			// it may be useful
+			// if (event.repeat && event.key !== 'Enter') {
+			// 	return;
+			// }
+
 			// page wide Enter to submit the form (not only when a input in the form has focus)
 			if (event.key === 'Enter') {
+
 				event.preventDefault();
+
+				if (isDefined(state.validation)) {
+					onNextQuestion();
+					return;
+				}
+
 				setState(validate);
 				return;
+
 			}
 
 			const choiceId = keyToChoiceId(event.key);
@@ -243,12 +291,14 @@ export const QuestionForm = (
 		window.addEventListener('keydown', handler);
 
 		return () => {
+			didUnsubscribe = true;
+			console.log('UN');
 			window.removeEventListener('keydown', handler);
 		};
 
-	}, [setState]);
+	}, [setState, state.validation, onNextQuestion]);
 
-	console.log(`[QuestionForm] render`, state);
+	// console.log(`[QuestionForm] render`, state);
 
 	return (
 		<form
@@ -285,14 +335,26 @@ export const QuestionForm = (
 								},
 							)}
 						</p>
-						<button type="button" name="next" className="btn btn-lg btn-primary">
-							{t('questionForm.actions.next')}
+						<button
+							type="button"
+							name="next"
+							className="btn btn-lg btn-primary btn-flex"
+							onClick={event => {
+								event.preventDefault();
+								onNextQuestion();
+							}}
+						>
+							{t('questionForm.actions.next')} <kbd>Enter</kbd>
 						</button>
 
 					</>
 				) : (
-					<button type="submit" name="submit" className="btn btn-lg btn-primary">
-						{t('questionForm.actions.validate')}
+					<button
+						type="submit"
+						name="submit"
+						className="btn btn-lg btn-primary btn-flex"
+					>
+						{t('questionForm.actions.validate')} <kbd>Enter</kbd>
 					</button>
 				)}
 

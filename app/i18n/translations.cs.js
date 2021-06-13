@@ -7,7 +7,7 @@ export default {
 		cs: 'čeština',
 	},
 	titles: {
-		home: `Úvodní stránka`,
+		home: `Přehled balíčků`,
 		loading: `Načítání ...`,
 		login: `Přihlášení`,
 		notFound: `Stránka nenalezena`,
@@ -101,7 +101,7 @@ export default {
 		},
 		actions: {
 			validate: `Zkontrolovat`,
-			next: `Další otázku`,
+			next: `Další otázka`,
 		},
 	},
 	homePage: {
