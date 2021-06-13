@@ -53,6 +53,12 @@
 
 			.question-choice {
 
+				&.question-choice--correct {
+					color: $state-success-text;
+					background-color: $state-success-bg;
+					// font-weight: 500;
+				}
+
 			}
 
 		}

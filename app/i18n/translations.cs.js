@@ -93,7 +93,7 @@ export default {
 	questionForm: {
 		types: {
 			singleChoice: `právě jedna správná odpověď`,
-			multipleChoice: `více správných odpovědí`,
+			multipleChoice: `více správných odpovědí (min. jedna, max. všechny)`,
 		},
 		validation: {
 			correct: `Otázka byla zodpovězna <strong>správně</strong>.`,
@@ -102,6 +102,12 @@ export default {
 		actions: {
 			validate: `Zkontrolovat`,
 			next: `Další otázka`,
+		},
+	},
+	questionsList: {
+		srHints: {
+			correct: 'Tato možnost je správně.',
+			wrong: 'Tato možnost je špatně.',
 		},
 	},
 	homePage: {

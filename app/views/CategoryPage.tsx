@@ -1,21 +1,22 @@
 "use strict";
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
-import { useDocumentTitle, useFormatMessageIdAsTagFn } from '../helpers/hooks';
+import { useDocumentTitle, useFormatMessageId } from '../helpers/hooks';
 import { packages } from '../db/queries';
 import { useQuery } from '../db/hooks';
 import { useRoute } from '../router/hooks';
 import { isDefined } from '../helpers/common';
 import { LoadingScreen } from '../components/layout';
 import NotFoundPage from './NotFoundPage';
-import { CategoryCard, CategoryHeader, PackageHeader } from '../components/content';
+import { CategoryHeader } from '../components/content';
 import { Category } from '../types';
+import classNames from 'classnames';
 
 
 const CategoryPage = () => {
 
-	const t = useFormatMessageIdAsTagFn();
+	const t = useFormatMessageId();
 
 	const { route } = useRoute();
 
@@ -33,7 +34,7 @@ const CategoryPage = () => {
 		? op.data.categories.find(({ id }) => id === categoryId)
 		: undefined;
 
-	const pageTitle = op.loading ? t`titles.loading` : !isDefined(category) ? t`titles.notFound` : category.name;
+	const pageTitle = op.loading ? t(`titles.loading`) : !isDefined(category) ? t(`titles.notFound`) : category.name;
 
 	useDocumentTitle(pageTitle);
 
@@ -63,25 +64,46 @@ const CategoryPage = () => {
 				category={category}
 			/>
 
-			<h2>{t`categoryPage.questionsHeading`}</h2>
+			<h2>{t(`categoryPage.questionsHeading`)}</h2>
 
 			<ol className="questions-list">
 
-				{questions.map(({ id, number, text, choices, correct }) => (
-					<li className="question" key={id} value={number}>
+				{questions.map(({ id, number, text, choices, correct }) => {
 
-						<span className="question-text">{text}</span>
+					const correctSet = new Set<number>(correct);
 
-						<ol className="question-choices">
-							{choices.map(choice => (
-								<li key={choice.id} value={choice.id} className="question-choice">
-									{choice.text}
-								</li>
-							))}
-						</ol>
+					return (
+						<li className="question" key={id} value={number}>
 
-					</li>
-				))}
+							<span className="question-text">{text}</span>
+
+							<ol className="question-choices">
+								{choices.map(choice => {
+
+									const isCorrect = correctSet.has(choice.id);
+
+									return (
+										<li
+											key={choice.id}
+											value={choice.id}
+											className={classNames('question-choice', {
+												'question-choice--correct': isCorrect,
+											})}
+										>
+											{choice.text}
+											<span className="sr-only">
+												{' '}{t(`questionsList.srHints.${isCorrect ? 'correct' : 'wrong'}`)}
+											</span>
+										</li>
+									);
+
+								})}
+							</ol>
+
+						</li>
+					);
+
+				})}
 
 
 			</ol>
