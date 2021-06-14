@@ -1,7 +1,7 @@
 "use strict";
 
 import { isDefined } from '../helpers/common';
-import { Package, FullPackage, LocalPackage, LocalFullPackage, LocalCategory, LocalQuestion } from '../types';
+import { FullPackage, LocalCategory, LocalFullPackage, LocalPackage, LocalQuestion, Package, Score } from '../types';
 import { Database } from './indexed-db';
 import { callApi } from '../helpers/api';
 
@@ -9,6 +9,13 @@ import { callApi } from '../helpers/api';
 export interface DataManagerOptions {
 	serverUrl: string;
 }
+
+export const updatedScore = (score: Score | undefined, correct: boolean) => {
+	return {
+		correct: (score?.correct ?? 0) + (correct ? 1 : 0),
+		wrong: (score?.wrong ?? 0) + (!correct ? 1 : 0),
+	};
+};
 
 class DataManager {
 
@@ -269,6 +276,79 @@ class DataManager {
 
 				};
 
+
+			},
+		);
+
+	}
+
+	public updateScore(questionId: number, correct: boolean) {
+		return this.db.runInTransaction<void>(
+			['packages', 'categories', 'questions'],
+			'readwrite',
+			(db, transaction, resolve, reject) => {
+
+				transaction.oncomplete = () => {
+					resolve();
+				};
+
+				const pStore = transaction.objectStore('packages');
+				const cStore = transaction.objectStore('categories');
+				const qStore = transaction.objectStore('questions');
+
+				// TODO: use promises within the transaction
+
+				qStore.get(questionId).onsuccess = event => {
+
+					const question: LocalQuestion | undefined =
+						(event.target as IDBRequest).result as LocalQuestion | undefined;
+
+					if (!isDefined(question)) {
+						reject(`question not found`);
+						return;
+					}
+
+					cStore.get(question.category).onsuccess = event => {
+
+						const category: LocalCategory | undefined =
+							(event.target as IDBRequest).result as LocalCategory | undefined;
+
+						if (!isDefined(category)) {
+							reject(`category not found`);
+							return;
+						}
+
+						pStore.get(category.package).onsuccess = event => {
+
+							const pack: LocalPackage | undefined =
+								(event.target as IDBRequest).result as LocalPackage | undefined;
+
+							if (!isDefined(pack)) {
+								reject(`package not found`);
+								return;
+							}
+
+							const d = new Date();
+
+							question.lastPractice = d;
+							question.score = updatedScore(question.score, correct);
+
+							category.lastPractice = d;
+							category.score = updatedScore(category.score, correct);
+
+							pack.lastPractice = d;
+							pack.score = updatedScore(pack.score, correct);
+
+							qStore.put(question);
+							cStore.put(category);
+							pStore.put(pack);
+
+						};
+
+
+					};
+
+				};
 
 			},
 		);
