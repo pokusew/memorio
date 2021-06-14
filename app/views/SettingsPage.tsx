@@ -13,6 +13,7 @@ import {
 import { Option, SelectInput, ToggleInput } from '../components/inputs';
 import { isDefined } from '../helpers/common';
 import { useIntl } from 'react-intl';
+import { useDataManager } from '../db/hooks';
 
 
 const LOCALE_OPTIONS: Option[] = [
@@ -32,6 +33,8 @@ const LOCALE_OPTIONS: Option[] = [
 
 const SettingsPage = () => {
 
+	const dm = useDataManager();
+
 	const intl = useIntl();
 	const getRawIntlMessage = createGetRawIntlMessage(intl);
 	const t = fnToTemplateTag(createFormatMessageId(intl));
@@ -44,6 +47,42 @@ const SettingsPage = () => {
 	if (!isDefined(locale)) {
 		throw new Error(`[LocaleLoader] locale undefined`);
 	}
+
+	const handleDeleteScores = useCallback<React.MouseEventHandler<HTMLButtonElement>>((event) => {
+
+		event.preventDefault();
+
+		// TODO: implement custom non-blocking app modals
+		if (confirm(t`settingsPage.deleteScoresConfirmation`)) {
+			// TODO: provide feedback to the UI
+			dm.deleteScores()
+				.then(() => {
+					console.log(`[handleDeleteScores] successfully deleted`);
+				})
+				.catch(err => {
+					console.log(`[handleDeleteScores] an error`, err);
+				});
+		}
+
+	}, [t, dm]);
+
+	const handleDeleteAllLocalData = useCallback<React.MouseEventHandler<HTMLButtonElement>>((event) => {
+
+		event.preventDefault();
+
+		// TODO: implement custom non-blocking app modals
+		if (confirm(t`settingsPage.deleteAllLocalDataConfirmation`)) {
+			// TODO: provide feedback to the UI
+			dm.deleteAllLocalData()
+				.then(() => {
+					console.log(`[handleDeleteAllLocalData] successfully deleted`);
+				})
+				.catch(err => {
+					console.log(`[handleDeleteAllLocalData] an error`, err);
+				});
+		}
+
+	}, [t, dm]);
 
 	const handleLocaleChange = useCallback<React.ChangeEventHandler<HTMLSelectElement>>((event) => {
 		setLocale(event.target.value);
@@ -79,6 +118,28 @@ const SettingsPage = () => {
 				checked={soundEffects}
 				onChange={handleSoundEffectsChange}
 			/>
+
+			<h2>{t`settingsPage.dataManagementHeading`}</h2>
+
+			<div className="btn-group">
+
+				<button
+					className="btn btn-danger"
+					type="button"
+					onClick={handleDeleteScores}
+				>
+					{t`settingsPage.deleteScores`}
+				</button>
+
+				<button
+					className="btn btn-danger"
+					type="button"
+					onClick={handleDeleteAllLocalData}
+				>
+					{t`settingsPage.deleteAllLocalData`}
+				</button>
+
+			</div>
 
 		</>
 	);

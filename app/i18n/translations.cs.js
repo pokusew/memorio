@@ -165,6 +165,14 @@ export default {
 		},
 		title: `Přihlášení`,
 	},
+	settingsPage: {
+		dataManagementHeading: `Správa dat`,
+		deleteScores: `Vynulovat všechna skóré`,
+		deleteScoresConfirmation: `Opravdu si přejete vynulovat všechna skóré?`,
+		deleteAllLocalData: `Smazat všechny stažené balíčky a všechna skóré`,
+		deleteAllLocalDataConfirmation:
+			`Opravdu si přejete smazat všechny stažené balíčky pro offline použití? Tím se také vymažou všechna skóré.`,
+	},
 	notFoundPage: {
 		backToHomePageBtn: `Zpět na úvodní stránku`,
 		message: `Této adrese neodpovídá žádná stránka.`,
