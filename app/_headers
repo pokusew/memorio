@@ -22,3 +22,5 @@
 	Cache-Control: public, max-age=31536000, immutable
 /*.imt.svg
 	Cache-Control: public, max-age=31536000, immutable
+/*.imt.mp3
+	Cache-Control: public, max-age=31536000, immutable
