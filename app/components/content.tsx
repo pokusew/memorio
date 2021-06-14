@@ -13,8 +13,12 @@ import LocalizedDate from './LocalizedDate';
 import { LocalCategory, LocalPackage, Score } from '../types';
 
 
+/**
+ * Returns an integer in range [0, 100] (number of percents)
+ * @param score
+ */
 const scoreToSuccessRate = (score: Score | undefined): number | undefined =>
-	score ? Math.round(score.correct / (score.correct + score.wrong)) : undefined;
+	score ? Math.round((score.correct * 100) / (score.correct + score.wrong)) : undefined;
 
 export interface PackageCardProps {
 	package: LocalPackage;
