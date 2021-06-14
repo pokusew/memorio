@@ -355,6 +355,63 @@ class DataManager {
 
 	}
 
+	public deleteScores(): Promise<void> {
+		return this.db.runInTransaction<void>(
+			['packages', 'categories', 'questions'],
+			'readwrite',
+			(db, transaction, resolve, reject) => {
+
+				transaction.oncomplete = () => {
+					resolve();
+				};
+
+				const pStore = transaction.objectStore('packages');
+				const cStore = transaction.objectStore('categories');
+				const qStore = transaction.objectStore('questions');
+
+				const scoreRemover = event => {
+					const cursor = (event.target as IDBRequest<IDBCursorWithValue | null>).result;
+					if (!isDefined(cursor)) {
+						// that's all data
+						return;
+					}
+					const value = cursor.value;
+					delete value.score;
+					delete value.lastPractice;
+					cursor.update(value);
+					cursor.continue();
+				};
+
+				pStore.openCursor().onsuccess = scoreRemover;
+				cStore.openCursor().onsuccess = scoreRemover;
+				qStore.openCursor().onsuccess = scoreRemover;
+
+			},
+		);
+	}
+
+	public deleteAllLocalData(): Promise<void> {
+		return this.db.runInTransaction<void>(
+			['packages', 'categories', 'questions'],
+			'readwrite',
+			(db, transaction, resolve, reject) => {
+
+				transaction.oncomplete = () => {
+					resolve();
+				};
+
+				const pStore = transaction.objectStore('packages');
+				const cStore = transaction.objectStore('categories');
+				const qStore = transaction.objectStore('questions');
+
+				pStore.clear();
+				cStore.clear();
+				qStore.clear();
+
+			},
+		);
+	}
+
 }
 
 export default DataManager;
