@@ -1,7 +1,12 @@
 "use strict";
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { useDocumentTitle, useFormatMessageId, useFormatMessageIdAsTagFn } from '../helpers/hooks';
+import {
+	useDocumentTitle,
+	useFormatMessageId,
+	useFormatMessageIdAsTagFn,
+	useStoreValueSoundEffects,
+} from '../helpers/hooks';
 import { packages } from '../db/queries';
 import { useDataManager, useQuery } from '../db/hooks';
 import { LocalFullPackage, LocalQuestion, PracticeMode } from '../types';
@@ -14,6 +19,8 @@ import { PracticeSetupForm, PracticeSetupFormSubmitHandler } from '../components
 import { R_PACKAGE, R_PACKAGE_PRACTICE, R_SETTINGS } from '../routes';
 import { Breadcrumbs } from '../components/breadcrumbs';
 import { Link } from '../router/compoments';
+import { SoundPlayer } from '../sounds/sound-player';
+import { sortByOrder, sortByRandom, sortByScore } from '../helpers/score';
 
 
 const STATE_INITIAL = 'initial';
@@ -33,7 +40,7 @@ interface PracticePageStatePractice {
 	index: number;
 }
 
-type PracticePageState = PracticePageStateInitial | PracticePageStatePractice;
+type PracticePageState = (PracticePageStateInitial | PracticePageStatePractice) & { player: SoundPlayer };
 
 interface PracticePageProps {
 	package: LocalFullPackage;
@@ -43,8 +50,17 @@ export const createPracticeQuestions = (mode: PracticeMode, categories: Set<numb
 
 	const questions = allQuestions.filter(({ category }) => categories.has(category));
 
-	// TODO: in place sort
-	// if (mode === PRACTICE_MODE_PROGRESS)
+	switch (mode) {
+		case 'progress':
+			sortByScore(questions);
+			break;
+		case 'random':
+			sortByRandom(questions);
+			break;
+		case 'order':
+			sortByOrder(questions);
+			break;
+	}
 
 	return questions;
 
@@ -56,10 +72,13 @@ const PracticePage = (props: PracticePageProps) => {
 
 	const dm = useDataManager();
 
-	const [state, setState] = useState<PracticePageState>({
+	const [soundEffects] = useStoreValueSoundEffects();
+
+	const [state, setState] = useState<PracticePageState>(() => ({
+		player: new SoundPlayer(),
 		pack: props.package,
 		state: STATE_INITIAL,
-	});
+	}));
 
 	const handleSetup = useCallback<PracticeSetupFormSubmitHandler>((mode, categories) => {
 
@@ -117,9 +136,16 @@ const PracticePage = (props: PracticePageProps) => {
 				console.error(`[handleUpdateScore] dm.updateScore(${questionId}, ${correct}) failed`, err);
 			});
 
-		// TODO: play sound if allowed
+		if (soundEffects) {
+			if (correct) {
+				state.player.playCorrectAnswer();
+			} else {
+				state.player.playWrongAnswer();
+			}
+		}
 
-	}, [state, dm]);
+
+	}, [state, dm, soundEffects]);
 
 	if (state.state == STATE_INITIAL) {
 		return (
@@ -228,6 +254,8 @@ const PracticePageWrapper = () => {
 	}
 
 	const pack: LocalFullPackage = op.data;
+
+	// console.log(`[PracticePageWrapper] render`);
 
 	return (
 		<PracticePage

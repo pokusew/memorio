@@ -292,7 +292,7 @@ export const QuestionForm = (
 
 		return () => {
 			didUnsubscribe = true;
-			console.log('UN');
+			// console.log('UN');
 			window.removeEventListener('keydown', handler);
 		};
 
