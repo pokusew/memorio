@@ -3,7 +3,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useDocumentTitle, useFormatMessageId, useFormatMessageIdAsTagFn } from '../helpers/hooks';
 import { packages } from '../db/queries';
-import { useQuery } from '../db/hooks';
+import { useDataManager, useQuery } from '../db/hooks';
 import { LocalFullPackage, LocalQuestion, PracticeMode } from '../types';
 import { useRoute } from '../router/hooks';
 import { isDefined } from '../helpers/common';
@@ -54,6 +54,8 @@ const PracticePage = (props: PracticePageProps) => {
 
 	const t = useFormatMessageId();
 
+	const dm = useDataManager();
+
 	const [state, setState] = useState<PracticePageState>({
 		pack: props.package,
 		state: STATE_INITIAL,
@@ -99,11 +101,25 @@ const PracticePage = (props: PracticePageProps) => {
 
 	const handleUpdateScore = useCallback<UpdateScoreHandler>(correct => {
 
-		console.log(`[handleUpdateScore]`, state, correct);
+		if (state.state !== STATE_PRACTICE) {
+			return;
+		}
 
-		// TODO: save and play sound if allowed
+		const questionId = state.questions[state.index].id;
 
-	}, [state]);
+		console.log(`[handleUpdateScore]`, questionId, correct);
+
+		dm.updateScore(questionId, correct)
+			.then(() => {
+				console.log('[handleUpdateScore] successfully updated');
+			})
+			.catch(err => {
+				console.error(`[handleUpdateScore] dm.updateScore(${questionId}, ${correct}) failed`, err);
+			});
+
+		// TODO: play sound if allowed
+
+	}, [state, dm]);
 
 	if (state.state == STATE_INITIAL) {
 		return (
