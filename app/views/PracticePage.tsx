@@ -1,70 +1,84 @@
 "use strict";
 
 import React, { useCallback, useMemo, useState } from 'react';
-
-import { R_PACKAGE, R_PACKAGE_PRACTICE, R_ROOT } from '../routes';
-import { useDocumentTitle, useFormatMessageIdAsTagFn } from '../helpers/hooks';
+import { useDocumentTitle, useFormatMessageId, useFormatMessageIdAsTagFn } from '../helpers/hooks';
 import { packages } from '../db/queries';
 import { useQuery } from '../db/hooks';
-import { LocalFullPackage, LocalQuestion } from '../types';
+import { LocalFullPackage, LocalQuestion, PracticeMode } from '../types';
 import { useRoute } from '../router/hooks';
 import { isDefined } from '../helpers/common';
 import { LoadingScreen } from '../components/layout';
 import NotFoundPage from './NotFoundPage';
-import { NextQuestionHandler, QuestionForm, UpdateScoreHandler } from '../components/practice';
-import { Link } from '../router/compoments';
+import { NextQuestionHandler, QuestionForm, UpdateScoreHandler } from '../components/question-form';
+import { PracticeSetupForm, PracticeSetupFormSubmitHandler } from '../components/practice-setup-form';
+import { R_PACKAGE, R_PACKAGE_PRACTICE, R_SETTINGS } from '../routes';
 import { Breadcrumbs } from '../components/breadcrumbs';
+import { Link } from '../router/compoments';
 
-
-interface PracticeBoxProps {
-	package: LocalFullPackage;
-}
 
 const STATE_INITIAL = 'initial';
 const STATE_PRACTICE = 'practice';
 
-const MODE_PROGRESS = 'progress';
-const MODE_RANDOM = 'random';
-const MODE_ORDER = 'order';
-
 interface PracticePageStateInitial {
+	pack: LocalFullPackage;
 	state: typeof STATE_INITIAL;
 }
 
 interface PracticePageStatePractice {
+	pack: LocalFullPackage;
 	state: typeof STATE_PRACTICE;
-	mode: typeof MODE_PROGRESS | typeof MODE_RANDOM | typeof MODE_ORDER;
-	categories: number[];
+	mode: PracticeMode;
+	categories: Set<number>;
 	questions: LocalQuestion[];
 	index: number;
 }
 
 type PracticePageState = PracticePageStateInitial | PracticePageStatePractice;
 
-const PracticePage = () => {
+interface PracticePageProps {
+	package: LocalFullPackage;
+}
 
-	const t = useFormatMessageIdAsTagFn();
+export const createPracticeQuestions = (mode: PracticeMode, categories: Set<number>, allQuestions: LocalQuestion[]) => {
 
-	const { route } = useRoute();
+	const questions = allQuestions.filter(({ category }) => categories.has(category));
 
-	const idStr = route?.payload?.packageId as string;
+	// TODO: in place sort
+	// if (mode === PRACTICE_MODE_PROGRESS)
 
-	const id = parseInt(idStr);
+	return questions;
 
-	const query = useMemo(() => packages.findOneById(id), [id]);
+};
 
-	const op = useQuery(query);
+const PracticePage = (props: PracticePageProps) => {
 
-	useDocumentTitle(t`titles.practice`);
+	const t = useFormatMessageId();
 
 	const [state, setState] = useState<PracticePageState>({
-		// state: STATE_INITIAL,
-		state: STATE_PRACTICE,
-		mode: MODE_PROGRESS,
-		categories: [],
-		questions: [],
-		index: 0,
+		pack: props.package,
+		state: STATE_INITIAL,
 	});
+
+	const handleSetup = useCallback<PracticeSetupFormSubmitHandler>((mode, categories) => {
+
+		setState(prevState => {
+
+			if (prevState.state !== STATE_INITIAL) {
+				return prevState;
+			}
+
+			return {
+				...prevState,
+				state: STATE_PRACTICE,
+				mode,
+				categories,
+				questions: createPracticeQuestions(mode, categories, prevState.pack.questions),
+				index: 0,
+			};
+
+		});
+
+	}, [setState]);
 
 	const handleNextQuestion = useCallback<NextQuestionHandler>(() => {
 
@@ -87,62 +101,73 @@ const PracticePage = () => {
 
 		console.log(`[handleUpdateScore]`, state, correct);
 
+		// TODO: save and play sound if allowed
+
 	}, [state]);
-
-
-	if (op.loading) {
-		return (
-			<LoadingScreen />
-		);
-	}
-
-	if (!isDefined(op.data)) {
-		return (
-			<NotFoundPage />
-		);
-	}
-
-	const pack: LocalFullPackage = op.data;
 
 	if (state.state == STATE_INITIAL) {
 		return (
 
 			<>
 
-				<nav className="breadcrumbs">
-					<ol>
-						<li><Link name={R_ROOT}>{t`titles.home`}</Link></li>
-						<li><Link name={R_PACKAGE} payload={{ packageId: id }}>{pack.name}</Link></li>
-						<li><Link name={R_PACKAGE_PRACTICE} payload={{ packageId: id }}>{t`titles.practice`}</Link></li>
-					</ol>
-				</nav>
+				<Breadcrumbs
+					name={R_PACKAGE_PRACTICE}
+					packageId={state.pack.id}
+					packageName={state.pack.name}
+				/>
 
-				<h1>{t`titles.practice`}</h1>
+				<h1>{t(`titles.practice`)}</h1>
 
-				<button
-					type="button"
-					className="btn btn-lg btn-primary"
-				>
-					Začít
-				</button>
+				<PracticeSetupForm
+					package={state.pack}
+					onSubmit={handleSetup}
+				/>
+
+				<h2>{t(`practicePage.tipsHeading`)}</h2>
+
+				<ul>
+					{t(`practicePage.tips`, {
+						li: chunks => <li>{chunks}</li>,
+						kbd: chunks => <kbd className="dark">{chunks}</kbd>,
+						settings: chunks => <Link name={R_SETTINGS}>{chunks}</Link>,
+					})}
+				</ul>
 
 			</>
 
 		);
 	}
 
-	const question = pack.questions[state.index];
+	if (state.index >= state.questions.length) {
+		return (
+			<>
+
+				<Breadcrumbs
+					name={R_PACKAGE_PRACTICE}
+					packageId={state.pack.id}
+					packageName={state.pack.name}
+				/>
+
+				<h1>{t(`practicePage.finishedHeading`)}</h1>
+
+				<p>{t(`practicePage.finished`)}</p>
+
+				<Link
+					className="btn btn-lg btn-primary"
+					name={R_PACKAGE}
+					payload={{ packageId: state.pack.id }}
+				>
+					{t(`practicePage.backToPackage`)}
+				</Link>
+
+			</>
+		);
+	}
+
+	const question = state.questions[state.index];
 
 	return (
 		<>
-
-			<Breadcrumbs
-				name={R_PACKAGE_PRACTICE}
-				packageId={pack.id}
-				packageName={pack.name}
-			/>
-
-			<h1>{t`titles.practice`}</h1>
 
 			{/* NOTE: The key is needed to trigger new component creation instead of just update
 			          (needed because of the question form internal state) */}
@@ -158,4 +183,43 @@ const PracticePage = () => {
 
 };
 
-export default PracticePage;
+const PracticePageWrapper = () => {
+
+	const t = useFormatMessageIdAsTagFn();
+
+	const { route } = useRoute();
+
+	const idStr = route?.payload?.packageId as string;
+
+	const id = parseInt(idStr);
+
+	const query = useMemo(() => packages.findOneById(id), [id]);
+
+	const op = useQuery(query);
+
+	useDocumentTitle(t`titles.practice`);
+
+	if (op.loading) {
+		return (
+			<LoadingScreen />
+		);
+	}
+
+	if (!isDefined(op.data)) {
+		return (
+			<NotFoundPage />
+		);
+	}
+
+	const pack: LocalFullPackage = op.data;
+
+	return (
+		<PracticePage
+			key={pack.id}
+			package={pack}
+		/>
+	);
+
+};
+
+export default PracticePageWrapper;

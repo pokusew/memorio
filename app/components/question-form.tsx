@@ -38,7 +38,7 @@ export const ChoiceBox = (
 			onClick={onClick}
 		>
 			<input
-				className="question-choice-checkbox"
+				className="question-choice-checkbox option-checkbox"
 				id={`question--choice-${choice.id}`}
 				name="choice"
 				type="checkbox"
@@ -327,14 +327,6 @@ export const QuestionForm = (
 			{isDefined(state.validation)
 				? (
 					<>
-						<p className="question-validation-message">
-							{t(
-								`questionForm.validation.${state.validation.correct ? 'correct' : 'wrong'}`,
-								{
-									strong: chunks => <strong>{chunks}</strong>,
-								},
-							)}
-						</p>
 						<button
 							type="button"
 							name="next"
@@ -346,7 +338,14 @@ export const QuestionForm = (
 						>
 							{t('questionForm.actions.next')} <kbd>Enter</kbd>
 						</button>
-
+						<p className="question-validation-message">
+							{t(
+								`questionForm.validation.${state.validation.correct ? 'correct' : 'wrong'}`,
+								{
+									strong: chunks => <strong>{chunks}</strong>,
+								},
+							)}
+						</p>
 					</>
 				) : (
 					<button

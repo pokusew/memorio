@@ -26,7 +26,6 @@ export interface SelectInputProps
 	prompt?: string;
 }
 
-
 export const SelectInput = (
 	{
 
@@ -78,15 +77,12 @@ export const SelectInput = (
 					<option key={value} value={value}>{t(label)}</option>)
 				}
 			</select>
-			{!isEmpty(error) && <p className="form-control-feedback">{isCustomError === true ? t(error) : error}</p>}
+			{!isEmpty(error) && <p className="form-control-feedback">{isCustomError === true ? error : t(error)}</p>}
 			{helpBlock}
 		</div>
 	);
 };
 
-export interface ChangeHandler {
-	(newValue: string): void
-}
 
 export interface InputProps
 	extends Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, 'ref'> {
@@ -140,11 +136,12 @@ export const Input = (
 				placeholder={isDefined(finalPlaceholder) ? t(finalPlaceholder) : undefined}
 				{...otherInputProps}
 			/>
-			{!isEmpty(error) && <p className="form-control-feedback">{isCustomError === true ? t(error) : error}</p>}
+			{!isEmpty(error) && <p className="form-control-feedback">{isCustomError === true ? error : t(error)}</p>}
 			{helpBlock}
 		</div>
 	);
 };
+
 
 export interface ToggleInputProps extends InputProps {
 
@@ -191,9 +188,155 @@ export const ToggleInput = (
 				{...otherInputProps}
 			/>
 			<label className="toggle-checkbox-label" htmlFor={id} />
-			{!isEmpty(error) && <p className="form-control-feedback">{isCustomError === true ? t(error) : error}</p>}
+			{!isEmpty(error) && <p className="form-control-feedback">{isCustomError === true ? error : t(error)}</p>}
 			{helpBlock}
 		</div>
 	);
 };
 
+
+export interface CheckboxOptionBoxProps {
+	name: string;
+	id: string;
+	label: string;
+	value: string;
+	selected: boolean;
+	onChange: React.ChangeEventHandler<HTMLInputElement>;
+}
+
+export const CheckboxOptionBox = (
+	{
+		name,
+		id,
+		label,
+		value,
+		selected,
+		onChange,
+	}: CheckboxOptionBoxProps,
+) => {
+
+	return (
+		<li
+			className={classNames('option', {
+				'option--selected': selected,
+			})}
+			data-value={value}
+		>
+			<label
+				className="option-label"
+				htmlFor={id}
+			>
+				<input
+					className="option-checkbox"
+					id={id}
+					name={name}
+					type="checkbox"
+					value={value}
+					checked={selected}
+					onChange={onChange}
+				/>
+				{label}
+			</label>
+		</li>
+	);
+
+};
+
+
+export interface CheckboxListInputProps {
+
+	id: string;
+	name: string;
+	label: string;
+
+	helpBlock?: React.ReactNode;
+
+	valid?: boolean;
+	error?: string;
+	isCustomError?: boolean;
+
+	options: Option[];
+	value: Set<string>;
+	onChange: React.ChangeEventHandler<HTMLInputElement>;
+
+	onSelectAll?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+	onSelectNone?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+
+}
+
+export const CheckboxListInput = (
+	{
+
+		id,
+		name,
+		label,
+
+		helpBlock,
+
+		valid,
+		error,
+		isCustomError,
+
+		options,
+		value,
+		onChange,
+
+		onSelectAll,
+		onSelectNone,
+
+	}: CheckboxListInputProps,
+) => {
+
+	const t = useFormatMessageId();
+
+	return (
+		<div className={classNames({
+			'form-group': true,
+			'has-error': valid === false,
+		})}>
+
+			<label className="form-control-label">{t(label)}</label>
+
+			{isDefined(onSelectAll) && (
+				<button
+					type="button"
+					className="btn btn-sm btn-action"
+					onClick={onSelectAll}
+				>
+					{t(`forms.selectAll`)}
+				</button>
+			)}
+
+			{isDefined(onSelectNone) && (
+				<button
+					type="button"
+					className="btn btn-sm btn-action"
+					onClick={onSelectNone}
+				>
+					{t(`forms.selectNone`)}
+				</button>
+
+			)}
+
+			<ol className="checkbox-list">
+				{options.map(({ value: v, label: l }) =>
+					<CheckboxOptionBox
+						key={v}
+						name={name}
+						id={`${id}--${v}`}
+						label={l}
+						value={v}
+						selected={value.has(v)}
+						onChange={onChange}
+					/>,
+				)}
+			</ol>
+
+			{!isEmpty(error) && <p className="form-control-feedback">{isCustomError === true ? error : t(error)}</p>}
+
+			{helpBlock}
+
+		</div>
+	);
+
+};

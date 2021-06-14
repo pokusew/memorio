@@ -194,6 +194,16 @@ input[type="search"] {
 	-webkit-appearance: none;
 }
 
+.form-control-label {
+	display: block;
+}
+
+.form-group {
+	.btn-action {
+		margin-bottom: .5rem;
+	}
+}
+
 // Feedback states
 .has-success {
 	@include form-control-validation($brand-success);

@@ -66,6 +66,8 @@ export default {
 		loadingError: 'Došlo k chybě při načítání dat.',
 	},
 	forms: {
+		selectAll: `Vybrat vše`,
+		selectNone: `Zrušit výběr`,
 		cancel: `Zrušit`,
 		errors: {
 			fieldRequired: `Vyplňte toto pole.`,
@@ -104,6 +106,23 @@ export default {
 			next: `Další otázka`,
 		},
 	},
+	practiceSetupForm: {
+		labels: {
+			mode: `Způsob řazení`,
+			category: `Kategorie`,
+		},
+		values: {
+			mode: {
+				progress: `Podle pokroku (otázky s nejmenší úspěšností jako první)`,
+				random: `Náhodně (otázky seřazeny v náhodném pořadí)`,
+				order: `Podle pořadí (otázky seřazeny dle jejich čísla)`,
+			},
+		},
+		errors: {
+			atLeastOneCategory: `Vyberte prosím alespoň jednu kategorii.`,
+		},
+		submit: `Začít`,
+	},
 	questionsList: {
 		srHints: {
 			correct: 'Tato možnost je správně.',
@@ -122,6 +141,22 @@ export default {
 	},
 	categoryPage: {
 		questionsHeading: `Otázky`,
+	},
+	practicePage: {
+		tipsHeading: `Ovládání a další tipy`,
+		tips: `
+			<li>Provičování je možné kdykoliv ukončit.</li>
+			<li>Výsledky se automaticky průběžně započítávají do celkového skóre.</li>
+			<li>Po zodpovězení každé otázky ihned uvidíte výsledek a správné řešení.</li>
+			<li>K ovládání je možné používat také klávesnici
+				– <kbd>Enter</kbd> pro potvrzení odpovědi a přechod na další otázku
+				– čísla/písmena pro výběr možností.
+			</li>
+			<li>Zvukové efetky je možné zapnout/vypout v <settings>Nastavení</settings>.</li>
+		`,
+		finishedHeading: `Procvičování dokončeno`,
+		finished: `Všechny vybrané otázky byly procvičeny.`,
+		backToPackage: `Zpět na stránku balíčku`,
 	},
 	loginPage: {
 		errors: {

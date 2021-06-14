@@ -173,7 +173,7 @@ export const PackageHeader = (
 			</div>
 
 			<div className="package-actions">
-				<Link className="btn btn-lg btn-warning" name={R_PACKAGE_PRACTICE} payload={{ packageId: id }}>{t('package.actions.practice')}</Link>
+				<Link className="btn btn-lg btn-primary" name={R_PACKAGE_PRACTICE} payload={{ packageId: id }}>{t('package.actions.practice')}</Link>
 				{/*<Link name={R_PACKAGE} payload={{ packageId: id }}>{t('package.actions.test')}</Link>*/}
 			</div>
 

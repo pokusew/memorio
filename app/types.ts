@@ -84,3 +84,12 @@ export type LocalFullPackage = LocalPackage & {
 	categories: LocalCategory[];
 	questions: LocalQuestion[];
 };
+
+export const PRACTICE_MODE_PROGRESS = 'progress';
+export const PRACTICE_MODE_RANDOM = 'random';
+export const PRACTICE_MODE_ORDER = 'order';
+
+export type PracticeMode =
+	| typeof PRACTICE_MODE_PROGRESS
+	| typeof PRACTICE_MODE_RANDOM
+	| typeof PRACTICE_MODE_ORDER;

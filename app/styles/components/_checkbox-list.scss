@@ -1,0 +1,44 @@
+//
+// Checkbox list
+// --------------------------------------------------
+
+.checkbox-list {
+	display: block;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+
+	.option {
+		display: block;
+		width: 100%;
+		background-color: $gray-lighter;
+		cursor: pointer;
+		padding: 0;
+		margin: 0 0 .5rem 0;
+		transition: background-color ease-in-out .1s;
+
+		.option-label {
+			display: flex;
+			margin: 0;
+			font-weight: normal;
+			cursor: pointer;
+			padding: .25rem .5rem;
+			align-items: center;
+			font-size: 1rem;
+		}
+
+		&:hover {
+			background-color: darken($gray-lighter, 10%);
+		}
+
+		&.option--selected {
+			background-color: $state-info-bg;
+
+			&:hover {
+				background-color: darken($state-info-bg, 10%);
+			}
+		}
+
+
+	}
+}
