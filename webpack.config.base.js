@@ -59,7 +59,7 @@ export default {
 				],
 			},
 			{
-				test: /[^]\.(png|jpg|svg)$/,
+				test: /[^]\.(png|jpg|svg|mp3)$/,
 				loader: 'file-loader',
 				options: {
 					name: '[name].[contenthash].imt.[ext]',
