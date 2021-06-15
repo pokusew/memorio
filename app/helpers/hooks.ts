@@ -28,11 +28,9 @@ export type MessageId = NonNullable<MessageDescriptor['id']>;
 export const createGetRawIntlMessage = (intl: IntlShape) => (id: MessageId, fallbackToId: boolean = true) =>
 	intl.messages[id] ?? (fallbackToId ? id : undefined);
 
-// TODO: better type for values?
 export const createFormatMessage = (intl: IntlShape) => (descriptor: MessageDescriptor, values?: Parameters<IntlFormatters['formatMessage']>[1]) =>
 	intl.formatMessage(descriptor , values);
 
-// TODO: better type for values?
 export const createFormatMessageId = (intl: IntlShape) => (id: MessageId, values?: Parameters<IntlFormatters['formatMessage']>[1]) =>
 	intl.formatMessage({ id }, values);
 
@@ -76,7 +74,6 @@ export const useFormatMessage = () => {
 // see https://github.com/rehooks/document-title/blob/master/index.js
 // TODO: add support for meta tags (theme-color, ...)
 export type DocumentTitleTemplate = (title: string | undefined) => string;
-// TODO: supply app name
 export const DEFAULT_TITLE_TEMPLATE = title => title === undefined ? `Memorio` : `${title} | Memorio`;
 export const useDocumentTitle = (title: string | undefined, template: DocumentTitleTemplate = DEFAULT_TITLE_TEMPLATE) => {
 

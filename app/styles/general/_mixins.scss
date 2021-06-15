@@ -2,38 +2,6 @@
 // Mixins
 // --------------------------------------------------
 
-@mixin hover {
-	// TODO: re-enable along with mq4-hover-shim
-	//  @if $enable-hover-media-query {
-	//    // See Media Queries Level 4: https://drafts.csswg.org/mediaqueries/#hover
-	//    // Currently shimmed by https://github.com/twbs/mq4-hover-shim
-	//    @media (hover: hover) {
-	//      &:hover { @content }
-	//    }
-	//  }
-	//  @else {
-	&:hover {
-		@content
-	}
-	//  }
-}
-
-@mixin hover-focus {
-	@if $enable-hover-media-query {
-		&:focus {
-			@content
-		}
-		@include hover {
-			@content
-		}
-	} @else {
-		&:focus,
-		&:hover {
-			@content
-		}
-	}
-}
-
 // Only display content to screen readers
 //
 // See: http://a11yproject.com/posts/how-to-hide-content
