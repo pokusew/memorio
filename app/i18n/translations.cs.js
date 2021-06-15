@@ -132,7 +132,7 @@ export default {
 	homePage: {
 		callout: {
 			welcome: `Vítejte v aplikaci Memorio, která slouží pro procvičování otázek.`,
-			gettingStarted: `Začněte výběrem balíčku otázek. Můžete si ho také uložit pro použití offline.`,
+			gettingStarted: `Začněte výběrem balíčku otázek. Po prvním otevření se automaticky uloží pro použití offline.`,
 		},
 		packagesHeading: `Přehled balíčků`,
 	},
@@ -145,7 +145,7 @@ export default {
 	practicePage: {
 		tipsHeading: `Ovládání a další tipy`,
 		tips: `
-			<li>Provičování je možné kdykoliv ukončit.</li>
+			<li>Procvičování je možné kdykoliv ukončit.</li>
 			<li>Výsledky se automaticky průběžně započítávají do celkového skóre.</li>
 			<li>Po zodpovězení každé otázky ihned uvidíte výsledek a správné řešení.</li>
 			<li>K ovládání je možné používat také klávesnici
