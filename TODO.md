@@ -34,6 +34,8 @@ Here is tracked what needs to be done / or cloud be done in the future.
 
 * show success rate by each question on CategoryPage
 
+* randomize choices order during practice
+
 
 ## Issues to watch
 
