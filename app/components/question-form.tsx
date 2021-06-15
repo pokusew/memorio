@@ -25,12 +25,28 @@ export const ChoiceBox = (
 	}: ChoiceBoxProps,
 ) => {
 
+	// validation styles logic
+	//
+	// - if the question answer is *correct* and it is *selected*
+	//   (i.e. the correct answer means that the choice is checked)
+	//   => add .question-choice--correct (green background)
+	//
+	// - if the question answer is *correct* and it is NOT *selected*
+	//   (i.e. the correct answer means that the choice is unchecked)
+	//   => no styles are added (default gray background)
+	//
+	// - if the question answer is *wrong*
+	//   (it should have been selected and it is NOT,
+	//    or it should have NOT been selected and it is)
+	//   => add .question-choice--wrong (red background)
+
 	const letterKey = choiceIdToLetterKey(choice.id);
+
 
 	return (
 		<li
 			className={classNames('question-choice', {
-				'question-choice--correct': correct === true,
+				'question-choice--correct': selected && correct === true,
 				'question-choice--wrong': correct === false,
 				'question-choice--selected': selected,
 			})}
