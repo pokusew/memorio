@@ -17,8 +17,14 @@ multiple-choice, images identification, etc.). The main features are:
 The code is written in **[TypeScript](https://www.typescriptlang.org/)**
 and **[React.js](https://reactjs.org/)**. See more in the [Architecture](#architecture) section.
 
-🚧 **Note:** This is still work in progress. **The app is already usable.** But some features should be
+🚧 **Note 1:** This is still work in progress. **The app is already usable.** But some features should be
 added/improved to make it more useful. Some of them are mentioned [here](./TODO.md).
+
+⚠️ **Note 2:** The app should work in all modern browsers. However, it
+requires [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) in order to work. For
+this reason, it cannot be used (at least for now) in private browsing mode in Firefox and Edge
+(see [Known Issues on Can I use IndexedDB](https://caniuse.com/?search=indexeddb))
+(The app will get stuck on the loading screen.).
 
 
 ## Content
