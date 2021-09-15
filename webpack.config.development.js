@@ -21,13 +21,15 @@ export default merge(baseConfig, {
 
 	entry: {
 		index: [
-			`webpack-dev-server/client?http://localhost:${port}/`,
-			'webpack/hot/only-dev-server',
+			// injected automatically by the webpack-dev-server (see devServer.hot/client)
+			// `webpack-dev-server/client?http://localhost:${port}/`,
+			// 'webpack/hot/only-dev-server',
 			path.join(__dirname, 'app/index'),
 		],
 		another: [
-			`webpack-dev-server/client?http://localhost:${port}/`,
-			'webpack/hot/only-dev-server',
+			// injected automatically by the webpack-dev-server (see devServer.hot/client)
+			// `webpack-dev-server/client?http://localhost:${port}/`,
+			// 'webpack/hot/only-dev-server',
 			path.join(__dirname, 'app/another'),
 		],
 		// handled the InjectManifest plugin
@@ -91,7 +93,8 @@ export default merge(baseConfig, {
 		new webpack.LoaderOptionsPlugin({
 			debug: true,
 		}),
-		new webpack.HotModuleReplacementPlugin(),
+		// automatically injected by the webpack-dev-server (when devServer.hot is true or 'only'))
+		// new webpack.HotModuleReplacementPlugin(),
 		new webpack.DefinePlugin({
 			__DEV__: true,
 			// note: it seems that to get rid out of the process/browser.js shim
@@ -152,21 +155,22 @@ export default merge(baseConfig, {
 
 	devServer: {
 
-		// currently, we use v4.0.0-beta.3
-		// the docs at https://webpack.js.org/configuration/dev-server/ are outdated
-		// see notes the release notes at https://github.com/webpack/webpack-dev-server/releases
-		// for an up-to-date docs of the beta version
+		// currently, we use v4.x
+		// see the docs at https://webpack.js.org/configuration/dev-server/
 
 		// host: '0.0.0.0',
 		port,
-		hot: true,
+
+		hot: 'only',
 		client: {
-			// both defaults to true (even when the docs say otherwise)
-			// we need false in order to control this per chunk (see entry config)
-			needClientEntry: false,
-			needHotEntry: false,
-			overlay: false,
+			// see https://webpack.js.org/configuration/dev-server/#devserverclient
+			overlay: {
+				errors: true,
+				warnings: false,
+			},
+			webSocketURL: 'auto://0.0.0.0:0/ws',
 		},
+
 		historyApiFallback: true,
 		static: [
 			{
