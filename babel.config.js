@@ -6,7 +6,21 @@
 // console.log(process.env.NODE_ENV);
 // console.log(process.env.BROWSERSLIST_ENV);
 
+const isDefined = value => value !== undefined && value !== null;
+
 const isWebpack = caller => caller?.name === 'babel-loader' && caller?.target === 'web';
+
+const determineBrowserslistEnv = (api) => {
+
+	const browserslistEnv = isDefined(process.env.BROWSERSLIST_ENV)
+		? process.env.BROWSERSLIST_ENV
+		: api.caller(isWebpack) ? 'production' : 'test';
+
+	console.log('browserslistEnv = ', browserslistEnv);
+
+	return browserslistEnv;
+
+};
 
 module.exports = api => ({
 	presets: [
@@ -15,7 +29,7 @@ module.exports = api => ({
 			{
 				// targets are provided by Browserslist
 				// see https://babeljs.io/docs/en/babel-preset-env#browserslist-integration
-				browserslistEnv: api.caller(isWebpack) ? 'production' : 'test',
+				browserslistEnv: determineBrowserslistEnv(api),
 				useBuiltIns: 'usage',
 				corejs: 3,
 				debug: false,
