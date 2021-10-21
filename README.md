@@ -205,6 +205,7 @@ following diagram briefly describes the main directories and files:
 
 - [Node.js](https://nodejs.org/) 16.x
 - [Yarn](https://yarnpkg.com/) 1.x
+- You can follow [this Node.js Development Setup guide](./NODEJS-SETUP.md).
 
 
 ### Set up
