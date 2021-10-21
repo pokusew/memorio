@@ -7,7 +7,6 @@ import { merge } from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { SubresourceIntegrityPlugin } from 'webpack-subresource-integrity';
 import baseConfig from './webpack.config.base';
-import autoprefixer from 'autoprefixer';
 import { templateParameters } from './tools/webpack-utils';
 import { InjectManifest } from 'workbox-webpack-plugin';
 
@@ -72,18 +71,9 @@ export default merge(baseConfig, {
 					'css-loader',
 					// https://github.com/bholloway/resolve-url-loader/blob/v5/packages/resolve-url-loader/README.md
 					'resolve-url-loader',
+					// PostCSS options are automatically loaded from postcss.config.js
+					'postcss-loader',
 					'sass-loader',
-					{
-						loader: 'postcss-loader',
-						options: {
-							postcssOptions: {
-								parser: 'postcss-scss',
-								plugins: function () {
-									return [autoprefixer];
-								},
-							},
-						},
-					},
 				],
 				include: [
 					path.resolve(__dirname, 'app'),
