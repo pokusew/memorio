@@ -7,5 +7,23 @@
 		"description": "Modelové otázky z biologie k přijímacím zkouškám na 1. lékařskou fakultu Univerzity Karlovy v Praze, verze 2011",
 		"numCategories": 23,
 		"numQuestions": 1730
+	},
+	{
+		"id": 2,
+		"version": 1,
+		"locale": "cs",
+		"name": "Modelové otázky z fyziky na 1. LF UK",
+		"description": "Modelové otázky z fyziky k přijímacím zkouškám na 1. lékařskou fakultu Univerzity Karlovy v Praze, verze 2011",
+		"numCategories": 1,
+		"numQuestions": 1262
+	},
+	{
+		"id": 3,
+		"version": 1,
+		"locale": "cs",
+		"name": "Modelové otázky z chemie na 1. LF UK",
+		"description": "Modelové otázky z chemie k přijímacím zkouškám na 1. lékařskou fakultu Univerzity Karlovy v Praze, verze 2011",
+		"numCategories": 1,
+		"numQuestions": 1288
 	}
 ]
