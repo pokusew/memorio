@@ -1,18 +1,24 @@
 "use strict";
 
-import webpack from 'webpack';
 import path from 'path';
 
 
 export default {
 
+	// file-loader is deprecated for webpack v5
+	// webpack Asset Modules is the recommended solution
+	//   see https://github.com/webpack-contrib/file-loader
+	//   see https://webpack.js.org/guides/asset-modules/
+
 	module: {
 		rules: [
 			{
 				test: /robots\.txt$/,
-				loader: 'file-loader',
-				options: {
-					name: '[name].[ext]',
+				// see https://webpack.js.org/guides/asset-modules/
+				type: 'asset/resource',
+				generator: {
+					// [ext] already contains the dot (.)
+					filename: '[name][ext]',
 				},
 				include: [
 					path.resolve(__dirname, 'app'),
@@ -20,9 +26,10 @@ export default {
 			},
 			{
 				test: /_(redirects|headers)$/,
-				loader: 'file-loader',
-				options: {
-					name: '[name]',
+				// see https://webpack.js.org/guides/asset-modules/
+				type: 'asset/resource',
+				generator: {
+					filename: '[name]',
 				},
 				include: [
 					path.resolve(__dirname, 'app'),
@@ -30,14 +37,13 @@ export default {
 			},
 			{
 				test: /manifest.json$/,
-				type: 'javascript/auto',
+				// see https://webpack.js.org/guides/asset-modules/
+				type: 'asset/resource',
+				generator: {
+					// [ext] already contains the dot (.)
+					filename: '[name].[contenthash].imt[ext]',
+				},
 				use: [
-					{
-						loader: 'file-loader',
-						options: {
-							name: '[name].[contenthash].imt.[ext]',
-						},
-					},
 					'web-app-manifest-loader',
 				],
 				include: [
@@ -59,10 +65,12 @@ export default {
 				],
 			},
 			{
-				test: /[^]\.(png|jpg|svg|mp3)$/,
-				loader: 'file-loader',
-				options: {
-					name: '[name].[contenthash].imt.[ext]',
+				test: /\.(png|jpg|mp3)$/,
+				// see https://webpack.js.org/guides/asset-modules/
+				type: 'asset/resource',
+				generator: {
+					// [ext] already contains the dot (.)
+					filename: '[name].[contenthash].imt[ext]',
 				},
 				include: [
 					path.resolve(__dirname, 'app'),
@@ -88,6 +96,10 @@ export default {
 	output: {
 		path: path.join(__dirname, 'dist'),
 		filename: '[name].js',
+		// see https://webpack.js.org/configuration/output/#outputhashdigestlength
+		// hashDigestLength,
+		// see https://webpack.js.org/configuration/output/#outputhashfunction
+		// hashFunction,
 	},
 
 	plugins: [],

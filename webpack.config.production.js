@@ -71,9 +71,19 @@ export default merge(baseConfig, {
 					'css-loader',
 					// https://github.com/bholloway/resolve-url-loader/blob/v5/packages/resolve-url-loader/README.md
 					'resolve-url-loader',
-					// PostCSS options are automatically loaded from postcss.config.js
-					'postcss-loader',
-					'sass-loader',
+					// PostCSS config is automatically loaded from postcss.config.js
+					{
+						loader: 'postcss-loader',
+						options: {
+							sourceMap: true,
+						},
+					},
+					{
+						loader: 'sass-loader',
+						options: {
+							sourceMap: true,
+						},
+					},
 				],
 				include: [
 					path.resolve(__dirname, 'app'),

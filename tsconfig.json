@@ -2,12 +2,12 @@
 	"compilerOptions": {
 		// https://stackoverflow.com/questions/61305578/what-typescript-configuration-produces-output-closest-to-node-js-14-capabilities/61305579#61305579
 		"lib": [
-			"es2020",
+			"es2021",
 			"dom",
 			"dom.iterable"
 		],
 		"module": "commonjs",
-		"target": "es2020",
+		"target": "es2021",
 		// TODO: maybe true Process & infer types from .js files.
 		"allowJs": true,
 		// Don't emit; allow Babel to transform files.

@@ -16,7 +16,7 @@ const determineBrowserslistEnv = (api) => {
 		? process.env.BROWSERSLIST_ENV
 		: api.caller(isWebpack) ? 'production' : 'test';
 
-	console.log('browserslistEnv = ', browserslistEnv);
+	console.log('browserslistEnv =', browserslistEnv);
 
 	return browserslistEnv;
 

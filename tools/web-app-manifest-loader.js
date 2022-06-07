@@ -13,15 +13,17 @@ module.exports = function (source) {
 
 			return new Promise(((resolve, reject) => {
 
-				this.loadModule(icon.src, (err, source, sourceMap, module) => {
-
-					// TODO: find out correct way
-					const path = '/' + Object.keys(module.buildInfo.assets)[0];
+				// Cannot use this.loadModule with webpack 5.x Assets Modules here (but file-loader works),
+				// see https://github.com/webpack/webpack/issues/13552.
+				// Surprisingly, importModule works.
+				this.importModule(`${icon.src}`, {}, (err, result) => {
 
 					if (err) {
 						reject(err);
 						return;
 					}
+
+					const path = result;
 
 					icon.src = path;
 
