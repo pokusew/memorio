@@ -5,7 +5,7 @@
 //       see https://github.com/microsoft/TypeScript/issues/14877
 //       see https://github.com/microsoft/TypeScript/issues/11781
 
-import { isDefined, IS_PRODUCTION } from '../helpers/common';
+import { IS_PRODUCTION, isDefined } from '../helpers/common';
 
 export type {};
 declare var self: ServiceWorkerGlobalScope & typeof globalThis
@@ -16,49 +16,44 @@ declare var self: ServiceWorkerGlobalScope & typeof globalThis
 //   https://developers.google.com/web/fundamentals/primers/service-workers/lifecycle
 //   https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
 
-const NAME = 'sw-v1';
-const CACHE_NAME = 'memorio-v1';
+const NAME = 'sw-v2';
+const CACHE_NAME = 'memorio-v2';
 const MANIFEST = self.__WB_MANIFEST ?? [];
 const MANIFEST_URLS: string[] = MANIFEST.map(({ url }) => url);
+const MANIFEST_MAP = new Set(MANIFEST_URLS);
 
 // currently, our "API" is served from the same origin as the SPA (and the SW)
 const MEMORIO_API = location.origin + '/data/';
 
-const FONT_AWESOME_URL_PATTERN = /font-awesome/;
+// const FONT_AWESOME_URL_PATTERN = /font-awesome/; // not used currently
 const GOOGLE_FONTS_URL_PATTERN = /fonts\.(googleapis|gstatic)\.com/;
 
-const shouldCacheAdditional = (url: string) =>
-	FONT_AWESOME_URL_PATTERN.test(url) || GOOGLE_FONTS_URL_PATTERN.test(url);
+const shouldCacheUrl = (url: string) => {
+
+	// cache assets from the MANIFEST (when in PRODUCTION mode)
+	if (IS_PRODUCTION && MANIFEST_MAP.has(url)) {
+		return true;
+	}
+
+	// cache assets from Google Fonts
+	if (/*FONT_AWESOME_URL_PATTERN.test(url) || */GOOGLE_FONTS_URL_PATTERN.test(url)) {
+		return true;
+	}
+
+	// but ignore everything else
+	return false;
+
+};
+
+const shouldCacheAdditional = shouldCacheUrl;
+
+const shouldSkipCustomFetch = (url: string) => !shouldCacheUrl(url);
 
 const isImmutable = (response: Response) => {
 
 	const cacheControl: string | null = response.headers.get('Cache-Control');
 
 	return isDefined(cacheControl) && cacheControl.indexOf('immutable') != -1;
-
-};
-
-const shouldIgnoreUrl = (url: string) => {
-
-	if (url.startsWith('chrome-extension://')) {
-		return true;
-	}
-
-	// ignore requests to our "API"
-	// as the content caching is solved in the app
-	if (url.startsWith(MEMORIO_API)) {
-		return true;
-	}
-
-	// if (IS_DEVELOPMENT) {
-	//
-	// 	if (FONT_AWESOME_URL_PATTERN.test(url) || GOOGLE_FONTS_URL_PATTERN.test(url)) {
-	// 		return true;
-	// 	}
-	//
-	// }
-
-	return false;
 
 };
 
@@ -116,7 +111,8 @@ self.addEventListener('fetch', (e: FetchEvent) => {
 	// if we know beforehand that we do not want to cache the response
 	// we can completely skip our custom fetching logic and let the browser handle it
 	// (instead of fetching and then returning it)
-	if (shouldIgnoreUrl(e.request.url)) {
+	if (shouldSkipCustomFetch(e.request.url)) {
+		// console.log(`[${NAME}] skipping`, e.request.url);
 		return;
 	}
 
