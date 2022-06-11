@@ -29,7 +29,8 @@ import { registerServiceWorker } from './helpers/sw';
 import { configureFirebase } from './firebase/config';
 
 
-registerServiceWorker();
+// TODO: re-enable before release
+// registerServiceWorker();
 
 const store = new Store<AppState>({
 	version: '0.0.4', // TODO: consider using build hash
