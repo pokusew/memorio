@@ -26,6 +26,7 @@ import { typedMapConstructor } from './helpers/common';
 import { AppState } from './types';
 import DataManager from './db/DataManager';
 import { registerServiceWorker } from './helpers/sw';
+import { configureFirebase } from './firebase/config';
 
 
 registerServiceWorker();
@@ -38,6 +39,8 @@ const store = new Store<AppState>({
 	]),
 });
 
+const firebase = configureFirebase();
+
 const dm = new DataManager({
 	serverUrl: `${location.origin}/data`,
 });
@@ -46,7 +49,7 @@ const router = new Router(routesMap);
 
 render(
 	<AppContainer>
-		<Root store={store} dm={dm} router={router} />
+		<Root store={store} firebase={firebase} dm={dm} router={router} />
 	</AppContainer>,
 	document.getElementById('root'),
 );
@@ -58,7 +61,7 @@ if (module.hot) {
 		const NextRoot = require('./containers/Root').default; // eslint-disable-line global-require
 		render(
 			<AppContainer>
-				<NextRoot store={store} dm={dm} router={router} />
+				<NextRoot store={store} firebase={firebase} dm={dm} router={router} />
 			</AppContainer>,
 			document.getElementById('root'),
 		);

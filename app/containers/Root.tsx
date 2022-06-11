@@ -4,6 +4,8 @@ import React from 'react';
 
 import StoreContext from '../store/StoreContext';
 import Store from '../store/Store';
+import { ConfiguredFirebase } from '../firebase/types';
+import FirebaseContext from '../firebase/FirebaseContext';
 import DataManager from '../db/DataManager';
 import DataManagerContext from '../db/DataManagerContext';
 import RouterContext from '../router/RouterContext';
@@ -18,24 +20,26 @@ import { App } from '../components/layout';
 
 export interface RootProps {
 	store: Store<AppState>;
+	firebase: ConfiguredFirebase;
 	dm: DataManager;
 	router: Router;
 }
 
-const Root = ({ store, dm, router }: RootProps) => {
+const Root = ({ store, firebase, dm, router }: RootProps) => {
 
 	return (
 		<StoreContext.Provider value={store}>
-			<DataManagerContext.Provider value={dm}>
-				<RouterContext.Provider value={router}>
-					<LocaleLoader>
-						<App>
-							<PageRouter />
-						</App>
-					</LocaleLoader>
-				</RouterContext.Provider>
-			</DataManagerContext.Provider>
-
+			<FirebaseContext.Provider value={firebase}>
+				<DataManagerContext.Provider value={dm}>
+					<RouterContext.Provider value={router}>
+						<LocaleLoader>
+							<App>
+								<PageRouter />
+							</App>
+						</LocaleLoader>
+					</RouterContext.Provider>
+				</DataManagerContext.Provider>
+			</FirebaseContext.Provider>
 		</StoreContext.Provider>
 	);
 
