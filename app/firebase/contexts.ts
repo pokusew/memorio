@@ -1,7 +1,7 @@
 "use strict";
 
 import React from 'react';
-import { ConfiguredFirebase, AppUser } from './types';
+import { AuthState, ConfiguredFirebase } from './types';
 
 
 // @ts-ignore
@@ -9,8 +9,8 @@ const FirebaseContext = React.createContext<ConfiguredFirebase>(undefined);
 
 FirebaseContext.displayName = 'FirebaseContext';
 
-const AppUserContext = React.createContext<AppUser | null>(null);
+const AuthStateContext = React.createContext<AuthState>({ loading: true });
 
-AppUserContext.displayName = 'FirebaseAuthContext';
+AuthStateContext.displayName = 'FirebaseAuthContext';
 
-export { FirebaseContext, AppUserContext };
+export { FirebaseContext, AuthStateContext };

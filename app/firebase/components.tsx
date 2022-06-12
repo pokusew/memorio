@@ -4,15 +4,15 @@ import React, { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useConfiguredFirebase } from './hooks';
 import { IS_DEVELOPMENT, isDefined } from '../helpers/common';
-import { AppUserContext } from './contexts';
-import { AppUser } from './types';
+import { AuthStateContext } from './contexts';
+import { AuthState } from './types';
 
 
 export const FirebaseUserProvider = ({ children }) => {
 
 	const { auth } = useConfiguredFirebase();
 
-	const [user, setUser] = useState<AppUser | null>(null);
+	const [state, setState] = useState<AuthState>({ loading: true });
 
 	useEffect(() => {
 
@@ -25,19 +25,28 @@ export const FirebaseUserProvider = ({ children }) => {
 							newUser,
 							idTokenResult,
 						);
-						// custom claims: see https://firebase.google.com/docs/auth/admin/custom-claims
-						setUser({
-							data: newUser,
-							// @ts-ignore (ParsedToken has invalid schema)
-							admin: idTokenResult.claims?.admin === true,
+						setState({
+							loading: false,
+							error: false,
+							data: {
+								data: newUser,
+								// custom claims: see https://firebase.google.com/docs/auth/admin/custom-claims
+								// @ts-ignore (because ParsedToken has invalid TypeScript schema definition)
+								admin: idTokenResult.claims?.admin === true,
+							},
 						});
 					})
 					.catch(err => {
 						console.error(`[FirebaseUserProvider] getIdTokenResult failed`, err);
+						// TODO: setState
 					});
 			} else {
 				IS_DEVELOPMENT && console.log(`[FirebaseUserProvider] auth state changed: user signed out`);
-				setUser(null);
+				setState({
+					loading: false,
+					error: false,
+					data: null,
+				});
 			}
 		});
 
@@ -49,9 +58,9 @@ export const FirebaseUserProvider = ({ children }) => {
 
 
 	return (
-		<AppUserContext.Provider value={user}>
+		<AuthStateContext.Provider value={state}>
 			{children}
-		</AppUserContext.Provider>
+		</AuthStateContext.Provider>
 	);
 
 };

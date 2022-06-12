@@ -4,7 +4,7 @@ import React from 'react';
 import { NavLink } from '../router/compoments';
 import { R_ROOT, R_SETTINGS } from '../routes';
 import { useFormatMessageIdAsTagFn } from '../helpers/hooks';
-import { useConfiguredFirebase, useFirebaseUser } from '../firebase/hooks';
+import { useAppUser, useConfiguredFirebase } from '../firebase/hooks';
 import { isDefined } from '../helpers/common';
 import { doSignIn, doSignOut } from '../firebase/helpers';
 
@@ -14,7 +14,7 @@ export const AppHeaderUser = () => {
 	const t = useFormatMessageIdAsTagFn();
 
 	const { auth } = useConfiguredFirebase();
-	const user = useFirebaseUser();
+	const user = useAppUser();
 
 	const handleSignIn = (event) => {
 		event.preventDefault();

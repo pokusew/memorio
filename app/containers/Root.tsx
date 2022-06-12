@@ -17,6 +17,7 @@ import PageRouter from './PageRouter';
 
 import { AppState } from '../types';
 import { App } from '../components/layout';
+import LoadingBarrier from './LoadingBarrier';
 
 
 export interface RootProps {
@@ -35,9 +36,11 @@ const Root = ({ store, firebase, dm, router }: RootProps) => {
 					<RouterContext.Provider value={router}>
 						<FirebaseUserProvider>
 							<LocaleLoader>
-								<App>
-									<PageRouter />
-								</App>
+								<LoadingBarrier>
+									<App>
+										<PageRouter />
+									</App>
+								</LoadingBarrier>
 							</LocaleLoader>
 						</FirebaseUserProvider>
 					</RouterContext.Provider>
