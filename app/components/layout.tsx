@@ -91,7 +91,7 @@ export const App = ({ children }) => {
 			</main>
 
 			<footer className="app-footer">
-				<p>&copy; 2021 <a href="https://github.com/pokusew">Martin Endler</a></p>
+				<p>&copy; 2022 <a href="https://github.com/pokusew">Martin Endler</a></p>
 				<p>{t`footer.sourceCode`} <a href="https://github.com/pokusew/memorio">GitHub</a></p>
 			</footer>
 		</>
