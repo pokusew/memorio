@@ -6,8 +6,6 @@ import StoreContext from '../store/StoreContext';
 import Store from '../store/Store';
 import { ConfiguredFirebase } from '../firebase/types';
 import { FirebaseContext } from '../firebase/contexts';
-import DataManager from '../db/DataManager';
-import DataManagerContext from '../db/DataManagerContext';
 import RouterContext from '../router/RouterContext';
 import Router from '../router/Router';
 import { FirebaseUserProvider } from '../firebase/components';
@@ -23,28 +21,25 @@ import LoadingBarrier from './LoadingBarrier';
 export interface RootProps {
 	store: Store<AppState>;
 	firebase: ConfiguredFirebase;
-	dm: DataManager;
 	router: Router;
 }
 
-const Root = ({ store, firebase, dm, router }: RootProps) => {
+const Root = ({ store, firebase, router }: RootProps) => {
 
 	return (
 		<StoreContext.Provider value={store}>
 			<FirebaseContext.Provider value={firebase}>
-				<DataManagerContext.Provider value={dm}>
-					<RouterContext.Provider value={router}>
-						<FirebaseUserProvider>
-							<LocaleLoader>
-								<LoadingBarrier>
-									<App>
-										<PageRouter />
-									</App>
-								</LoadingBarrier>
-							</LocaleLoader>
-						</FirebaseUserProvider>
-					</RouterContext.Provider>
-				</DataManagerContext.Provider>
+				<RouterContext.Provider value={router}>
+					<FirebaseUserProvider>
+						<LocaleLoader>
+							<LoadingBarrier>
+								<App>
+									<PageRouter />
+								</App>
+							</LoadingBarrier>
+						</LocaleLoader>
+					</FirebaseUserProvider>
+				</RouterContext.Provider>
 			</FirebaseContext.Provider>
 		</StoreContext.Provider>
 	);

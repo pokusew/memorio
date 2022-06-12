@@ -2,15 +2,11 @@
 
 import React from 'react';
 import { Link } from '../router/compoments';
-import {
-	R_PACKAGE,
-	R_PACKAGE_PRACTICE,
-	R_PACKAGE_CATEGORY,
-} from '../routes';
+import { R_PACKAGE, R_PACKAGE_CATEGORY, R_PACKAGE_PRACTICE } from '../routes';
 import { useFormatMessageId } from '../helpers/hooks';
 import { isDefined } from '../helpers/common';
 import LocalizedDate from './LocalizedDate';
-import { LocalCategory, LocalPackage, Score } from '../types';
+import { LocalCategory, LocalPackage } from '../types';
 import { scoreToSuccessRate } from '../helpers/score';
 
 
@@ -25,10 +21,12 @@ export const PackageCard = (
 			locale,
 			name,
 			description,
-			numQuestions,
-			numCategories,
-			lastPractice,
-			score,
+			_numQuestions,
+			_numCategories,
+			userPracticeData: {
+				lastPractice,
+				score,
+			},
 		},
 	}: PackageCardProps,
 ) => {
@@ -48,8 +46,8 @@ export const PackageCard = (
 			<div className="card-content">
 				<div className="package-details">
 					{t('package.details', {
-						numQuestions,
-						numCategories,
+						numQuestions: _numQuestions,
+						numCategories: _numCategories,
 						num: chunks => <strong className="number">{chunks}</strong>,
 					})}
 				</div>
@@ -109,10 +107,12 @@ export const PackageHeader = (
 			locale,
 			name,
 			description,
-			numQuestions,
-			numCategories,
-			lastPractice,
-			score,
+			_numQuestions,
+			_numCategories,
+			userPracticeData: {
+				lastPractice,
+				score,
+			},
 		},
 	}: PackageHeaderProps,
 ) => {
@@ -131,8 +131,8 @@ export const PackageHeader = (
 			<div className="package-content">
 				<div className="package-details">
 					{t('package.details', {
-						numQuestions,
-						numCategories,
+						numQuestions: _numQuestions,
+						numCategories: _numCategories,
 						num: chunks => <strong className="number">{chunks}</strong>,
 					})}
 				</div>
@@ -192,9 +192,11 @@ export const CategoryCard = (
 			package: packageId,
 			id,
 			name,
-			numQuestions,
-			lastPractice,
-			score,
+			_numQuestions,
+			userPracticeData: {
+				lastPractice,
+				score,
+			},
 		},
 	}: CategoryCardProps,
 ) => {
@@ -211,7 +213,7 @@ export const CategoryCard = (
 			<div className="card-content">
 				<div className="package-details">
 					{t('category.details', {
-						numQuestions,
+						numQuestions: _numQuestions,
 						num: chunks => <strong className="number">{chunks}</strong>,
 					})}
 				</div>
@@ -274,9 +276,11 @@ export const CategoryHeader = (
 			package: packageId,
 			id,
 			name,
-			numQuestions,
-			lastPractice,
-			score,
+			_numQuestions,
+			userPracticeData: {
+				lastPractice,
+				score,
+			},
 		},
 	}: CategoryHeaderProps,
 ) => {
@@ -294,7 +298,7 @@ export const CategoryHeader = (
 			<div className="package-content">
 				<div className="package-details">
 					{t('category.details', {
-						numQuestions,
+						numQuestions: _numQuestions,
 						num: chunks => <strong className="number">{chunks}</strong>,
 					})}
 				</div>

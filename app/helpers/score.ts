@@ -1,6 +1,7 @@
 "use strict";
 
 import { LocalQuestion, Score } from '../types';
+import { isDefined } from './common';
 
 
 /**
@@ -8,7 +9,7 @@ import { LocalQuestion, Score } from '../types';
  * @param score
  */
 export const scoreToSuccessRate = (score: Score | undefined): number | undefined =>
-	score ? Math.round((score.correct * 100) / (score.correct + score.wrong)) : undefined;
+	isDefined(score) ? Math.round((score.correct * 100) / (score.correct + score.wrong)) : undefined;
 
 // TODO: improve
 export const shuffleArray = (o: Array<any>) => {
@@ -26,8 +27,12 @@ export const sortByRandom = (questions: LocalQuestion[]) => {
  */
 export const sortByScore = (questions: LocalQuestion[]) => {
 
-	const scores = new Map<number, number>(
-		questions.map(({ id, score }) => [id, scoreToSuccessRate(score) ?? -1]),
+	// question id => score as an integer in range [0, 100] (number of percents)
+	const scores = new Map<string, number>(
+		questions.map(
+			({ id, userPracticeData: { score } }) =>
+				[id, scoreToSuccessRate(score) ?? -1],
+		),
 	);
 
 	questions.sort((a, b) =>

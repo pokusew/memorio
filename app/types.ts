@@ -12,27 +12,26 @@ export interface Score {
 }
 
 export interface Package {
-	id: number;
-	version: number;
+	id: string;
 	locale: string;
 	name: string;
 	description: string;
-	numCategories: number; // precomputed by API
-	numQuestions: number; // precomputed by API
+	_numCategories: number;
+	_numQuestions: number;
 }
 
 export interface Category {
-	id: number;
-	package: number;
+	id: string;
+	package: string;
 	name: string;
-	number?: number | undefined;
-	numQuestions: number; // precomputed by API
+	number: number;
+	_numQuestions: number;
 }
 
 export interface AbstractQuestion {
-	id: number;
-	package: number;
-	category: number;
+	id: string;
+	package: string;
+	category: string;
 	number?: number | undefined;
 	type: string;
 }
@@ -69,16 +68,20 @@ export interface FullPackage extends Package {
 	questions: Question[];
 }
 
-export interface LocalData {
+export interface UserPracticeData {
 	lastPractice?: Date | undefined;
 	score?: Score | undefined;
 }
 
-export type LocalPackage = Package & LocalData;
+export interface WithUserPracticeData {
+	userPracticeData: UserPracticeData;
+}
 
-export type LocalCategory = Category & LocalData;
+export type LocalPackage = Package & WithUserPracticeData;
 
-export type LocalQuestion = Question & LocalData;
+export type LocalCategory = Category & WithUserPracticeData;
+
+export type LocalQuestion = Question & WithUserPracticeData;
 
 export type LocalFullPackage = LocalPackage & {
 	categories: LocalCategory[];

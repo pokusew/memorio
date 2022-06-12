@@ -29,7 +29,7 @@ export const AppHeaderUser = () => {
 	if (isDefined(user)) {
 		return (
 			<li>
-				<button onClick={handleSignOut}>{user.data.displayName}</button>
+				<button onClick={handleSignOut}>{user.displayName}</button>
 			</li>
 		);
 	}

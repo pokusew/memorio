@@ -3,8 +3,8 @@
 import React, { useMemo } from 'react';
 
 import { useDocumentTitle, useFormatMessageIdAsTagFn } from '../helpers/hooks';
-import { packages } from '../db/queries';
-import { useQuery } from '../db/hooks';
+import { packages } from '../data/queries';
+import { useQuery } from '../data/hooks';
 import { useRoute } from '../router/hooks';
 import { isDefined } from '../helpers/common';
 import { LoadingScreen } from '../components/layout';
@@ -20,9 +20,7 @@ const PackagePage = () => {
 
 	const { route } = useRoute();
 
-	const idStr = route?.payload?.packageId as string;
-
-	const id = parseInt(idStr);
+	const id = route?.payload?.packageId as string;
 
 	const query = useMemo(() => packages.findOneById(id), [id]);
 

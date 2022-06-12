@@ -151,7 +151,7 @@ export const useStoreValueUnsafe = <DataModel extends object, K extends keyof Da
 
 	useEffect(() => {
 
-		console.log(`[useStoreValue] listen ${path}`);
+		console.log(`[useStoreValue] listen ${path.toString()}`);
 
 		const handleValueChange = nextValue => {
 			console.log(`[useStoreValue] handleValueChange`, nextValue);
@@ -162,7 +162,7 @@ export const useStoreValueUnsafe = <DataModel extends object, K extends keyof Da
 
 		return () => {
 
-			console.log(`[useStoreValue] cleanup ${path}`);
+			console.log(`[useStoreValue] cleanup ${path.toString()}`);
 
 			unlisten();
 

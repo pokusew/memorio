@@ -12,7 +12,7 @@ import {
 import { CheckboxListInput, Option, SelectInput } from './inputs';
 
 
-export type PracticeSetupFormSubmitHandler = (mode: PracticeMode, categories: Set<number>) => void;
+export type PracticeSetupFormSubmitHandler = (mode: PracticeMode, categories: Set<string>) => void;
 
 export interface PracticeSetupFormProps {
 	package: LocalFullPackage;
@@ -48,8 +48,8 @@ export const toggleAll = (prevState: PracticeSetupFormState): PracticeSetupFormS
 
 export const createInitialPracticeSetupFormState = (pack: LocalFullPackage): PracticeSetupFormState => {
 
-	const categories = pack.categories.map(({ id, name, numQuestions }) => ({
-		label: `${name} (${numQuestions})`,
+	const categories = pack.categories.map(({ id, name, _numQuestions }) => ({
+		label: `${name} (${_numQuestions})`,
 		value: `${id}`,
 	}));
 
@@ -114,7 +114,7 @@ export const PracticeSetupForm = (props: PracticeSetupFormProps) => {
 		event.preventDefault();
 
 		if (state.categoriesSelected.size > 0) {
-			const categories = new Set(([...state.categoriesSelected.values()]).map(v => parseInt(v)));
+			const categories = new Set([...state.categoriesSelected.values()]);
 			onSubmit(state.mode, categories);
 		}
 

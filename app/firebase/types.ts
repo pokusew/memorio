@@ -11,25 +11,42 @@ export interface ConfiguredFirebase {
 	db: Firestore;
 }
 
-export interface AppUser {
-	data: User;
-	admin: boolean;
+export interface UserData {
+	practiceDataVersion: number;
 }
+
+export interface AppUser {
+	uid: string;
+	displayName: string | null;
+	admin: boolean;
+	data: UserData;
+	raw: User;
+}
+
+// AUTH_STATE_LOADING can mean two different state:
+// 1. initializing (first-time)
+// 2. loading user details (token, document)
+export const AUTH_STATE_LOADING = 'loading';
+export const AUTH_STATE_USER = 'user';
+export const AUTH_STATE_UNAUTHENTICATED = 'unauthenticated';
+export const AUTH_STATE_ERROR = 'error';
+
 
 export interface AuthStateLoading {
-	loading: true;
+	state: typeof AUTH_STATE_LOADING;
 }
 
-export interface AuthStateSuccess {
-	loading: false;
-	error: false;
-	data: AppUser | null;
+export interface AuthStateUser {
+	state: typeof AUTH_STATE_USER;
+	data: AppUser;
+}
+
+export interface AuthStateUnauthenticated {
+	state: typeof AUTH_STATE_UNAUTHENTICATED;
 }
 
 export interface AuthStateError {
-	loading: false;
-	error: true;
+	state: typeof AUTH_STATE_ERROR;
 }
 
-export type AuthState = AuthStateLoading | AuthStateSuccess | AuthStateError;
-
+export type AuthState = AuthStateLoading | AuthStateUser | AuthStateUnauthenticated | AuthStateError;

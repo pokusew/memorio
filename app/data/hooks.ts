@@ -1,14 +1,13 @@
 "use strict";
 
-import { useCallback, useContext, useDebugValue, useEffect, useState } from 'react';
+import { useDebugValue, useEffect, useState } from 'react';
+import { Firestore } from 'firebase/firestore';
+import { useAppUser, useConfiguredFirebase } from '../firebase/hooks';
+import { AppUser } from '../firebase/types';
+import { IS_DEVELOPMENT } from '../helpers/common';
 
-import DataManagerContext from './DataManagerContext';
-import DataManager from './DataManager';
 
-
-export const useDataManager = () => useContext<DataManager>(DataManagerContext);
-
-export type QueryExecutor<QueryResult> = (dm: DataManager) => Promise<QueryResult>;
+export type QueryExecutor<QueryResult> = (db: Firestore, user: AppUser | null) => Promise<QueryResult>;
 
 export interface QueryOperationLoading<T> {
 	loading: true;
@@ -32,17 +31,20 @@ export type QueryOperation<T> = QueryOperationLoading<T> | QueryOperationSuccess
 
 
 interface QueryHookState<T> {
-	dm: DataManager;
+	db: Firestore;
+	user: AppUser | null;
 	query: QueryExecutor<T>;
 	value: QueryOperation<T>;
 }
 
 export const useQuery = <T>(query: QueryExecutor<T>): QueryOperation<T> => {
 
-	const dm = useDataManager();
+	const { db } = useConfiguredFirebase();
+	const user = useAppUser();
 
 	const [state, setState] = useState<QueryHookState<T>>(() => ({
-		dm,
+		db,
+		user,
 		query,
 		value: {
 			loading: true,
@@ -53,7 +55,7 @@ export const useQuery = <T>(query: QueryExecutor<T>): QueryOperation<T> => {
 
 	let valueToReturn = state.value;
 
-	if (state.dm !== dm || state.query !== query) {
+	if (state.db !== db || state.user !== user || state.query !== query) {
 
 		valueToReturn = {
 			loading: true,
@@ -62,7 +64,8 @@ export const useQuery = <T>(query: QueryExecutor<T>): QueryOperation<T> => {
 		};
 
 		setState({
-			dm,
+			db,
+			user,
 			query,
 			value: {
 				loading: true,
@@ -102,13 +105,14 @@ export const useQuery = <T>(query: QueryExecutor<T>): QueryOperation<T> => {
 			let value: QueryOperation<T>;
 
 			try {
-				const data = await query(dm);
+				const data = await query(db, user);
 				value = {
 					loading: false,
 					error: false,
 					data,
-				}
+				};
 			} catch (err) {
+				console.error('[useQuery] query error', err);
 				value = {
 					loading: false,
 					error: true,
@@ -117,7 +121,7 @@ export const useQuery = <T>(query: QueryExecutor<T>): QueryOperation<T> => {
 			}
 
 			if (didUnsubscribe) {
-				console.warn('finished but unsubscribed');
+				IS_DEVELOPMENT && console.warn('[useQuery] ignoring query result because already unsubscribed');
 				return;
 			}
 
@@ -127,7 +131,7 @@ export const useQuery = <T>(query: QueryExecutor<T>): QueryOperation<T> => {
 				// Since we subscribe an unsubscribe in a passive effect,
 				// it's possible that this callback will be invoked for a stale (previous) subscription.
 				// This check avoids scheduling an update for that stale subscription.
-				if (prevState.dm !== dm || prevState.query !== query) {
+				if (prevState.db !== db || prevState.query !== query) {
 					return prevState;
 				}
 
@@ -147,11 +151,10 @@ export const useQuery = <T>(query: QueryExecutor<T>): QueryOperation<T> => {
 		executeQuery();
 
 		return () => {
-			console.log('didUnsubscribe = true');
 			didUnsubscribe = true;
 		};
 
-	}, [dm, query]);
+	}, [db, user, query]);
 
 	// Return the current value for our caller to use while rendering.
 	return valueToReturn;

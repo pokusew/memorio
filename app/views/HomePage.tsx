@@ -3,8 +3,8 @@
 import React, { useMemo } from 'react';
 
 import { useDocumentTitle, useFormatMessageIdAsTagFn } from '../helpers/hooks';
-import { packages } from '../db/queries';
-import { useQuery } from '../db/hooks';
+import { packages } from '../data/queries';
+import { useQuery } from '../data/hooks';
 import { LoadingError, LoadingScreen } from '../components/layout';
 import { PackageCard } from '../components/content';
 

@@ -3,14 +3,14 @@
 import React, { useMemo } from 'react';
 
 import { useDocumentTitle, useFormatMessageId } from '../helpers/hooks';
-import { packages } from '../db/queries';
-import { useQuery } from '../db/hooks';
+import { packages } from '../data/queries';
+import { useQuery } from '../data/hooks';
 import { useRoute } from '../router/hooks';
 import { isDefined } from '../helpers/common';
 import { LoadingScreen } from '../components/layout';
 import NotFoundPage from './NotFoundPage';
 import { CategoryHeader } from '../components/content';
-import { Category } from '../types';
+import { Category, LocalCategory } from '../types';
 import classNames from 'classnames';
 import { R_PACKAGE_CATEGORY } from '../routes';
 import { Breadcrumbs } from '../components/breadcrumbs';
@@ -22,17 +22,15 @@ const CategoryPage = () => {
 
 	const { route } = useRoute();
 
-	const packageIdStr = route?.payload?.packageId as string;
-	const packageId = parseInt(packageIdStr);
+	const packageId = route?.payload?.packageId as string;
 
-	const categoryIdStr = route?.payload?.categoryId as string;
-	const categoryId = parseInt(categoryIdStr);
+	const categoryId = route?.payload?.categoryId as string;
 
 	const query = useMemo(() => packages.findOneById(packageId), [packageId]);
 
 	const op = useQuery(query);
 
-	const category: Category | undefined = isDefined(op.data)
+	const category: LocalCategory | undefined = isDefined(op.data)
 		? op.data.categories.find(({ id }) => id === categoryId)
 		: undefined;
 

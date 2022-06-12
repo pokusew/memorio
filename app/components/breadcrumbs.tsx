@@ -2,22 +2,16 @@
 
 import React from 'react';
 import { Link } from '../router/compoments';
-import {
-	R_ROOT,
-	R_SETTINGS,
-	R_PACKAGE,
-	R_PACKAGE_CATEGORY,
-	R_PACKAGE_PRACTICE,
-} from '../routes';
+import { R_PACKAGE, R_PACKAGE_CATEGORY, R_PACKAGE_PRACTICE, R_ROOT, R_SETTINGS } from '../routes';
 import { useFormatMessageId } from '../helpers/hooks';
 
 
 export type BreadcrumbsProps =
 	| { name: typeof R_ROOT }
 	| { name: typeof R_SETTINGS }
-	| { name: typeof R_PACKAGE; packageId: number; packageName: string }
-	| { name: typeof R_PACKAGE_CATEGORY; packageId: number; packageName: string; categoryId: number; categoryName: string; }
-	| { name: typeof R_PACKAGE_PRACTICE; packageId: number; packageName: string }
+	| { name: typeof R_PACKAGE; packageId: string; packageName: string }
+	| { name: typeof R_PACKAGE_CATEGORY; packageId: string; packageName: string; categoryId: string; categoryName: string; }
+	| { name: typeof R_PACKAGE_PRACTICE; packageId: string; packageName: string }
 
 export type BreadcrumbsLink = {
 	name: string;

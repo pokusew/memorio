@@ -7,8 +7,8 @@ import {
 	useFormatMessageIdAsTagFn,
 	useStoreValueSoundEffects,
 } from '../helpers/hooks';
-import { packages } from '../db/queries';
-import { useDataManager, useQuery } from '../db/hooks';
+import { packages, updateScore } from '../data/queries';
+import { useQuery } from '../data/hooks';
 import { LocalFullPackage, LocalQuestion, PracticeMode } from '../types';
 import { useRoute } from '../router/hooks';
 import { isDefined } from '../helpers/common';
@@ -21,7 +21,7 @@ import { Breadcrumbs } from '../components/breadcrumbs';
 import { Link } from '../router/compoments';
 import { SoundPlayer } from '../sounds/sound-player';
 import { sortByOrder, sortByRandom, sortByScore } from '../helpers/score';
-
+import { useAppUser, useConfiguredFirebase } from '../firebase/hooks';
 
 const STATE_INITIAL = 'initial';
 const STATE_PRACTICE = 'practice';
@@ -35,7 +35,7 @@ interface PracticePageStatePractice {
 	pack: LocalFullPackage;
 	state: typeof STATE_PRACTICE;
 	mode: PracticeMode;
-	categories: Set<number>;
+	categories: Set<string>;
 	questions: LocalQuestion[];
 	index: number;
 }
@@ -46,7 +46,7 @@ interface PracticePageProps {
 	package: LocalFullPackage;
 }
 
-export const createPracticeQuestions = (mode: PracticeMode, categories: Set<number>, allQuestions: LocalQuestion[]) => {
+export const createPracticeQuestions = (mode: PracticeMode, categories: Set<string>, allQuestions: LocalQuestion[]) => {
 
 	const questions = allQuestions.filter(({ category }) => categories.has(category));
 
@@ -70,7 +70,8 @@ const PracticePage = (props: PracticePageProps) => {
 
 	const t = useFormatMessageId();
 
-	const dm = useDataManager();
+	const { db } = useConfiguredFirebase();
+	const user = useAppUser();
 
 	const [soundEffects] = useStoreValueSoundEffects();
 
@@ -124,17 +125,30 @@ const PracticePage = (props: PracticePageProps) => {
 			return;
 		}
 
+		const packageId = state.questions[state.index].package;
+		const categoryId = state.questions[state.index].category;
 		const questionId = state.questions[state.index].id;
 
 		console.log(`[handleUpdateScore]`, questionId, correct);
 
-		dm.updateScore(questionId, correct)
-			.then(() => {
-				console.log('[handleUpdateScore] successfully updated');
-			})
-			.catch(err => {
-				console.error(`[handleUpdateScore] dm.updateScore(${questionId}, ${correct}) failed`, err);
-			});
+		if (isDefined(user)) {
+			updateScore(
+				db,
+				user,
+				user.data.practiceDataVersion,
+				packageId,
+				categoryId,
+				questionId,
+				new Date(),
+				correct,
+			)
+				.then(() => {
+					console.log('[handleUpdateScore] successfully updated');
+				})
+				.catch(err => {
+					console.error(`[handleUpdateScore] updateScore failed`, err);
+				});
+		}
 
 		if (soundEffects) {
 			if (correct) {
@@ -145,7 +159,7 @@ const PracticePage = (props: PracticePageProps) => {
 		}
 
 
-	}, [state, dm, soundEffects]);
+	}, [state, db, user, soundEffects]);
 
 	if (state.state == STATE_INITIAL) {
 		return (
@@ -231,9 +245,7 @@ const PracticePageWrapper = () => {
 
 	const { route } = useRoute();
 
-	const idStr = route?.payload?.packageId as string;
-
-	const id = parseInt(idStr);
+	const id = route?.payload?.packageId as string;
 
 	const query = useMemo(() => packages.findOneById(id), [id]);
 

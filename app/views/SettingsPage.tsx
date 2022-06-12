@@ -13,7 +13,8 @@ import {
 import { Option, SelectInput, ToggleInput } from '../components/inputs';
 import { isDefined } from '../helpers/common';
 import { useIntl } from 'react-intl';
-import { useDataManager } from '../db/hooks';
+import { useAppUser, useConfiguredFirebase } from '../firebase/hooks';
+import { deleteAllScores } from '../data/queries';
 
 
 const LOCALE_OPTIONS: Option[] = [
@@ -33,7 +34,8 @@ const LOCALE_OPTIONS: Option[] = [
 
 const SettingsPage = () => {
 
-	const dm = useDataManager();
+	const { db } = useConfiguredFirebase();
+	const user = useAppUser();
 
 	const intl = useIntl();
 	const getRawIntlMessage = createGetRawIntlMessage(intl);
@@ -52,10 +54,14 @@ const SettingsPage = () => {
 
 		event.preventDefault();
 
+		if (!isDefined(user)) {
+			return;
+		}
+
 		// TODO: implement custom non-blocking app modals
 		if (confirm(t`settingsPage.deleteScoresConfirmation`)) {
 			// TODO: provide feedback to the UI
-			dm.deleteScores()
+			deleteAllScores(db, user)
 				.then(() => {
 					console.log(`[handleDeleteScores] successfully deleted`);
 				})
@@ -64,7 +70,7 @@ const SettingsPage = () => {
 				});
 		}
 
-	}, [t, dm]);
+	}, [t, db, user]);
 
 	const handleDeleteAllLocalData = useCallback<React.MouseEventHandler<HTMLButtonElement>>((event) => {
 
@@ -73,16 +79,10 @@ const SettingsPage = () => {
 		// TODO: implement custom non-blocking app modals
 		if (confirm(t`settingsPage.deleteAllLocalDataConfirmation`)) {
 			// TODO: provide feedback to the UI
-			dm.deleteAllLocalData()
-				.then(() => {
-					console.log(`[handleDeleteAllLocalData] successfully deleted`);
-				})
-				.catch(err => {
-					console.log(`[handleDeleteAllLocalData] an error`, err);
-				});
+			// TODO: implement once we start using Firebase's offline features
 		}
 
-	}, [t, dm]);
+	}, [t]);
 
 	const handleLocaleChange = useCallback<React.ChangeEventHandler<HTMLSelectElement>>((event) => {
 		setLocale(event.target.value);
