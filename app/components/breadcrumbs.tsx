@@ -74,7 +74,7 @@ export const breadcrumbsPropsToLinks = (t: ReturnType<typeof useFormatMessageId>
 
 		if (props.name === R_PACKAGE_PRACTICE) {
 			links.push({
-				name: R_PACKAGE,
+				name: R_PACKAGE_PRACTICE,
 				payload: {
 					packageId: props.packageId,
 				},
