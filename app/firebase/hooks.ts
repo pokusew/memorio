@@ -2,8 +2,9 @@
 
 import { useContext } from 'react';
 
-import FirebaseContext from './FirebaseContext';
-import { ConfiguredFirebase } from './types';
+import { FirebaseContext, AppUserContext } from './contexts';
 
 
-export const useConfiguredFirebase = () => useContext<ConfiguredFirebase>(FirebaseContext);
+export const useConfiguredFirebase = () => useContext(FirebaseContext);
+
+export const useFirebaseUser = () => useContext(AppUserContext);

@@ -17,6 +17,7 @@ export default {
 	},
 	header: {
 		appName: `Memorio`,
+		signIn: `Přihlásit se`,
 	},
 	footer: {
 		sourceCode: `Zdrojový kód na`,

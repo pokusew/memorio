@@ -4,7 +4,43 @@ import React from 'react';
 import { NavLink } from '../router/compoments';
 import { R_ROOT, R_SETTINGS } from '../routes';
 import { useFormatMessageIdAsTagFn } from '../helpers/hooks';
+import { useConfiguredFirebase, useFirebaseUser } from '../firebase/hooks';
+import { isDefined } from '../helpers/common';
+import { doSignIn, doSignOut } from '../firebase/helpers';
 
+
+export const AppHeaderUser = () => {
+
+	const t = useFormatMessageIdAsTagFn();
+
+	const { auth } = useConfiguredFirebase();
+	const user = useFirebaseUser();
+
+	const handleSignIn = (event) => {
+		event.preventDefault();
+		doSignIn(auth);
+	};
+
+	const handleSignOut = (event) => {
+		event.preventDefault();
+		doSignOut(auth);
+	};
+
+	if (isDefined(user)) {
+		return (
+			<li>
+				<button onClick={handleSignOut}>{user.data.displayName}</button>
+			</li>
+		);
+	}
+
+	return (
+		<li>
+			<button onClick={handleSignIn}>{t`header.signIn`}</button>
+		</li>
+	);
+
+};
 
 export const AppHeader = React.memo((props) => {
 
@@ -29,6 +65,7 @@ export const AppHeader = React.memo((props) => {
 						<li>
 							<NavLink name={R_SETTINGS}>{t`titles.settings`}</NavLink>
 						</li>
+						<AppHeaderUser />
 					</ul>
 				</nav>
 

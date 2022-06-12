@@ -17,6 +17,7 @@ export default {
 	},
 	header: {
 		appName: `Memorio`,
+		signIn: `Sign in`,
 	},
 	footer: {
 		sourceCode: `Source code on`,
