@@ -87,7 +87,7 @@ export const Redirect = (props: LinkProps) => {
 
 	useEffect(() => {
 
-		console.log(`[Redirect] redirecting to ${href}`);
+		IS_DEVELOPMENT && console.log(`[Redirect] redirecting to ${href}`);
 
 		router.redirectUsingUrl(href);
 

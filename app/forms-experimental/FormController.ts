@@ -2,27 +2,27 @@
 
 import React from 'react';
 
-import { isDefined } from '../helpers/common';
+import { IS_DEVELOPMENT, isDefined } from '../helpers/common';
 import {
-	MemoizedFieldRegister,
-	FieldOptions,
-	FieldRegistration,
-	FieldElement,
-	FieldRegister,
-	FormOnSubmitHandler,
-	OnSubmitHandler,
-	FieldValidityState,
 	FieldChangeListener,
+	FieldElement,
+	FieldOptions,
+	FieldRegister,
+	FieldRegistration,
+	FieldValidityState,
+	FormOnSubmitHandler,
+	MemoizedFieldRegister,
+	OnSubmitHandler,
 } from './common';
 import {
-	optionsToDependencies,
-	findRegister,
 	addEventListeners,
-	removeAllEventListeners,
-	syncValidationAttributes,
-	isRadio,
+	findRegister,
 	getFieldValue,
+	isRadio,
+	optionsToDependencies,
+	removeAllEventListeners,
 	setFieldValue,
+	syncValidationAttributes,
 } from './helpers';
 import { deepClone, getValue, setValue } from './object-utils';
 import { AutoMap } from '../helpers/maps';
@@ -89,7 +89,7 @@ export default class FormController<DataShape> {
 			return;
 		}
 
-		console.log(`[FormController:${this._name}] name change from '${this._name}' to '${name}'`);
+		IS_DEVELOPMENT && console.log(`[FormController:${this._name}] name change from '${this._name}' to '${name}'`);
 		this._name = name;
 		// TODO: notify
 
@@ -105,7 +105,7 @@ export default class FormController<DataShape> {
 			return;
 		}
 
-		console.log(`[FormController:${this._name}] initialValues change`);
+		IS_DEVELOPMENT && console.log(`[FormController:${this._name}] initialValues change`);
 		this._initialValues = initialValues;
 		// TODO: make this behaviour configurable via enableReinitialize
 		// TODO: reset and notify
@@ -122,7 +122,7 @@ export default class FormController<DataShape> {
 			return;
 		}
 
-		console.log(`[FormController:${this._name}] onSubmit change`);
+		IS_DEVELOPMENT && console.log(`[FormController:${this._name}] onSubmit change`);
 		this._onSubmit = onSubmit;
 		// no need to notify
 
@@ -159,12 +159,12 @@ export default class FormController<DataShape> {
 
 	public listenForFieldChange(name: string, onChange: FieldChangeListener): () => void {
 
-		// console.log(`[FormController:${this._name}] listen for field change ${name}`);
+		// IS_DEVELOPMENT && console.log(`[FormController:${this._name}] listen for field change ${name}`);
 
 		this.fieldChangeListeners.use(name).add(onChange);
 
 		return () => {
-			// console.log(`[FormController:${this._name}] unlisten for field change ${name}`);
+			// IS_DEVELOPMENT && console.log(`[FormController:${this._name}] unlisten for field change ${name}`);
 			this.fieldChangeListeners.get(name)?.delete(onChange);
 			this.fieldChangeListeners.safeDelete(name);
 		};
@@ -173,7 +173,7 @@ export default class FormController<DataShape> {
 
 	private notify(field: FieldRegistration): void {
 
-		console.log(`[FormController:${this._name}] notify ${field.name}`);
+		IS_DEVELOPMENT && console.log(`[FormController:${this._name}] notify ${field.name}`);
 
 		const fieldListeners = this.fieldChangeListeners.get(field.name);
 
@@ -187,7 +187,7 @@ export default class FormController<DataShape> {
 
 	private revalidate(field: FieldRegistration, force: boolean = false): boolean {
 
-		// console.log(`revalidate ${field.name}`);
+		// IS_DEVELOPMENT && console.log(`revalidate ${field.name}`);
 
 		// TODO: support custom validation
 
@@ -243,7 +243,7 @@ export default class FormController<DataShape> {
 		}
 
 		if (notify) {
-			console.log(`[FormController:${this._name}][revalidate] validity change of`, field);
+			IS_DEVELOPMENT && console.log(`[FormController:${this._name}][revalidate] validity change of`, field);
 			this.notify(field);
 		}
 
@@ -273,7 +273,7 @@ export default class FormController<DataShape> {
 		const field = this.fields.get(name);
 
 		if (!isDefined(field)) {
-			console.log(`[FormController:${this._name}][handleNativeInputEvent] undefined field '${name}'`, event);
+			IS_DEVELOPMENT && console.log(`[FormController:${this._name}][handleNativeInputEvent] undefined field '${name}'`, event);
 			return;
 		}
 
@@ -322,7 +322,7 @@ export default class FormController<DataShape> {
 		event.preventDefault();
 		event.stopPropagation();
 
-		console.log(`[FormController:${this._name}][handleSubmit] values=%o fields=%o`, this.values, this.fields);
+		IS_DEVELOPMENT && console.log(`[FormController:${this._name}][handleSubmit] values=%o fields=%o`, this.values, this.fields);
 
 		// const formRef: HTMLFormElement = event.currentTarget;
 
@@ -340,15 +340,15 @@ export default class FormController<DataShape> {
 		// 	values.set(name, ref.value);
 		// }
 
-		// console.log(values);
+		// IS_DEVELOPMENT && console.log(values);
 
 		// see https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/formdata_event
 		// const data: FormData = new FormData(event.currentTarget);
 		//
-		// console.log([...data]);
+		// IS_DEVELOPMENT && console.log([...data]);
 		//
 		// for (const [key, value] of data) {
-		// 	console.log(`key='${key}' has value='${value}'`);
+		// 	IS_DEVELOPMENT && console.log(`key='${key}' has value='${value}'`);
 		// }
 
 	}
@@ -365,7 +365,7 @@ export default class FormController<DataShape> {
 			throw new Error('input type=radio is not supported via register, use controlled component');
 		}
 
-		console.log(`[FormController:${this._name}][refCallback:${name}] registerField`, name);
+		IS_DEVELOPMENT && console.log(`[FormController:${this._name}][refCallback:${name}] registerField`, name);
 
 		const initialValue = getValue(this.values, name);
 
@@ -402,7 +402,7 @@ export default class FormController<DataShape> {
 
 		// assert name === field.name
 
-		console.log(`[FormController:${this._name}][refCallback:${name}] deregisterField`, name);
+		IS_DEVELOPMENT && console.log(`[FormController:${this._name}][refCallback:${name}] deregisterField`, name);
 
 		removeAllEventListeners(field.ref, this.nativeInputEventHandler);
 
@@ -418,7 +418,7 @@ export default class FormController<DataShape> {
 		const memoizedRegister = findRegister(this.memoizedFieldRegister, name, dependencies);
 
 		if (isDefined(memoizedRegister)) {
-			console.log(`[FormController:${this._name}][register] HIT ${name}`);
+			IS_DEVELOPMENT && console.log(`[FormController:${this._name}][register] HIT ${name}`);
 			return memoizedRegister;
 		}
 
@@ -433,7 +433,7 @@ export default class FormController<DataShape> {
 		// But I do NOT know if we can always rely on the order.
 		register = (node: FieldElement | null) => {
 
-			// console.log(`[FormController:${this._name}][refCallback:${name}]`);
+			// IS_DEVELOPMENT && console.log(`[FormController:${this._name}][refCallback:${name}]`);
 
 			const field: FieldRegistration | undefined = this.fields.get(name);
 
@@ -449,12 +449,12 @@ export default class FormController<DataShape> {
 				return;
 			}
 
-			console.log(`[FormController:${this._name}][refCallback:${name}] unexpected field/node combination`, field, node);
+			IS_DEVELOPMENT && console.log(`[FormController:${this._name}][refCallback:${name}] unexpected field/node combination`, field, node);
 			throw new Error(`[FormController:${this._name}][refCallback:${name}] unexpected field/node combination`);
 
 		};
 
-		console.log(`[FormController:${this._name}][register] MISS ${name}`);
+		IS_DEVELOPMENT && console.log(`[FormController:${this._name}][register] MISS ${name}`);
 
 		return register;
 

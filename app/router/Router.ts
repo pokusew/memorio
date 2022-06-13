@@ -2,15 +2,15 @@
 
 import { IS_DEVELOPMENT, isDefined, isEmpty } from '../helpers/common';
 import {
-	Route,
+	INVALID_LINK,
 	LocationListener,
-	RouteUrlGenerator,
+	Route,
+	RouteMatcher,
 	RoutesMap,
 	RouteToUrlMap,
-	UrlToRouteMap,
-	INVALID_LINK,
-	RouteMatcher,
+	RouteUrlGenerator,
 	UnlistenFunction,
+	UrlToRouteMap,
 } from './common';
 import { DOMAttributes } from 'react';
 
@@ -249,7 +249,7 @@ class Router {
 		this.urlToRouteMap = createUrlToRouteMap(routesMap);
 		this.listeners = new Set();
 		this.popstateHandler = event => {
-			console.log('[Router] popstate', location, event);
+			IS_DEVELOPMENT && console.log('[Router] popstate', location, event);
 			this.updateRoute(event);
 		};
 
@@ -295,11 +295,11 @@ class Router {
 		const route = this.convertUrlToRoute(this.pathname);
 
 		if (areRoutesEqual(this.route, route)) {
-			console.log('[Router] areRoutesEqual === true', route);
+			IS_DEVELOPMENT && console.log('[Router] areRoutesEqual === true', route);
 			return;
 		}
 
-		console.log('[Router] updating route', route);
+		IS_DEVELOPMENT && console.log('[Router] updating route', route);
 		this.route = route;
 		this.notify();
 
@@ -309,7 +309,7 @@ class Router {
 	private historyPush(url: string | null, data?: any) {
 
 		if (location.href === url /* && history.state === data */) {
-			console.log(`[Router] ignoring historyPush`, url);
+			IS_DEVELOPMENT && console.log(`[Router] ignoring historyPush`, url);
 			return;
 		}
 
@@ -327,7 +327,7 @@ class Router {
 	private historyReplace(url: string | null, data?: any) {
 
 		if (location.href === url /* && history.state === data */) {
-			console.log(`[Router] ignoring historyReplace`, url);
+			IS_DEVELOPMENT && console.log(`[Router] ignoring historyReplace`, url);
 			return;
 		}
 

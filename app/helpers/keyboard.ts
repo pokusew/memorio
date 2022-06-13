@@ -20,13 +20,13 @@ export const useOnKeyDownEvent = (onKeyDown: (event: KeyboardEvent) => void) => 
 
 		};
 
-		IS_DEVELOPMENT && console.log(`[useOnKeyDownEvent] setup`);
+		// IS_DEVELOPMENT && console.log(`[useOnKeyDownEvent] setup`);
 
 		window.addEventListener('keydown', handler);
 
 		return () => {
 			didUnsubscribe = true;
-			IS_DEVELOPMENT && console.log(`[useOnKeyDownEvent] cleanup`);
+			// IS_DEVELOPMENT && console.log(`[useOnKeyDownEvent] cleanup`);
 			window.removeEventListener('keydown', handler);
 		};
 

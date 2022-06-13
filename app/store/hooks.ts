@@ -135,45 +135,6 @@ export const useStoreValue = <DataModel extends object, K extends keyof DataMode
 
 };
 
-
-export const useStoreValueUnsafe = <DataModel extends object, K extends keyof DataModel>(path: K): [DataModel[K] | undefined, StoreValueSetter<DataModel[K]>] => {
-
-	// TODO: better approach without using increment counter to forceUpdate?
-
-	const store: Store<DataModel> = useStore();
-
-	const [version, setVersion] = useState<number>(1);
-
-	const setValue = useCallback<StoreValueSetter<DataModel[K]>>(
-		nextValue => store.update(path, nextValue),
-		[path, store],
-	);
-
-	useEffect(() => {
-
-		console.log(`[useStoreValue] listen ${path.toString()}`);
-
-		const handleValueChange = nextValue => {
-			console.log(`[useStoreValue] handleValueChange`, nextValue);
-			setVersion(v => v === Number.MAX_SAFE_INTEGER ? 1 : v + 1);
-		};
-
-		const unlisten = store.listen(path, handleValueChange);
-
-		return () => {
-
-			console.log(`[useStoreValue] cleanup ${path.toString()}`);
-
-			unlisten();
-
-		};
-
-	}, [store, path, setVersion]);
-
-	return [store.getState().get(path), setValue];
-
-};
-
 export const useStoreValueSetter = <DataModel extends object, K extends keyof DataModel>(path: K): StoreValueSetter<DataModel[K]> => {
 
 	const store: Store<DataModel> = useStore();

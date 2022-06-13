@@ -18,7 +18,7 @@ export const copyOnClick = event => {
 	if (!isDefined(selection)) {
 		// note: this should never happen as the selection is created
 		//       in range.selectNodeContents(event.target);
-		console.error('Error while copying target to clipboard: selection is null', selection);
+		console.error(`[copyOnClick] Error while copying target to clipboard: selection is null`, selection);
 		return;
 	}
 
@@ -28,13 +28,12 @@ export const copyOnClick = event => {
 	try {
 		const result = document.execCommand('copy');
 		if (result) {
-			console.log(`Copied target to clipboard!`);
-		}
-		else {
-			console.warn(`Unable to copy target to clipboard!`);
+			console.log(`[copyOnClick] Copied target to clipboard!`);
+		} else {
+			console.warn(`[copyOnClick] Unable to copy target to clipboard!`);
 		}
 	} catch (err) {
-		console.error('Error while copying target to clipboard:', err);
+		console.error(`[copyOnClick] Error while copying target to clipboard:`, err);
 	}
 
 	selection.removeAllRanges();

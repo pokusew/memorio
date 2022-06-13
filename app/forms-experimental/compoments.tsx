@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { OnSubmitHandler } from './common';
 import FormContext, { FormContextShape } from './FormContext';
 import FormController from './FormController';
+import { IS_DEVELOPMENT } from '../helpers/common';
 
 
 export interface FormProps<DataShape>
@@ -27,14 +28,14 @@ export const Form = <DataShape extends any>({ name, onSubmit, nativeErrorReporti
 	context.controller.name = name;
 	context.controller.onSubmit = onSubmit;
 
-	console.log(`[Form] rendering`, name);
+	IS_DEVELOPMENT && console.log(`[Form] rendering`, name);
 
 	useEffect(() => {
 
-		console.log(`[Form] useEffect`, name);
+		IS_DEVELOPMENT && console.log(`[Form] useEffect`, name);
 
 		return () => {
-			console.log(`[Form] useEffect:cleanup`, name);
+			IS_DEVELOPMENT && console.log(`[Form] useEffect:cleanup`, name);
 		};
 
 	}, [name]);
