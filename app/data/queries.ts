@@ -14,7 +14,7 @@ import {
 	writeBatch,
 } from 'firebase/firestore';
 import { AppUser } from '../firebase/types';
-import { isDefined } from '../helpers/common';
+import { IS_DEVELOPMENT, isDefined } from '../helpers/common';
 
 
 const DEFAULT_DELAY = 1000;
@@ -32,8 +32,17 @@ const userPracticeDataFromFirebase = (data) => {
 	};
 };
 
+export interface WithOptionalNumber {
+	number?: number | undefined;
+}
+
+export const byNumberAscending = (a: WithOptionalNumber, b: WithOptionalNumber): number =>
+	(a.number ?? 0) - (b.number ?? 0);
+
 export const packages = {
 	findAll: () => async (db: Firestore, user: AppUser | null): Promise<LocalPackage[]> => {
+
+		IS_DEVELOPMENT && console.log(`[queries] user=${user?.uid ?? '(none)'} packages.findAll()`);
 
 		const queries: Promise<QuerySnapshot>[] = [];
 
@@ -72,11 +81,14 @@ export const packages = {
 	},
 	findOneById: (id: string) => async (db: Firestore, user: AppUser | null): Promise<LocalFullPackage | undefined> => {
 
-		console.log('running', id);
+		IS_DEVELOPMENT && console.log(`[queries] user=${user?.uid ?? '(none)'} packages.findOneById(id='${id}')`);
 
 		const queries: Promise<any>[] = [];
 
 		queries.push(getDoc(doc(db, 'packages', id)));
+		// TODO: order categories and questions by number directly using Firestore
+		//       once we ensure that all documents have the number field
+		//       see https://firebase.google.com/docs/firestore/query-data/order-limit-data
 		queries.push(getDocs(collection(db, 'packages', id, 'categories')));
 		queries.push(getDocs(collection(db, 'packages', id, 'questions')));
 
@@ -150,7 +162,13 @@ export const packages = {
 			});
 		}
 
-		console.log('got result', pack);
+		// in-place sort
+		pack.categories.sort(byNumberAscending);
+		pack.questions.sort(byNumberAscending);
+
+		// IS_DEVELOPMENT && console.log(
+		// 	`[queries] user=${user?.uid ?? '(none)'} packages.findOneById(id='${id}') pack =`, pack,
+		// );
 
 		return pack;
 
