@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useFormatMessageId } from '../helpers/hooks';
 import { Choice, Question } from '../types';
 import classNames from 'classnames';
-import { isDefined } from '../helpers/common';
+import { IS_DEVELOPMENT, isDefined } from '../helpers/common';
 import { useOnKeyDownEvent } from '../helpers/keyboard';
 
 
@@ -77,7 +77,7 @@ export const ChoiceBox = (
 
 };
 
-export interface QuestionFormState {
+export interface QuestionPracticeFormState {
 	question: Question;
 	choicesCorrect: Map<number, boolean>;
 	choicesSelected: Map<number, boolean>;
@@ -87,14 +87,14 @@ export interface QuestionFormState {
 	} | undefined,
 }
 
-export const validate = (prevState: QuestionFormState): QuestionFormState => {
+export const validate = (prevState: QuestionPracticeFormState): QuestionPracticeFormState => {
 
 	// already validated
 	if (isDefined(prevState.validation)) {
 		return prevState;
 	}
 
-	console.log(`[validate] validating`);
+	IS_DEVELOPMENT && console.log(`[QuestionPracticeForm/validate] validating`);
 
 	const { question, choicesCorrect, choicesSelected } = prevState;
 
@@ -110,7 +110,7 @@ export const validate = (prevState: QuestionFormState): QuestionFormState => {
 
 };
 
-export const toggleChoice = (choiceId: number) => (prevState: QuestionFormState): QuestionFormState => {
+export const toggleChoice = (choiceId: number) => (prevState: QuestionPracticeFormState): QuestionPracticeFormState => {
 
 	// state is immutable after the question is validated
 	if (isDefined(prevState.validation)) {
@@ -180,7 +180,7 @@ export const choiceIdToLetterKey = (choiceId: number): string | undefined => {
 
 };
 
-export const createInitialQuestionFormStateFromQuestion = (question: Question): QuestionFormState => {
+export const createInitialQuestionPracticeFormStateFromQuestion = (question: Question): QuestionPracticeFormState => {
 
 	const correct = new Set<number>(question.correct);
 
@@ -197,28 +197,28 @@ export type UpdateScoreHandler = (correct: boolean) => void;
 export type NextQuestionHandler = () => void;
 
 
-export interface QuestionFormProps {
+export interface QuestionPracticeFormProps {
 	question: Question;
 	onUpdateScore: UpdateScoreHandler;
 	onNextQuestion: NextQuestionHandler;
 }
 
-export const QuestionForm = (
+export const QuestionPracticeForm = (
 	{
 		question,
 		onUpdateScore,
 		onNextQuestion,
-	}: QuestionFormProps,
+	}: QuestionPracticeFormProps,
 ) => {
 
 	const t = useFormatMessageId();
 
-	const [state, setState] = useState<QuestionFormState>(createInitialQuestionFormStateFromQuestion(question));
+	const [state, setState] = useState<QuestionPracticeFormState>(createInitialQuestionPracticeFormStateFromQuestion(question));
 
 	useEffect(() => {
 
 		if (isDefined(state.validation)) {
-			console.log(`[QuestionForm] updating score correct = `, state.validation.correct);
+			IS_DEVELOPMENT && console.log(`[QuestionPracticeForm] updating score correct = `, state.validation.correct);
 			onUpdateScore(state.validation.correct);
 		}
 
@@ -299,16 +299,16 @@ export const QuestionForm = (
 
 	useOnKeyDownEvent(handleKeyDownEvent);
 
-	// console.log(`[QuestionForm] render`, state);
+	// console.log(`[QuestionPracticeForm] render`, state);
 
 	return (
 		<form
-			className="question-form"
+			className="question-practice-form"
 			name="question"
 			onSubmit={handleSubmit}
 		>
 			<div className="question-note">
-				{t(`questionForm.types.${question.multiple ? 'multiple' : 'single'}Choice`)}
+				{t(`questionPracticeForm.types.${question.multiple ? 'multiple' : 'single'}Choice`)}
 			</div>
 			<div className="question-text">
 				{question.text}
@@ -337,11 +337,11 @@ export const QuestionForm = (
 								onNextQuestion();
 							}}
 						>
-							{t('questionForm.actions.next')} <kbd>Enter</kbd>
+							{t('questionPracticeForm.actions.next')} <kbd>Enter</kbd>
 						</button>
 						<p className="question-validation-message">
 							{t(
-								`questionForm.validation.${state.validation.correct ? 'correct' : 'wrong'}`,
+								`questionPracticeForm.validation.${state.validation.correct ? 'correct' : 'wrong'}`,
 								{
 									strong: chunks => <strong>{chunks}</strong>,
 								},
@@ -354,7 +354,7 @@ export const QuestionForm = (
 						name="submit"
 						className="btn btn-lg btn-primary btn-flex"
 					>
-						{t('questionForm.actions.validate')} <kbd>Enter</kbd>
+						{t('questionPracticeForm.actions.validate')} <kbd>Enter</kbd>
 					</button>
 				)}
 

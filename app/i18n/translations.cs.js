@@ -93,7 +93,7 @@ export default {
 		},
 		switchToBtn: `Přepnout na {url}`,
 	},
-	questionForm: {
+	questionPracticeForm: {
 		types: {
 			singleChoice: `právě jedna správná odpověď`,
 			multipleChoice: `více správných odpovědí (min. jedna, max. všechny)`,

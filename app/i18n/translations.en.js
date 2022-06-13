@@ -88,7 +88,7 @@ export default {
 		},
 		switchToBtn: `Switch to {url}`,
 	},
-	questionForm: {
+	questionPracticeForm: {
 		types: {
 			singleChoice: `exactly one correct answer`,
 			multipleChoice: `more correct answers possible (min. one, max. all)`,

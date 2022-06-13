@@ -14,7 +14,7 @@ import { useRoute } from '../router/hooks';
 import { isDefined } from '../helpers/common';
 import { LoadingScreen } from '../components/layout';
 import NotFoundPage from './NotFoundPage';
-import { NextQuestionHandler, QuestionForm, UpdateScoreHandler } from '../components/question-form';
+import { NextQuestionHandler, QuestionPracticeForm, UpdateScoreHandler } from '../components/question-practice-form';
 import { PracticeSetupForm, PracticeSetupFormSubmitHandler } from '../components/practice-setup-form';
 import { R_PACKAGE, R_PACKAGE_PRACTICE, R_SETTINGS } from '../routes';
 import { Breadcrumbs } from '../components/breadcrumbs';
@@ -227,7 +227,7 @@ const PracticePage = (props: PracticePageProps) => {
 
 			{/* NOTE: The key is needed to trigger new component creation instead of just update
 			          (needed because of the question form internal state) */}
-			<QuestionForm
+			<QuestionPracticeForm
 				key={question.id}
 				question={question}
 				onUpdateScore={handleUpdateScore}
