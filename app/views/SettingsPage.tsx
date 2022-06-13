@@ -72,17 +72,17 @@ const SettingsPage = () => {
 
 	}, [t, db, user]);
 
-	const handleDeleteAllLocalData = useCallback<React.MouseEventHandler<HTMLButtonElement>>((event) => {
-
-		event.preventDefault();
-
-		// TODO: implement custom non-blocking app modals
-		if (confirm(t`settingsPage.deleteAllLocalDataConfirmation`)) {
-			// TODO: provide feedback to the UI
-			// TODO: implement once we start using Firebase's offline features
-		}
-
-	}, [t]);
+	// const handleDeleteAllLocalData = useCallback<React.MouseEventHandler<HTMLButtonElement>>((event) => {
+	//
+	// 	event.preventDefault();
+	//
+	// 	// TODO: implement custom non-blocking app modals
+	// 	if (confirm(t`settingsPage.deleteAllLocalDataConfirmation`)) {
+	// 		// TODO: provide feedback to the UI
+	// 		// TODO: implement once we start using Firebase's offline features
+	// 	}
+	//
+	// }, [t]);
 
 	const handleLocaleChange = useCallback<React.ChangeEventHandler<HTMLSelectElement>>((event) => {
 		setLocale(event.target.value);
@@ -119,7 +119,21 @@ const SettingsPage = () => {
 				onChange={handleSoundEffectsChange}
 			/>
 
-			<h2>{t`settingsPage.dataManagementHeading`}</h2>
+			{isDefined(user) && (
+				<>
+					<h2>{t`settingsPage.dataManagementHeading`}</h2>
+
+					<button
+						className="btn btn-danger"
+						type="button"
+						onClick={handleDeleteScores}
+					>
+						{t`settingsPage.deleteScores`}
+					</button>
+				</>
+			)}
+
+			{/*<h2>{t`settingsPage.dataManagementHeading`}</h2>
 
 			<div className="btn-group">
 
@@ -139,7 +153,7 @@ const SettingsPage = () => {
 					{t`settingsPage.deleteAllLocalData`}
 				</button>
 
-			</div>
+			</div>*/}
 
 		</>
 	);
