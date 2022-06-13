@@ -134,7 +134,8 @@ export default {
 	homePage: {
 		callout: {
 			welcome: `Vítejte v aplikaci Memorio, která slouží pro procvičování otázek.`,
-			gettingStarted: `Začněte výběrem balíčku otázek. Po prvním otevření se automaticky uloží pro použití offline.`,
+			gettingStarted: `Začněte výběrem balíčku otázek.`,
+			// gettingStarted: `Začněte výběrem balíčku otázek. Po prvním otevření se automaticky uloží pro použití offline.`,
 		},
 		packagesHeading: `Přehled balíčků`,
 	},

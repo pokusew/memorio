@@ -129,7 +129,8 @@ export default {
 	homePage: {
 		callout: {
 			welcome: `Welcome to Memorio – an app for for practicing test questions.`,
-			gettingStarted: `Start by selecting a package of questions. When first opened, it is automatically saved for offline use.`,
+			gettingStarted: `Start by selecting a package of questions.`,
+			// gettingStarted: `Start by selecting a package of questions. When first opened, it is automatically saved for offline use.`,
 		},
 		packagesHeading: `Packages overview`,
 	},
