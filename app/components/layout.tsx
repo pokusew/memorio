@@ -6,7 +6,8 @@ import { R_ROOT, R_SETTINGS } from '../routes';
 import { useFormatMessageIdAsTagFn } from '../helpers/hooks';
 import { useAppUser, useConfiguredFirebase } from '../firebase/hooks';
 import { isDefined } from '../helpers/common';
-import { doSignIn, doSignOut } from '../firebase/helpers';
+import { doSignIn, doSignOut, isAdmin } from '../firebase/helpers';
+import { Button } from './common';
 
 
 export const AppHeaderUser = () => {
@@ -28,15 +29,26 @@ export const AppHeaderUser = () => {
 
 	if (isDefined(user)) {
 		return (
-			<li>
-				<button onClick={handleSignOut}>{user.displayName}</button>
+			<li className="user">
+				<Button
+					style={isAdmin(user) ? 'danger' : 'primary'}
+					className="btn-sm"
+					onClick={handleSignOut}
+				>
+					{user.displayName}
+				</Button>
 			</li>
 		);
 	}
 
 	return (
-		<li>
-			<button onClick={handleSignIn}>{t`header.signIn`}</button>
+		<li className="user">
+			<Button
+				label="header.signIn"
+				style="danger"
+				className="btn-sm"
+				onClick={handleSignIn}
+			/>
 		</li>
 	);
 
