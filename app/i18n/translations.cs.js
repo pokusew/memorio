@@ -129,6 +129,7 @@ export default {
 			correct: 'Tato možnost je správně.',
 			wrong: 'Tato možnost je špatně.',
 		},
+		edit: `Upravit`,
 	},
 	homePage: {
 		callout: {
@@ -142,6 +143,12 @@ export default {
 	},
 	categoryPage: {
 		questionsHeading: `Otázky`,
+	},
+	questionPage: {
+		heading: `Editace otázky`,
+		preview: `Náhled`,
+		prevQuestion: `Přechozí otázka`,
+		nextQuestion: `Následující otázka`,
 	},
 	practicePage: {
 		tipsHeading: `Ovládání a další tipy`,

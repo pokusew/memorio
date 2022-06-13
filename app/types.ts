@@ -84,7 +84,9 @@ export type LocalCategory = Category & WithUserPracticeData;
 export type LocalQuestion = Question & WithUserPracticeData;
 
 export type LocalFullPackage = LocalPackage & {
+	// guaranteed ordering (sorted by number)
 	categories: LocalCategory[];
+	// guaranteed ordering (sorted by number)
 	questions: LocalQuestion[];
 };
 

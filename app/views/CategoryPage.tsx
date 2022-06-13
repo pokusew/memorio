@@ -10,15 +10,20 @@ import { isDefined } from '../helpers/common';
 import { LoadingScreen } from '../components/layout';
 import NotFoundPage from './NotFoundPage';
 import { CategoryHeader } from '../components/content';
-import { Category, LocalCategory } from '../types';
+import { LocalCategory } from '../types';
 import classNames from 'classnames';
-import { R_PACKAGE_CATEGORY } from '../routes';
+import { R_PACKAGE_CATEGORY, R_PACKAGE_QUESTION } from '../routes';
 import { Breadcrumbs } from '../components/breadcrumbs';
+import { useAppUser } from '../firebase/hooks';
+import { Link } from '../router/compoments';
+import { isAdmin } from '../firebase/helpers';
 
 
 const CategoryPage = () => {
 
 	const t = useFormatMessageId();
+
+	const user = useAppUser();
 
 	const { route } = useRoute();
 
@@ -54,7 +59,7 @@ const CategoryPage = () => {
 
 	const questions = op.data.questions.filter(({ category: c }) => c === category.id);
 
-	questions.sort(({ number: a }, { number: b }) => (a ?? 0) - (b ?? 0));
+	// note: questions are already sorted by their number
 
 	return (
 		<>
@@ -108,11 +113,23 @@ const CategoryPage = () => {
 								})}
 							</ol>
 
+							{isDefined(user) && isAdmin(user) && (
+								<Link
+									className="question-edit-btn"
+									name={R_PACKAGE_QUESTION}
+									payload={{
+										packageId,
+										questionId: id,
+									}}
+								>
+									{t(`questionsList.edit`)}
+								</Link>
+							)}
+
 						</li>
 					);
 
 				})}
-
 
 			</ol>
 

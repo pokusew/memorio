@@ -1,17 +1,11 @@
 "use strict";
 
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { IS_DEVELOPMENT, isDefined } from '../helpers/common';
-import { useRouter, useRoute } from '../router/hooks';
+import { useRoute } from '../router/hooks';
 
-import {
-	R_SETTINGS,
-	R_ROOT,
-	R_PACKAGE,
-	R_PACKAGE_CATEGORY,
-	R_PACKAGE_PRACTICE,
-} from '../routes';
+import { R_PACKAGE, R_PACKAGE_CATEGORY, R_PACKAGE_PRACTICE, R_PACKAGE_QUESTION, R_ROOT, R_SETTINGS } from '../routes';
 
 import NotFoundPage from '../views/NotFoundPage';
 import SettingsPage from '../views/SettingsPage';
@@ -19,6 +13,7 @@ import HomePage from '../views/HomePage';
 import MissingRoutePage from '../views/MissingRoutePage';
 import PackagePage from '../views/PackagePage';
 import CategoryPage from '../views/CategoryPage';
+import QuestionPage from '../views/QuestionPage';
 import PracticePage from '../views/PracticePage';
 
 
@@ -46,6 +41,10 @@ const PageRouter = () => {
 
 	if (name === R_PACKAGE_CATEGORY) {
 		return <CategoryPage />;
+	}
+
+	if (name === R_PACKAGE_QUESTION) {
+		return <QuestionPage />;
 	}
 
 	if (name === R_PACKAGE_PRACTICE) {

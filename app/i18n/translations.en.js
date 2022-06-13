@@ -124,6 +124,7 @@ export default {
 			correct: 'This option is correct.',
 			wrong: 'This option is wrong.',
 		},
+		edit: `Edit`,
 	},
 	homePage: {
 		callout: {
@@ -137,6 +138,12 @@ export default {
 	},
 	categoryPage: {
 		questionsHeading: `Questions`,
+	},
+	questionPage: {
+		heading: `Question editor`,
+		preview: `Preview`,
+		prevQuestion: `Prev question`,
+		nextQuestion: `Next question`,
 	},
 	practicePage: {
 		tipsHeading: `Control and tips`,
