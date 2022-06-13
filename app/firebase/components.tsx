@@ -24,6 +24,8 @@ export const FirebaseUserProvider = ({ children }) => {
 
 	useEffect(() => {
 
+		IS_DEVELOPMENT && console.log(`[FirebaseUserProvider] running effect`);
+
 		let uid: string | null = null;
 		let unsubscribePreviousUserDoc: Unsubscribe | null = null;
 
@@ -107,6 +109,8 @@ export const FirebaseUserProvider = ({ children }) => {
 		};
 
 	}, [auth, db]);
+
+	IS_DEVELOPMENT && console.log(`[FirebaseUserProvider] rendering with value`, state);
 
 	return (
 		<AuthStateContext.Provider value={state}>
