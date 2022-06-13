@@ -5,6 +5,7 @@ import { useFormatMessageId } from '../helpers/hooks';
 import { Choice, Question } from '../types';
 import classNames from 'classnames';
 import { isDefined } from '../helpers/common';
+import { useOnKeyDownEvent } from '../helpers/keyboard';
 
 
 export interface ChoiceBoxProps {
@@ -266,53 +267,37 @@ export const QuestionForm = (
 
 	}, [setState]);
 
-	useEffect(() => {
+	const handleKeyDownEvent = useCallback((event: KeyboardEvent) => {
 
-		let didUnsubscribe = false;
+		// it may be useful
+		// if (event.repeat && event.key !== 'Enter') {
+		// 	return;
+		// }
 
-		const handler = (event: KeyboardEvent) => {
+		// page wide Enter to submit the form (not only when a input in the form has focus)
+		if (event.key === 'Enter') {
 
-			if (didUnsubscribe) {
+			event.preventDefault();
+
+			if (isDefined(state.validation)) {
+				onNextQuestion();
 				return;
 			}
 
-			// it may be useful
-			// if (event.repeat && event.key !== 'Enter') {
-			// 	return;
-			// }
+			setState(validate);
+			return;
 
-			// page wide Enter to submit the form (not only when a input in the form has focus)
-			if (event.key === 'Enter') {
+		}
 
-				event.preventDefault();
+		const choiceId = keyToChoiceId(event.key);
 
-				if (isDefined(state.validation)) {
-					onNextQuestion();
-					return;
-				}
-
-				setState(validate);
-				return;
-
-			}
-
-			const choiceId = keyToChoiceId(event.key);
-
-			if (isDefined(choiceId)) {
-				setState(toggleChoice(choiceId));
-			}
-
-		};
-
-		window.addEventListener('keydown', handler);
-
-		return () => {
-			didUnsubscribe = true;
-			// console.log('UN');
-			window.removeEventListener('keydown', handler);
-		};
+		if (isDefined(choiceId)) {
+			setState(toggleChoice(choiceId));
+		}
 
 	}, [setState, state.validation, onNextQuestion]);
+
+	useOnKeyDownEvent(handleKeyDownEvent);
 
 	// console.log(`[QuestionForm] render`, state);
 
