@@ -263,11 +263,22 @@ export const updateQuestion = async (
 	db: Firestore,
 	id,
 	packageId,
+	oldCategoryId,
+	newCategoryId,
 	data: QuestionData,
 ): Promise<void> => {
 
+	const oldCategoryRef = doc(db, 'packages', packageId, 'categories', oldCategoryId);
+	const newCategoryRef = doc(db, 'packages', packageId, 'categories', newCategoryId);
+
 	const questionRef = doc(db, 'packages', packageId, 'questions', id);
 
-	await setDoc(questionRef, data);
+	const batch = writeBatch(db);
+
+	batch.set(questionRef, data);
+	batch.set(oldCategoryRef, { _numQuestions: increment(-1) }, { merge: true });
+	batch.set(newCategoryRef, { _numQuestions: increment(1) }, { merge: true });
+
+	await batch.commit();
 
 };

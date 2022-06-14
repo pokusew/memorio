@@ -133,7 +133,7 @@ const QuestionPage = () => {
 		}
 		IS_DEVELOPMENT && console.log('[QuestionPage][handleSubmit]', data);
 		setLastUpdateOperationResult({ state: 'running', questionId: question.id });
-		updateQuestion(db, question.id, question.package, data)
+		updateQuestion(db, question.id, question.package, question.category, data.category, data)
 			.then(() => {
 				console.log(`[handleSubmit] successfully updated`);
 				setLastUpdateOperationResult({ state: 'success', questionId: question.id });
