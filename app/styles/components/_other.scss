@@ -42,17 +42,17 @@
 	padding: 0;
 	font-weight: normal;
 	list-style: none;
-	counter-reset: question-counter;
+	// counter-reset: question-counter;
 
 	.question {
-		counter-increment: question-counter;
+		// counter-increment: question-counter;
 		margin: 0 0 remy(22px) 0;
 		padding: 0;
 		display: flex;
 		gap: .5rem;
 
 		&::before {
-			content: counter(question-counter, decimal) ".";
+			content: attr(value) ".";
 			display: inline-block;
 			font-weight: 500;
 			// font-size: remy(18px);
