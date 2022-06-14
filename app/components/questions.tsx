@@ -6,6 +6,7 @@ import { R_PACKAGE_QUESTION } from '../routes';
 import { Question, QuestionData } from '../types';
 import classNames from 'classnames';
 import { useFormatMessageId } from '../helpers/hooks';
+import { processTextToHtml } from '../text/format';
 
 
 export interface QuestionsListWithoutEditButtonItemProps {
@@ -31,43 +32,50 @@ export const QuestionsListItem = (props: QuestionsItemProps) => {
 	return (
 		<li className="question" value={number}>
 
-			<span className="question-text">{text}</span>
+			<div className="question-content">
 
-			<ol className="question-choices">
-				{choices.map(choice => {
+				<div className="question-text remark-text" dangerouslySetInnerHTML={{ __html: processTextToHtml(text) }} />
 
-					const isCorrect = correctSet.has(choice.id);
+				<ol className="question-choices">
+					{choices.map(choice => {
 
-					return (
-						<li
-							key={choice.id}
-							value={choice.id}
-							className={classNames('question-choice', {
-								'question-choice--correct': isCorrect,
-							})}
-						>
-							{choice.text}
-							<span className="sr-only">
+						const isCorrect = correctSet.has(choice.id);
+
+						return (
+							<li
+								key={choice.id}
+								value={choice.id}
+								className={classNames('question-choice', {
+									'question-choice--correct': isCorrect,
+								})}
+							>
+								<div
+									className="question-choice-text remark-text"
+									dangerouslySetInnerHTML={{ __html: processTextToHtml(choice.text) }}
+								/>
+								<span className="sr-only">
 								{' '}{t(`questionsList.srHints.${isCorrect ? 'correct' : 'wrong'}`)}
 							</span>
-						</li>
-					);
+							</li>
+						);
 
-				})}
-			</ol>
+					})}
+				</ol>
 
-			{props.showEditButton && (
-				<Link
-					className="question-edit-btn"
-					name={R_PACKAGE_QUESTION}
-					payload={{
-						packageId: props.question.package,
-						questionId: props.question.id,
-					}}
-				>
-					{t(`questionsList.edit`)}
-				</Link>
-			)}
+				{props.showEditButton && (
+					<Link
+						className="question-edit-btn"
+						name={R_PACKAGE_QUESTION}
+						payload={{
+							packageId: props.question.package,
+							questionId: props.question.id,
+						}}
+					>
+						{t(`questionsList.edit`)}
+					</Link>
+				)}
+
+			</div>
 
 		</li>
 	);

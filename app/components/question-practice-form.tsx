@@ -6,6 +6,7 @@ import { Choice, Question } from '../types';
 import classNames from 'classnames';
 import { IS_DEVELOPMENT, isDefined } from '../helpers/common';
 import { useOnKeyDownEvent } from '../helpers/keyboard';
+import { processTextToHtml } from '../text/format';
 
 
 export interface ChoiceBoxProps {
@@ -65,11 +66,15 @@ export const ChoiceBox = (
 				disabled={isDefined(correct)}
 			/>
 			<label
-				className="question-choice-label"
+				className="sr-only"
 				htmlFor={`question--choice-${choice.id}`}
 			>
 				{choice.text}
 			</label>
+			<div
+				className="question-choice-label remark-text"
+				dangerouslySetInnerHTML={{ __html: processTextToHtml(choice.text) }}
+			/>
 			{letterKey && <kbd>{letterKey}</kbd>}
 			<kbd>{choice.id}</kbd>
 		</li>
@@ -310,9 +315,10 @@ export const QuestionPracticeForm = (
 			<div className="question-note">
 				{t(`questionPracticeForm.types.${question.multiple ? 'multiple' : 'single'}Choice`)}
 			</div>
-			<div className="question-text">
-				{question.text}
-			</div>
+			<div
+				className="question-text remark-text"
+				dangerouslySetInnerHTML={{ __html: processTextToHtml(question.text) }}
+			/>
 			<ol className="question-choices">
 				{question.choices.map(choice => (
 					<ChoiceBox

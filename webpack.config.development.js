@@ -100,7 +100,7 @@ export default merge(baseConfig, {
 			// note: it seems that to get rid out of the process/browser.js shim
 			//       'process': false is also required
 			//       maybe it is related to discussion in https://github.com/webpack/webpack/issues/798
-			'process': false,
+			// 'process': false, // TODO: unified/remark
 			'process.env.NODE_ENV': JSON.stringify('development'),
 		}),
 		// see https://developers.google.com/web/tools/workbox/modules/workbox-webpack-plugin

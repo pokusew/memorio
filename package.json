@@ -34,7 +34,13 @@
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-hot-loader": "^4.13.0",
-    "react-intl": "^6.0.4"
+    "react-intl": "^6.0.4",
+    "rehype-katex": "^6.0.2",
+    "rehype-stringify": "^9.0.3",
+    "remark-math": "^5.1.1",
+    "remark-parse": "^10.0.1",
+    "remark-rehype": "^10.1.0",
+    "unified": "^10.1.2"
   },
   "devDependencies": {
     "@ava/babel": "^2.0.0",

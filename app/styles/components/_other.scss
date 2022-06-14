@@ -2,6 +2,16 @@
 // Other (more specific) components
 // --------------------------------------------------
 
+.remark-text {
+	p {
+		margin: 0 0 remy(4px) 0;
+
+		&:last-child {
+			margin: 0;
+		}
+	}
+}
+
 .package {
 
 	.package-details {
@@ -30,30 +40,58 @@
 .questions-list {
 	margin: 0;
 	padding: 0;
-	list-style-type: decimal;
+	font-weight: normal;
+	list-style: none;
+	counter-reset: question-counter;
 
 	.question {
-		list-style-position: inside;
-		margin: 0 0 1rem 0;
+		counter-increment: question-counter;
+		margin: 0 0 remy(22px) 0;
+		padding: 0;
+		display: flex;
+		gap: .5rem;
 
-		&::marker {
+		&::before {
+			content: counter(question-counter, decimal) ".";
+			display: inline-block;
 			font-weight: 500;
+			// font-size: remy(18px);
+		}
+
+		.question-content {
+			flex: 1;
 		}
 
 		.question-text {
-			font-weight: 500;
+			margin: 0 0 remy(6px) 0;
 		}
 
 		.question-choices {
-			font-weight: normal;
-
-			margin: .25rem 0 0 1rem;
+			margin: 0;
 			padding: 0;
-			list-style-type: lower-alpha;
+			font-weight: normal;
+			list-style: none;
+			counter-reset: choice-counter;
 
 			.question-choice {
+				counter-increment: choice-counter;
+				margin: 0 0 remy(4px) 0;
+				padding: 0;
+				display: flex;
+				gap: .5rem;
+
+				&::before {
+					content: counter(choice-counter, lower-alpha) ".";
+					display: inline-block;
+					font-weight: 500;
+					// font-size: remy(18px);
+				}
 
 				&.question-choice--correct {
+					&::before {
+						content: counter(choice-counter, upper-alpha) ".";
+					}
+
 					color: $state-success-text;
 					background-color: $state-success-bg;
 					// font-weight: 500;
