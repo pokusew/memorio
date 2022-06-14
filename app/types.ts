@@ -33,6 +33,7 @@ export interface AbstractQuestion {
 	package: string;
 	category: string;
 	number?: number | undefined;
+	disabled?: boolean | undefined;
 	type: string;
 }
 

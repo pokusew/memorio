@@ -48,7 +48,7 @@ interface PracticePageProps {
 
 export const createPracticeQuestions = (mode: PracticeMode, categories: Set<string>, allQuestions: LocalQuestion[]) => {
 
-	const questions = allQuestions.filter(({ category }) => categories.has(category));
+	const questions = allQuestions.filter(({ category, disabled }) => categories.has(category) && disabled !== true);
 
 	switch (mode) {
 		case 'progress':

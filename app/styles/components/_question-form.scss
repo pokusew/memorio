@@ -48,9 +48,15 @@ svg.icon {
 	.question-form-editor-meta {
 		display: flex;
 		gap: 1rem;
+		margin: 0 0 1rem 0;
+
+		.question-disabled-checkbox {
+			margin: 0;
+		}
 
 		> .form-group {
 			flex: 1;
+			margin: 0;
 		}
 	}
 

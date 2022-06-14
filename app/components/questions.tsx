@@ -25,12 +25,12 @@ export const QuestionsListItem = (props: QuestionsItemProps) => {
 
 	const t = useFormatMessageId();
 
-	const { number, text, correct, choices } = props.question;
+	const { number, disabled, text, correct, choices } = props.question;
 
 	const correctSet = new Set<number>(correct);
 
 	return (
-		<li className="question" value={number}>
+		<li className={classNames('question', { 'question--disabled': disabled === true })} value={number}>
 
 			<div className="question-content">
 

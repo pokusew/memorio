@@ -51,6 +51,10 @@
 		display: flex;
 		gap: .5rem;
 
+		&.question--disabled {
+			opacity: .5;
+		}
+
 		&::before {
 			content: attr(value) ".";
 			display: inline-block;

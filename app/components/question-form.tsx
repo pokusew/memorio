@@ -90,6 +90,7 @@ interface QuestionChoiceState {
 interface QuestionFormState {
 	category: Field<string>;
 	number: Field<number>;
+	disabled: Field<boolean>;
 	text: Field<string>;
 	choices: QuestionChoiceState[]; // order matters
 	lastChoiceKey: number;
@@ -158,6 +159,12 @@ const createInitialState = (initialValues: Partial<Question> | undefined): Quest
 		handler: INTEGER_HANDLER,
 	};
 
+	const disabled: Field<boolean> = {
+		value: initialValues?.disabled ?? false,
+		touched: false,
+		handler: BOOLEAN_HANDLER,
+	};
+
 	const text: Field<string> = {
 		value: initialValues?.text,
 		touched: false,
@@ -184,6 +191,7 @@ const createInitialState = (initialValues: Partial<Question> | undefined): Quest
 	const fields = new Map<string, Field<any>>();
 	fields.set('category', category);
 	fields.set('number', number);
+	fields.set('disabled', disabled);
 	fields.set('text', text);
 	choices.forEach(({ key, text, correct }) => {
 		fields.set(`choices[${key}].text`, text);
@@ -193,6 +201,7 @@ const createInitialState = (initialValues: Partial<Question> | undefined): Quest
 	return {
 		category,
 		number,
+		disabled,
 		text,
 		choices,
 		lastChoiceKey,
@@ -205,6 +214,7 @@ const createInitialState = (initialValues: Partial<Question> | undefined): Quest
 const formStateToQuestion = (formState: QuestionFormState): QuestionData => ({
 	category: formState.category.value ?? '',
 	number: formState.number.value,
+	disabled: formState.disabled.value ?? false,
 	type: 'choice',
 	text: formState.text.value ?? '',
 	multiple: true,
@@ -441,6 +451,15 @@ const QuestionForm = ({ initialValues, categories, onSubmit }: QuestionFormProps
 						onChange={handleInputChange}
 						valid={isValid('number')}
 						error={getError('number')}
+					/>
+
+					<input
+						className="question-disabled-checkbox option-checkbox"
+						id="question--disabled"
+						name="disabled"
+						type="checkbox"
+						checked={formState.disabled.value ?? false}
+						onChange={handleInputChange}
 					/>
 				</div>
 
