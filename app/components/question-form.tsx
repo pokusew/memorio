@@ -282,8 +282,6 @@ const QuestionForm = ({ initialValues, categories, onSubmit }: QuestionFormProps
 
 			const field = prevState.fields.get(name);
 
-			console.log(field, name);
-
 			// field does not exist or this event did not change its value
 			if (!isDefined(field) || !field.handler(currentTarget, field)) {
 				return prevState;
@@ -323,8 +321,6 @@ const QuestionForm = ({ initialValues, categories, onSubmit }: QuestionFormProps
 			}
 			index = choiceEl.value - 1;
 		}
-
-		console.log(action, index);
 
 		setFormState(prevState => {
 

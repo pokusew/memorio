@@ -80,7 +80,6 @@ const QuestionPage = () => {
 
 	const handleKeyDownEvent = useCallback((event: KeyboardEvent) => {
 
-		console.log(event);
 		if (event.key === 'p' && event.ctrlKey && isDefined(prevQuestionId)) {
 			router.redirect(R_PACKAGE_QUESTION, {
 				packageId,
