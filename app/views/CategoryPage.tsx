@@ -11,12 +11,11 @@ import { LoadingScreen } from '../components/layout';
 import NotFoundPage from './NotFoundPage';
 import { CategoryHeader } from '../components/content';
 import { LocalCategory } from '../types';
-import classNames from 'classnames';
-import { R_PACKAGE_CATEGORY, R_PACKAGE_QUESTION } from '../routes';
+import { R_PACKAGE_CATEGORY } from '../routes';
 import { Breadcrumbs } from '../components/breadcrumbs';
 import { useAppUser } from '../firebase/hooks';
-import { Link } from '../router/compoments';
 import { isAdmin } from '../firebase/helpers';
+import { QuestionsListItem } from '../components/questions';
 
 
 const CategoryPage = () => {
@@ -33,7 +32,7 @@ const CategoryPage = () => {
 
 	const query = useMemo(() => packages.findOneById(packageId), [packageId]);
 
-	const op = useQuery(query);
+	const [op] = useQuery(query);
 
 	const category: LocalCategory | undefined = isDefined(op.data)
 		? op.data.categories.find(({ id }) => id === categoryId)
@@ -81,55 +80,13 @@ const CategoryPage = () => {
 
 			<ol className="questions-list">
 
-				{questions.map(({ id, number, text, choices, correct }) => {
-
-					const correctSet = new Set<number>(correct);
-
-					return (
-						<li className="question" key={id} value={number}>
-
-							<span className="question-text">{text}</span>
-
-							<ol className="question-choices">
-								{choices.map(choice => {
-
-									const isCorrect = correctSet.has(choice.id);
-
-									return (
-										<li
-											key={choice.id}
-											value={choice.id}
-											className={classNames('question-choice', {
-												'question-choice--correct': isCorrect,
-											})}
-										>
-											{choice.text}
-											<span className="sr-only">
-												{' '}{t(`questionsList.srHints.${isCorrect ? 'correct' : 'wrong'}`)}
-											</span>
-										</li>
-									);
-
-								})}
-							</ol>
-
-							{isDefined(user) && isAdmin(user) && (
-								<Link
-									className="question-edit-btn"
-									name={R_PACKAGE_QUESTION}
-									payload={{
-										packageId,
-										questionId: id,
-									}}
-								>
-									{t(`questionsList.edit`)}
-								</Link>
-							)}
-
-						</li>
-					);
-
-				})}
+				{questions.map((question) => (
+					<QuestionsListItem
+						key={question.id}
+						question={question}
+						showEditButton={isDefined(user) && isAdmin(user)}
+					/>
+				))}
 
 			</ol>
 

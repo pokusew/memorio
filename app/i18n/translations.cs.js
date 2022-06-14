@@ -150,6 +150,24 @@ export default {
 		preview: `Náhled`,
 		prevQuestion: `Přechozí otázka`,
 		nextQuestion: `Následující otázka`,
+		save: `Uložit změny`,
+		lastUpdateOperation: {
+			running: `Ukládám otázku {questionId} ...`,
+			success: `Otázka {questionId} uložena úspěšně.`,
+			error: `Došlo k chybě při ukládání otázky {questionId}.`,
+		},
+	},
+	questionForm: {
+		labels: {
+			category: `Kategorie`,
+			number: `Číslo`,
+			questionText: `Otázka`,
+			choiceText: `Možnost`,
+		},
+		values: {},
+		errors: {},
+		addChoice: `Přidat další možnost`,
+		submit: `Uložit`,
 	},
 	practicePage: {
 		tipsHeading: `Ovládání a další tipy`,

@@ -145,6 +145,24 @@ export default {
 		preview: `Preview`,
 		prevQuestion: `Prev question`,
 		nextQuestion: `Next question`,
+		save: `Save changes`,
+		lastUpdateOperation: {
+			running: `Saving question {questionId} ...`,
+			success: `Question {questionId} saved successfully.`,
+			error: `An error occurred while saving question {questionId}.`,
+		},
+	},
+	questionForm: {
+		labels: {
+			category: `Category`,
+			number: `Number`,
+			questionText: `Question`,
+			choiceText: `Choice`,
+		},
+		values: {},
+		errors: {},
+		addChoice: `Add another choice`,
+		submit: `Save`,
 	},
 	practicePage: {
 		tipsHeading: `Control and tips`,

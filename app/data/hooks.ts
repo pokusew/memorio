@@ -1,6 +1,6 @@
 "use strict";
 
-import { useDebugValue, useEffect, useState } from 'react';
+import { useDebugValue, useEffect, useMemo, useState } from 'react';
 import { Firestore } from 'firebase/firestore';
 import { useAppUser, useConfiguredFirebase } from '../firebase/hooks';
 import { AppUser } from '../firebase/types';
@@ -37,7 +37,9 @@ interface QueryHookState<T> {
 	value: QueryOperation<T>;
 }
 
-export const useQuery = <T>(query: QueryExecutor<T>): QueryOperation<T> => {
+export type QueryDataUpdateFn<T> = (updater: (prevData: T) => T) => void;
+
+export const useQuery = <T>(query: QueryExecutor<T>): [QueryOperation<T>, QueryDataUpdateFn<T>] => {
 
 	const { db } = useConfiguredFirebase();
 	const user = useAppUser();
@@ -156,7 +158,29 @@ export const useQuery = <T>(query: QueryExecutor<T>): QueryOperation<T> => {
 
 	}, [db, user, query]);
 
+	const updateData = useMemo(() => (updater: (prevData: T) => T) => setState(prevState => {
+
+		if (prevState.value.loading || prevState.value.error) {
+			return prevState;
+		}
+
+		const newData = updater(prevState.value.data);
+
+		if (newData === prevState.value.data) {
+			return prevState;
+		}
+
+		return {
+			...prevState,
+			value: {
+				...prevState.value,
+				data: newData,
+			},
+		};
+
+	}), []);
+
 	// Return the current value for our caller to use while rendering.
-	return valueToReturn;
+	return [valueToReturn, updateData];
 
 };

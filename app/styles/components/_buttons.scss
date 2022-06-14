@@ -70,6 +70,16 @@
 		}
 	}
 
+	&.btn-success {
+		background-color: $brand-success;
+		color: $white;
+
+		&:hover, &:focus {
+			background-color: darken($brand-success, 10%);
+			color: $white;
+		}
+	}
+
 }
 
 .btn + .btn {

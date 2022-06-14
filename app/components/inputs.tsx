@@ -8,6 +8,7 @@ import { useFormatMessageId } from '../helpers/hooks';
 
 
 export interface Option {
+	raw?: boolean | undefined;
 	value: string;
 	label: string;
 }
@@ -73,8 +74,8 @@ export const SelectInput = (
 				{...otherInputProps}
 			>
 				{isDefined(prompt) && <option value="">{t(prompt)}</option>}
-				{options.map(({ value, label }) =>
-					<option key={value} value={value}>{t(label)}</option>)
+				{options.map(({ value, label, raw }) =>
+					<option key={value} value={value}>{raw === true ? label : t(label)}</option>)
 				}
 			</select>
 			{!isEmpty(error) && <p className="form-control-feedback">{isCustomError === true ? error : t(error)}</p>}
@@ -130,6 +131,66 @@ export const Input = (
 			<input
 				id={id}
 				type={type ?? 'text'}
+				name={name}
+				ref={inputRef}
+				className="form-control"
+				placeholder={isDefined(finalPlaceholder) ? t(finalPlaceholder) : undefined}
+				{...otherInputProps}
+			/>
+			{!isEmpty(error) && <p className="form-control-feedback">{isCustomError === true ? error : t(error)}</p>}
+			{helpBlock}
+		</div>
+	);
+};
+
+
+export interface TextAreaProps
+	extends Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>, 'ref'> {
+	name: string;
+	label: string;
+	valid?: boolean;
+	error?: string;
+	isCustomError?: boolean;
+	helpBlock?: React.ReactNode;
+	inputRef?: Ref<HTMLTextAreaElement>;
+	// TODO: should come from React.DetailedHTMLProps
+	rows?: number;
+}
+
+export const TextArea = (
+	{
+
+		id,
+		name,
+		type,
+		label,
+
+		placeholder,
+		helpBlock,
+
+		valid,
+		error,
+		isCustomError,
+
+		inputRef,
+
+		...otherInputProps
+
+	}: TextAreaProps,
+) => {
+
+	const t = useFormatMessageId();
+
+	const finalPlaceholder = placeholder ?? label;
+
+	return (
+		<div className={classNames({
+			'form-group': true,
+			'has-error': valid === false,
+		})}>
+			<label className="form-control-label" htmlFor={id}>{t(label)}</label>
+			<textarea
+				id={id}
 				name={name}
 				ref={inputRef}
 				className="form-control"

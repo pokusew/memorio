@@ -1,6 +1,6 @@
 "use strict";
 
-import { LocalCategory, LocalFullPackage, LocalPackage, LocalQuestion } from '../types';
+import { LocalCategory, LocalFullPackage, LocalPackage, LocalQuestion, QuestionData } from '../types';
 import {
 	collection,
 	doc,
@@ -256,5 +256,18 @@ export const deleteAllScores = async (
 	await setDoc(userDataRef, { practiceDataVersion: increment(1) }, { merge: true });
 
 	// TODO: listen for practiceDataVersion change (on server / using Firebase Functions) and remove the old data
+
+};
+
+export const updateQuestion = async (
+	db: Firestore,
+	id,
+	packageId,
+	data: QuestionData,
+): Promise<void> => {
+
+	const questionRef = doc(db, 'packages', packageId, 'questions', id);
+
+	await setDoc(questionRef, data);
 
 };

@@ -1,0 +1,137 @@
+//
+// Question form
+// --------------------------------------------------
+
+svg.icon {
+	display: block;
+	width: 16px;
+	height: 16px;
+	path {
+		fill: currentColor;
+	}
+}
+
+.question-editor-toolbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 0 0 1rem 0;
+
+	.btn-prev, .btn-next {
+		gap: .5rem;
+		kbd {
+			margin: 0;
+		}
+	}
+
+}
+
+.question-form {
+	display: flex;
+	margin: 0 0 1rem 0;
+	gap: 1rem;
+
+	textarea {
+		font-family: $font-family-monospace;
+		font-size: remy(14px);
+		padding: 10px 12px;
+	}
+
+	.question-form-editor {
+		flex: 1;
+
+		label {
+			@extend .sr-only;
+		}
+	}
+
+	.question-form-editor-meta {
+		display: flex;
+		gap: 1rem;
+
+		> .form-group {
+			flex: 1;
+		}
+	}
+
+	.question-editable-choices {
+		font-weight: normal;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		counter-reset: choice-counter;
+
+		.question-choice {
+			display: grid;
+			grid-template-columns: 32px 1fr min-content;
+			grid-template-areas:
+				"id correct actions"
+				"editor editor editor";
+			grid-template-rows: 32px min-content;
+			gap: 0 .5rem;
+			counter-increment: choice-counter;
+			margin: 0 0 1rem 0;
+
+			&::before {
+				grid-area: id;
+				content: counter(choice-counter, lower-alpha);
+				background: #757575;
+				width: 2rem;
+				height: 2rem;
+				// border-radius: 50%;
+				display: block;
+				line-height: 2rem;
+				color: $white;
+				text-align: center;
+			}
+
+			&.question-choice--correct {
+				&::before {
+					font-weight: 500;
+					content: counter(choice-counter, upper-alpha);
+					background-color: darken($green, 10%);
+				}
+				color: $state-success-text;
+				background-color: $state-success-bg;
+			}
+
+			.question-choice-correct-toggle {
+				grid-area: correct;
+			}
+
+			.form-group {
+				grid-area: editor;
+				margin: 0;
+			}
+
+		}
+
+	}
+
+	.question-choice-actions {
+		grid-area: actions;
+		display: flex;
+		gap: 24px;
+		.btn-action {
+			margin: 0;
+		}
+	}
+
+	.question-form-preview {
+		flex: 1;
+	}
+
+	.btn-action {
+		// width: 16px;
+		// height: 16px;
+		padding: 8px;
+	}
+
+	.btn-add-choice {
+		display: flex;
+		gap: .25rem;
+		align-items: center;
+		margin: 0 0 1rem 0;
+	}
+
+}

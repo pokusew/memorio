@@ -17,7 +17,7 @@ const HomePage = () => {
 
 	const query = useMemo(() => packages.findAll(), []);
 
-	const op = useQuery(query);
+	const [op] = useQuery(query);
 
 	if (op.loading) {
 		return (

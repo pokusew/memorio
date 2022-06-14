@@ -63,6 +63,8 @@ export interface ChoiceQuestion extends AbstractQuestion {
 
 export type Question = ChoiceQuestion;
 
+export type QuestionData = Omit<Question, 'id' | 'package'>;
+
 export interface FullPackage extends Package {
 	categories: Category[];
 	questions: Question[];

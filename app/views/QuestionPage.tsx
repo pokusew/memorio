@@ -1,25 +1,50 @@
 "use strict";
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useDocumentTitle, useFormatMessageId } from '../helpers/hooks';
-import { packages } from '../data/queries';
+import { packages, updateQuestion } from '../data/queries';
 import { useQuery } from '../data/hooks';
 import { useRoute } from '../router/hooks';
-import { isDefined } from '../helpers/common';
+import { IS_DEVELOPMENT, isDefined } from '../helpers/common';
 import { LoadingScreen } from '../components/layout';
 import NotFoundPage from './NotFoundPage';
-import { LocalQuestion } from '../types';
-import classNames from 'classnames';
+import { LocalQuestion, QuestionData } from '../types';
 import { R_PACKAGE_QUESTION } from '../routes';
 import { Breadcrumbs } from '../components/breadcrumbs';
-import { useOnKeyDownEvent } from '../helpers/keyboard';
 import { Link } from '../router/compoments';
+import QuestionForm from '../components/question-form';
+import { Button } from '../components/common';
+import { useConfiguredFirebase } from '../firebase/hooks';
+import { useOnKeyDownEvent } from '../helpers/keyboard';
+import IconArrowLeftLongRegular
+	from '-!svg-react-loader?name=IconArrowLeftLongRegular!../images/icons/arrow-left-long-regular.svg';
+import IconArrowRightLongRegular
+	from '-!svg-react-loader?name=IconArrowRightLongRegular!../images/icons/arrow-right-long-regular.svg';
 
+
+interface UpdateOperationRunning {
+	state: 'running';
+	questionId: string;
+}
+
+interface UpdateOperationSuccess {
+	state: 'success';
+	questionId: string;
+}
+
+interface UpdateOperationError {
+	state: 'error';
+	questionId: string;
+}
+
+type UpdateOperationState = UpdateOperationRunning | UpdateOperationSuccess | UpdateOperationError;
 
 const QuestionPage = () => {
 
 	const t = useFormatMessageId();
+
+	const { db } = useConfiguredFirebase();
 
 	const { route, router } = useRoute();
 
@@ -29,7 +54,7 @@ const QuestionPage = () => {
 
 	const query = useMemo(() => packages.findOneById(packageId), [packageId]);
 
-	const op = useQuery(query);
+	const [op, updateData] = useQuery(query);
 
 	const questionIndex: number = isDefined(op.data)
 		? op.data.questions.findIndex(({ id }) => id === questionId)
@@ -55,21 +80,85 @@ const QuestionPage = () => {
 
 	const handleKeyDownEvent = useCallback((event: KeyboardEvent) => {
 
-		if (event.key === 'ArrowLeft' && isDefined(prevQuestionId)) {
+		console.log(event);
+		if (event.key === 'p' && event.ctrlKey && isDefined(prevQuestionId)) {
 			router.redirect(R_PACKAGE_QUESTION, {
 				packageId,
 				questionId: prevQuestionId,
 			});
-		} else if (event.key === 'ArrowRight' && isDefined(nextQuestionId)) {
+		} else if (event.key === 'n' && event.ctrlKey && isDefined(nextQuestionId)) {
 			router.redirect(R_PACKAGE_QUESTION, {
 				packageId,
 				questionId: nextQuestionId,
 			});
+		} else if (event.key === 's' && event.ctrlKey && isDefined(question)) {
+			const questionForm = document.getElementById('question-form');
+			if (questionForm instanceof HTMLFormElement) {
+				questionForm.requestSubmit();
+			}
 		}
 
 	}, [router, packageId, prevQuestionId, nextQuestionId]);
 
 	useOnKeyDownEvent(handleKeyDownEvent);
+
+	const [lastUpdateOperationResult, setLastUpdateOperationResult] = useState<UpdateOperationState | undefined>(undefined);
+
+	useEffect(() => {
+
+		let didCleanup = false;
+		let timeout: number | null = null;
+
+		if (isDefined(lastUpdateOperationResult) && lastUpdateOperationResult.state !== 'running') {
+			timeout = window.setTimeout(() => {
+				if (didCleanup) {
+					return;
+				}
+				timeout = null;
+				setLastUpdateOperationResult(undefined);
+			}, 2000);
+		}
+
+		return () => {
+			didCleanup = true;
+			if (isDefined(timeout)) {
+				window.clearTimeout(timeout);
+			}
+		};
+
+	}, [lastUpdateOperationResult, setLastUpdateOperationResult]);
+
+	const handleSubmit = useCallback((data: QuestionData) => {
+		if (!isDefined(question)) {
+			return;
+		}
+		IS_DEVELOPMENT && console.log('[QuestionPage][handleSubmit]', data);
+		setLastUpdateOperationResult({ state: 'running', questionId: question.id });
+		updateQuestion(db, question.id, question.package, data)
+			.then(() => {
+				console.log(`[handleSubmit] successfully updated`);
+				setLastUpdateOperationResult({ state: 'success', questionId: question.id });
+				updateData((prevData => {
+
+					if (!isDefined(prevData)) {
+						return prevData;
+					}
+
+					return {
+						...prevData,
+						questions: prevData.questions.map(q => q.id !== question.id ? q : ({
+							...q,
+							...data,
+						})),
+					};
+
+				}));
+			})
+			.catch(err => {
+				console.log(`[handleSubmit] an error during updateQuestion`, err);
+				setLastUpdateOperationResult({ state: 'error', questionId: question.id });
+			});
+	}, [db, question, updateData]);
 
 	if (op.loading) {
 		return (
@@ -85,8 +174,6 @@ const QuestionPage = () => {
 
 	const pack = op.data;
 
-	const correctSet = new Set(question.correct);
-
 	return (
 		<>
 
@@ -98,63 +185,63 @@ const QuestionPage = () => {
 				questionName={question.number?.toString() ?? '??'}
 			/>
 
-			<h2>{t(`questionPage.heading`)}</h2>
+			<span className="sr-only">{t(`questionPage.heading`)}</span>
 
-			{isDefined(prevQuestionId) && (
-				<Link
-					className="btn btn-primary"
-					name={R_PACKAGE_QUESTION}
-					payload={{
-						packageId,
-						questionId: prevQuestionId,
-					}}
+			<div className="question-editor-toolbar">
+				{isDefined(prevQuestionId) && (
+					<Link
+						className="btn btn-flex btn-prev"
+						name={R_PACKAGE_QUESTION}
+						payload={{
+							packageId,
+							questionId: prevQuestionId,
+						}}
+					>
+						<IconArrowLeftLongRegular className="icon" />
+						<span className="sr-only">{t(`questionPage.prevQuestion`)}</span>
+						<kbd>Ctrl + P</kbd>
+					</Link>
+				)}
+
+				<Button
+					form="question-form"
+					style="success"
+					className="btn-flex"
+					type="submit"
 				>
-					{t(`questionPage.prevQuestion`)}
-				</Link>
-			)}
+					{t('questionPage.save')} <kbd>Ctrl + S</kbd>
+				</Button>
 
-			{isDefined(nextQuestionId) && (
-				<Link
-					className="btn btn-primary"
-					name={R_PACKAGE_QUESTION}
-					payload={{
-						packageId,
-						questionId: nextQuestionId,
-					}}
-				>
-					{t(`questionPage.nextQuestion`)}
-				</Link>
-			)}
-
-			<ol className="questions-list">
-				<li className="question" key={question.id} value={question.number}>
-
-					<span className="question-text">{question.text}</span>
-
-					<ol className="question-choices">
-						{question.choices.map(choice => {
-
-							const isCorrect = correctSet.has(choice.id);
-
-							return (
-								<li
-									key={choice.id}
-									value={choice.id}
-									className={classNames('question-choice', {
-										'question-choice--correct': isCorrect,
-									})}
-								>
-									{choice.text}
-									<span className="sr-only">
-												{' '}{t(`questionsList.srHints.${isCorrect ? 'correct' : 'wrong'}`)}
-											</span>
-								</li>
-							);
-
+				{isDefined(lastUpdateOperationResult) && (
+					<div className="last-update-operation">
+						{t(`questionPage.lastUpdateOperation.${lastUpdateOperationResult.state}`, {
+							questionId: lastUpdateOperationResult.questionId,
 						})}
-					</ol>
-				</li>
-			</ol>
+					</div>
+				)}
+
+				{isDefined(nextQuestionId) && (
+					<Link
+						className="btn btn-flex btn-next"
+						name={R_PACKAGE_QUESTION}
+						payload={{
+							packageId,
+							questionId: nextQuestionId,
+						}}
+					>
+						<kbd>Ctrl + N</kbd>
+						<span className="sr-only">{t(`questionPage.nextQuestion`)}</span>
+						<IconArrowRightLongRegular className="icon" />
+					</Link>
+				)}
+			</div>
+
+			<QuestionForm
+				key={question.id}
+				initialValues={question}
+				categories={op.data.categories.map(c => ({ value: c.id, label: c.name, raw: true }))}
+				onSubmit={handleSubmit}
+			/>
 
 		</>
 	);

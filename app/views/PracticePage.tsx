@@ -249,7 +249,7 @@ const PracticePageWrapper = () => {
 
 	const query = useMemo(() => packages.findOneById(id), [id]);
 
-	const op = useQuery(query);
+	const [op] = useQuery(query);
 
 	useDocumentTitle(t`titles.practice`);
 
