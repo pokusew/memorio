@@ -2,7 +2,7 @@
 
 An app for practicing test questions
 
-👉 Available online at [pokusew-memorio.netlify.app](https://pokusew-memorio.netlify.app/)
+👉 Available online at [next--pokusew-memorio.netlify.app](https://next--pokusew-memorio.netlify.app/)
 
 The app offers an effective way for practicing test questions of different types (single-choice,
 multiple-choice, images identification, etc.). The main features are:
