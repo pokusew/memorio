@@ -2,9 +2,12 @@
 // see https://stackoverflow.com/questions/51725002/false-positive-typescript-cannot-find-module-warning
 declare module '*.svg' {
 
-	import { HTMLAttributes } from 'react';
+	import React, { HTMLAttributes } from 'react';
 
-	const value: React.ComponentType<HTMLAttributes<SVGElement>>;
+	// TODO: does not work
+	// const value: React.ComponentType<HTMLAttributes<SVGElement>>;
+	// const value: JSX.IntrinsicElements['svg'];
+	const value: any;
 
 	export default value;
 
