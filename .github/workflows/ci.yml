@@ -31,40 +31,41 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        # TODO: use 16
-        node-version: [ 14.x ]
+        node-version: [ 18.x ]
 
     runs-on: ${{ matrix.os }}
 
     steps:
 
       # https://github.com/actions/checkout
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
         # https://github.com/actions/setup-node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          # consider built-in cache feature
+          # see https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-data
 
       - name: Cache node_modules
         # https://github.com/actions/cache
         # TODO: https://github.com/actions/cache/blob/main/examples.md#node---npm
         # TODO: https://github.com/actions/cache/blob/main/examples.md#node---yarn
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: cache
         with:
           path: |
             node_modules
-          key: ${{ runner.OS }}-node-${{ matrix.node-version }}-node_modules-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-node_modules-${{ hashFiles('yarn.lock') }}
 
       - name: Install dependencies
         # skip if cache was restored
         # see https://github.com/actions/cache#skipping-steps-based-on-cache-hit
         if: steps.cache.outputs.cache-hit != 'true'
         # note: Yarn in pre-installed in the VM image
-        # (see https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-README.md)
-        run: yarn
+        # (see https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md)
+        run: yarn --frozen-lockfile
 
       - name: Run unit tests
         # https://askubuntu.com/a/731237
@@ -91,7 +92,7 @@ jobs:
       - name: Store test results
         if: ${{ success() || failure() }}
         # https://github.com/actions/upload-artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test-results
           path: |
