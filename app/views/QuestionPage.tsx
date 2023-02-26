@@ -97,7 +97,7 @@ const QuestionPage = () => {
 			}
 		}
 
-	}, [router, packageId, prevQuestionId, nextQuestionId]);
+	}, [router, packageId, prevQuestionId, nextQuestionId, question]);
 
 	useOnKeyDownEvent(handleKeyDownEvent);
 
