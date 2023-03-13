@@ -89,7 +89,7 @@
     "workbox-webpack-plugin": "^6.5.4"
   },
   "engines": {
-    "node": ">=14.x",
+    "node": ">=18.x",
     "yarn": "1.x"
   }
 }
