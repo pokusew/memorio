@@ -11,11 +11,11 @@ on:
   # see also https://github.community/t/how-to-trigger-an-action-on-push-or-pull-request-but-not-both/16662
   push:
     branches:
-      - master
+      - main
       - next
   pull_request:
     branches:
-      - master
+      - main
 
 env:
   # TODO: forces AVA (and other) to print colorized output, better solution?
