@@ -42,7 +42,7 @@ standard [npm CLI](https://docs.npmjs.com/about-npm).
    nvm install 18.*
    ```
 
-5. Verify Node.js is installed and active (should print something like `v18.14.2`):
+5. Verify Node.js is installed and active (should print something like `v18.15.0`):
    ```bash
    node -v
    ```
@@ -68,7 +68,7 @@ standard [npm CLI](https://docs.npmjs.com/about-npm).
    yarn global add node-gyp nodemon sort-package-json doctoc
    ```
 
-10. Verify that Yarn global packages binaries are on your PATH (should print `2.0.20`):
+10. Verify that Yarn global packages binaries are on your PATH (should print `2.0.21`):
 	```bash
 	nodemon -v
 	```
