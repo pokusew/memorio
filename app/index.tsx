@@ -11,7 +11,6 @@ import React from 'react';
 // }
 import { render } from 'react-dom';
 
-import { AppContainer } from 'react-hot-loader';
 import Root from './containers/Root';
 import { routesMap } from './routes';
 
@@ -44,22 +43,18 @@ const firebase = configureFirebase();
 const router = new Router(routesMap);
 
 render(
-	<AppContainer>
-		<Root store={store} firebase={firebase} router={router} />
-	</AppContainer>,
+	<Root store={store} firebase={firebase} router={router} />,
 	document.getElementById('root'),
 );
-
-// @ts-ignore
-if (module.hot) {
-	// @ts-ignore
-	module.hot.accept('./containers/Root', () => {
-		const NextRoot = require('./containers/Root').default; // eslint-disable-line global-require
-		render(
-			<AppContainer>
-				<NextRoot store={store} firebase={firebase} router={router} />
-			</AppContainer>,
-			document.getElementById('root'),
-		);
-	});
-}
+//
+// // @ts-ignore
+// if (module.hot) {
+// 	// @ts-ignore
+// 	module.hot.accept('./containers/Root', () => {
+// 		const NextRoot = require('./containers/Root').default; // eslint-disable-line global-require
+// 		render(
+// 			<NextRoot store={store} firebase={firebase} router={router} />,
+// 			document.getElementById('root'),
+// 		);
+// 	});
+// }

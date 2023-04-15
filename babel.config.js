@@ -55,7 +55,7 @@ module.exports = api => ({
 		development: {
 			presets: [],
 			plugins: api.caller(isWebpack)
-				? ['react-hot-loader/babel']
+				? ['react-refresh/babel']
 				: [],
 		},
 	},

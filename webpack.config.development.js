@@ -7,6 +7,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import baseConfig from './webpack.config.base';
 import { templateParameters } from './tools/webpack-utils';
 import { InjectManifest } from 'workbox-webpack-plugin';
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
 
 const port = 3000;
@@ -81,14 +82,6 @@ export default merge(baseConfig, {
 		],
 	},
 
-	// https://github.com/gaearon/react-hot-loader#react--dom
-	// it is really needed, otherwise React Apollo won't trigger rerenders on proxy changes
-	resolve: {
-		alias: {
-			'react-dom': '@hot-loader/react-dom',
-		},
-	},
-
 	plugins: [
 		new webpack.LoaderOptionsPlugin({
 			debug: true,
@@ -103,6 +96,8 @@ export default merge(baseConfig, {
 			// 'process': false, // TODO: unified/remark
 			'process.env.NODE_ENV': JSON.stringify('development'),
 		}),
+		// see https://github.com/pmmmwh/react-refresh-webpack-plugin/#usage
+		new ReactRefreshWebpackPlugin(),
 		// see https://developers.google.com/web/tools/workbox/modules/workbox-webpack-plugin
 		// see https://developers.google.com/web/tools/workbox/reference-docs/latest/module-workbox-webpack-plugin.InjectManifest#InjectManifest
 		new InjectManifest({
