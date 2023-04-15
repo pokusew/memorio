@@ -2,14 +2,7 @@
 
 import React from 'react';
 
-// see https://github.com/welldone-software/why-did-you-render
-// if (process.env.NODE_ENV === 'development') {
-// 	const whyDidYouRender = require('@welldone-software/why-did-you-render');
-// 	whyDidYouRender(React, {
-// 		trackAllPureComponents: true,
-// 	});
-// }
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import Root from './containers/Root';
 import { routesMap } from './routes';
@@ -42,10 +35,9 @@ const firebase = configureFirebase();
 
 const router = new Router(routesMap);
 
-render(
-	<Root store={store} firebase={firebase} router={router} />,
-	document.getElementById('root'),
-);
+const container = document.getElementById('root');
+const root = createRoot(container!);
+root.render(<Root store={store} firebase={firebase} router={router} />);
 //
 // // @ts-ignore
 // if (module.hot) {
