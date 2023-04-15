@@ -62,7 +62,6 @@ module.exports = api => ({
 	ignore: [
 		'**/*.no-babel.js',
 		/node_modules/,
-		/test\//,
 		'**/dist',
 	],
 	sourceMaps: true,
