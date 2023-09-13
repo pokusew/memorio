@@ -2,12 +2,12 @@
 	"compilerOptions": {
 		// https://stackoverflow.com/questions/61305578/what-typescript-configuration-produces-output-closest-to-node-js-14-capabilities/61305579#61305579
 		"lib": [
-			"es2021",
-			"dom",
-			"dom.iterable"
+			"ES2022",
+			"DOM",
+			"DOM.Iterable"
 		],
-		"module": "commonjs",
-		"target": "es2021",
+		"module": "CommonJS",
+		"target": "ES2022",
 		// TODO: maybe true Process & infer types from .js files.
 		"allowJs": true,
 		// Don't emit; allow Babel to transform files.
@@ -20,11 +20,17 @@
 		"jsx": "preserve",
 		"resolveJsonModule": true
 	},
+	// https://www.typescriptlang.org/tsconfig#files
+	// https://www.typescriptlang.org/tsconfig#include
+	// https://www.typescriptlang.org/tsconfig#exclude
+	// see https://github.com/Microsoft/TypeScript/wiki/FAQ#why-is-a-file-in-the-exclude-list-still-picked-up-by-the-compiler
+	// use `yarn tsc --listFiles` to list what files are included in the compilation,
+	// and `yarn tsc --traceResolution` to see why they were included
+	"include": [
+		"./types/",
+		"./app/"
+	],
 	"exclude": [
-		// see https://github.com/Microsoft/TypeScript/wiki/FAQ#why-is-a-file-in-the-exclude-list-still-picked-up-by-the-compiler
-		// use `yarn tsc --listFiles` to list what files are included in the compilation,
-		// and `yarn tsc --traceResolution` to see why they were included
-		"**/node_modules/**/*",
-		"app/sw/**/*"
+		"./app/sw/"
 	]
 }
