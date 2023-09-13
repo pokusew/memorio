@@ -40,7 +40,7 @@ const CategoryPage = () => {
 
 	const pageTitle = op.loading ? t(`titles.loading`) : !isDefined(category) ? t(`titles.notFound`) : category.name;
 
-	useDocumentTitle(pageTitle);
+	useDocumentTitle(pageTitle as string);
 
 	if (op.loading) {
 		return (

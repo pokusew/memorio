@@ -1,6 +1,6 @@
 "use strict";
 
-import { IntlFormatters, IntlShape, MessageDescriptor, useIntl } from 'react-intl';
+import { IntlShape, MessageDescriptor, useIntl } from 'react-intl';
 
 import { useStoreValue, useStoreValueSetter } from '../store/hooks';
 import { useEffect } from 'react';
@@ -29,11 +29,13 @@ export type MessageId = NonNullable<MessageDescriptor['id']>;
 export const createGetRawIntlMessage = (intl: IntlShape) => (id: MessageId, fallbackToId: boolean = true) =>
 	intl.messages[id] ?? (fallbackToId ? id : undefined);
 
-export const createFormatMessage = (intl: IntlShape) => (descriptor: MessageDescriptor, values?: Parameters<IntlFormatters['formatMessage']>[1]) =>
-	intl.formatMessage(descriptor, values);
+export const createFormatMessage = (intl: IntlShape) =>
+	(...args: Parameters<IntlShape['formatMessage']>) =>
+		intl.formatMessage(...args);
 
-export const createFormatMessageId = (intl: IntlShape) => (id: MessageId, values?: Parameters<IntlFormatters['formatMessage']>[1]) =>
-	intl.formatMessage({ id }, values);
+export const createFormatMessageId = (intl: IntlShape) =>
+	(id: MessageId, ...args: (Parameters<IntlShape['formatMessage']> extends [any, ...infer Rest] ? Rest : never)) =>
+		intl.formatMessage({ id }, ...args);
 
 export const useGetRawIntlMessage = () => {
 
@@ -55,6 +57,7 @@ export const useFormatMessageIdAsTagFn = () => {
 
 	const intl = useIntl();
 
+	// @ts-ignore TODO: better solution
 	return fnToTemplateTag(createFormatMessageId(intl));
 
 };

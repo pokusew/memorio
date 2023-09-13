@@ -134,7 +134,7 @@ export const Input = (
 				name={name}
 				ref={inputRef}
 				className="form-control"
-				placeholder={isDefined(finalPlaceholder) ? t(finalPlaceholder) : undefined}
+				placeholder={isDefined(finalPlaceholder) ? t(finalPlaceholder) as string : undefined}
 				{...otherInputProps}
 			/>
 			{!isEmpty(error) && <p className="form-control-feedback">{isCustomError === true ? error : t(error)}</p>}
@@ -194,7 +194,7 @@ export const TextArea = (
 				name={name}
 				ref={inputRef}
 				className="form-control"
-				placeholder={isDefined(finalPlaceholder) ? t(finalPlaceholder) : undefined}
+				placeholder={isDefined(finalPlaceholder) ? t(finalPlaceholder) as string : undefined}
 				{...otherInputProps}
 			/>
 			{!isEmpty(error) && <p className="form-control-feedback">{isCustomError === true ? error : t(error)}</p>}
@@ -245,7 +245,7 @@ export const ToggleInput = (
 				name={name}
 				ref={inputRef}
 				className="toggle-checkbox-input"
-				placeholder={isDefined(finalPlaceholder) ? t(finalPlaceholder) : undefined}
+				placeholder={isDefined(finalPlaceholder) ? t(finalPlaceholder) as string : undefined}
 				{...otherInputProps}
 			/>
 			<label className="toggle-checkbox-label" htmlFor={id} />

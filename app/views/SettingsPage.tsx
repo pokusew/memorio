@@ -39,6 +39,7 @@ const SettingsPage = () => {
 
 	const intl = useIntl();
 	const getRawIntlMessage = createGetRawIntlMessage(intl);
+	// @ts-ignore TODO: better solution
 	const t = fnToTemplateTag(createFormatMessageId(intl));
 
 	useDocumentTitle(t`titles.settings`);
@@ -106,7 +107,7 @@ const SettingsPage = () => {
 				onChange={handleLocaleChange}
 				helpBlock={
 					<p className="help-block">
-						{t`settingsForm.labels.effectiveLocale`}: {getRawIntlMessage(`locales.${intl.locale}`)}
+						{t`settingsForm.labels.effectiveLocale`}: {getRawIntlMessage(`locales.${intl.locale}`) as string}
 					</p>
 				}
 			/>

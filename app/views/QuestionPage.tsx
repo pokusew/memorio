@@ -76,7 +76,7 @@ const QuestionPage = () => {
 
 	const pageTitle = op.loading ? t(`titles.loading`) : !isDefined(question) ? t(`titles.notFound`) : question.number?.toString() ?? '??';
 
-	useDocumentTitle(pageTitle);
+	useDocumentTitle(pageTitle as string);
 
 	const handleKeyDownEvent = useCallback((event: KeyboardEvent) => {
 

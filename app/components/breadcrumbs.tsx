@@ -25,7 +25,7 @@ export const breadcrumbsPropsToLinks = (t: ReturnType<typeof useFormatMessageId>
 	const links: BreadcrumbsLink[] = [
 		{
 			name: R_ROOT,
-			label: t(`titles.home`),
+			label: t(`titles.home`) as string,
 		},
 	];
 
@@ -36,7 +36,7 @@ export const breadcrumbsPropsToLinks = (t: ReturnType<typeof useFormatMessageId>
 	if (props.name === R_SETTINGS) {
 		links.push({
 			name: R_SETTINGS,
-			label: t(`titles.settings`),
+			label: t(`titles.settings`) as string,
 		});
 		return links;
 	}
@@ -85,7 +85,7 @@ export const breadcrumbsPropsToLinks = (t: ReturnType<typeof useFormatMessageId>
 				payload: {
 					packageId: props.packageId,
 				},
-				label: t(`titles.practice`),
+				label: t(`titles.practice`) as string,
 			});
 			return links;
 		}
